@@ -12,8 +12,11 @@
     "test:run": "vitest run"
   },
   "devDependencies": {
+    "@vitest/ui": "^3.2.4",
+    "jsdom": "^26.1.0",
     "typescript": "~5.8.3",
-    "vite": "^7.1.2"
+    "vite": "^7.1.2",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@fluentui/react-components": "^9.69.0",

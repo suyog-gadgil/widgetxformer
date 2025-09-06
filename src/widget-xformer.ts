@@ -2,6 +2,263 @@
  * WidgetXFormer - A JavaScript library for rendering interactive widgets from JSON data
  * Supports: Tabs, Charts (Doughnut, Bar, Line), Accordions, Cards, Maps, and more
  * Enhanced with Microsoft Fluent UI Design System
+ * 
+ * ==================== LLM INTEGRATION DOCUMENTATION ====================
+ * 
+ * INITIALIZATION:
+ * ```javascript
+ * import WidgetXFormer from './widget-xformer';
+ * const widgetRenderer = WidgetXFormer.getInstance();
+ * ```
+ * 
+ * PRIMARY METHOD - render():
+ * ```javascript
+ * widgetRenderer.render(config, containerId);
+ * ```
+ * 
+ * PARAMETERS:
+ * - config: WidgetConfig object (required)
+ * - containerId: string - DOM element ID where widget will be rendered (required)
+ * 
+ * WidgetConfig INTERFACE:
+ * ```typescript
+ * {
+ *   type: string,           // Widget type (see SUPPORTED WIDGET TYPES below)
+ *   data: any,             // Widget-specific data structure
+ *   style?: {              // Optional styling configuration
+ *     theme?: string,      // Theme name: 'light' | 'fluent-dark' | 'default' | 'brand' | 'dark'
+ *     palette?: string,    // Color palette (future use)
+ *     density?: string,    // Layout density (future use)
+ *     fluentDesign?: boolean // Enable Fluent UI design (default: true)
+ *   }
+ * }
+ * ```
+ * 
+ * SUPPORTED WIDGET TYPES:
+ * 1. 'tabs' - Tab navigation widget
+ * 2. 'doughnut' - Doughnut chart
+ * 3. 'bar' - Bar chart
+ * 4. 'line' - Line chart
+ * 5. 'accordion' - Collapsible content sections
+ * 6. 'card' - Content card
+ * 7. 'metric' - Key performance indicator display
+ * 8. 'table' - Data table
+ * 9. 'worldmap' - World map visualization
+ * 10. 'timeline' - Event timeline with rich configuration
+ * 11. 'fluent-card' - Enhanced Fluent UI card
+ * 12. 'fluent-button' - Fluent UI button
+ * 13. 'fluent-progressbar' - Fluent UI progress indicator
+ * 
+ * WIDGET DATA STRUCTURES:
+ * 
+ * TABS:
+ * data: { items: TabItem[] }
+ * TabItem: { id: string, label: string, content: string }
+ * 
+ * CHARTS (doughnut, bar, line):
+ * data: ChartData
+ * ChartData: {
+ *   labels: string[],
+ *   datasets: ChartDataset[]
+ * }
+ * ChartDataset: {
+ *   label: string,
+ *   data: number[],
+ *   backgroundColor?: string | string[],
+ *   borderColor?: string | string[],
+ *   borderWidth?: number
+ * }
+ * 
+ * ACCORDION:
+ * data: { items: AccordionItem[] }
+ * AccordionItem: {
+ *   id: string,
+ *   title: string,
+ *   content: string,
+ *   expanded?: boolean
+ * }
+ * 
+ * CARD:
+ * data: {
+ *   title?: string,
+ *   content?: string,
+ *   actions?: any[],
+ *   interactive?: boolean
+ * }
+ * 
+ * METRIC:
+ * data: {
+ *   value: string | number,
+ *   label: string
+ * }
+ * 
+ * TABLE:
+ * data: {
+ *   headers?: string[],
+ *   rows?: string[][]
+ * }
+ * 
+ * TIMELINE:
+ * data: {
+ *   events: TimelineEvent[],
+ *   config?: TimelineConfig
+ * }
+ * TimelineEvent: {
+ *   id: string,
+ *   date: string | Date,
+ *   title: string,
+ *   description?: string,
+ *   category?: string,
+ *   icon?: string,
+ *   status?: 'completed' | 'current' | 'upcoming' | 'cancelled',
+ *   link?: string,
+ *   metadata?: Record<string, any>
+ * }
+ * TimelineConfig: {
+ *   orientation?: 'vertical' | 'horizontal',
+ *   layout?: 'left' | 'right' | 'alternating' | 'center',
+ *   showDates?: boolean,
+ *   showIcons?: boolean,
+ *   groupBy?: 'none' | 'year' | 'month' | 'category',
+ *   sortOrder?: 'asc' | 'desc',
+ *   showProgress?: boolean,
+ *   animate?: boolean,
+ *   interactive?: boolean,
+ *   dateFormat?: string,
+ *   showConnectors?: boolean,
+ *   compactMode?: boolean
+ * }
+ * 
+ * FLUENT-CARD:
+ * data: {
+ *   title?: string,
+ *   content?: string,
+ *   actions?: Array<{
+ *     text: string,
+ *     appearance?: 'primary' | 'secondary' | 'outline' | 'subtle',
+ *     onClick?: Function
+ *   }>,
+ *   interactive?: boolean
+ * }
+ * 
+ * FLUENT-BUTTON:
+ * data: {
+ *   text: string,
+ *   appearance?: 'primary' | 'secondary' | 'outline' | 'subtle',
+ *   onClick?: Function
+ * }
+ * 
+ * FLUENT-PROGRESSBAR:
+ * data: {
+ *   value: number,      // 0-100
+ *   label?: string,
+ *   description?: string,
+ *   indeterminate?: boolean
+ * }
+ * 
+ * EXAMPLE USAGE:
+ * 
+ * 1. Basic Tab Widget:
+ * ```javascript
+ * widgetRenderer.render({
+ *   type: 'tabs',
+ *   data: {
+ *     items: [
+ *       { id: '1', label: 'Tab 1', content: 'Content 1' },
+ *       { id: '2', label: 'Tab 2', content: 'Content 2' }
+ *     ]
+ *   },
+ *   style: { theme: 'light' }
+ * }, 'tab-container');
+ * ```
+ * 
+ * 2. Chart Widget:
+ * ```javascript
+ * widgetRenderer.render({
+ *   type: 'bar',
+ *   data: {
+ *     labels: ['A', 'B', 'C'],
+ *     datasets: [{
+ *       label: 'Dataset 1',
+ *       data: [10, 20, 30],
+ *       backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56']
+ *     }]
+ *   },
+ *   style: { theme: 'light' }
+ * }, 'chart-container');
+ * ```
+ * 
+ * 3. Timeline Widget:
+ * ```javascript
+ * widgetRenderer.render({
+ *   type: 'timeline',
+ *   data: {
+ *     events: [
+ *       {
+ *         id: '1',
+ *         date: '2024-01-15',
+ *         title: 'Project Started',
+ *         description: 'Initial project kickoff',
+ *         status: 'completed'
+ *       }
+ *     ],
+ *     config: {
+ *       orientation: 'vertical',
+ *       showProgress: true,
+ *       animate: true
+ *     }
+ *   },
+ *   style: { theme: 'light' }
+ * }, 'timeline-container');
+ * ```
+ * 
+ * 4. Fluent UI Card:
+ * ```javascript
+ * widgetRenderer.render({
+ *   type: 'fluent-card',
+ *   data: {
+ *     title: 'Card Title',
+ *     content: 'Card content goes here',
+ *     actions: [
+ *       { text: 'Primary Action', appearance: 'primary' },
+ *       { text: 'Secondary Action', appearance: 'secondary' }
+ *     ],
+ *     interactive: true
+ *   },
+ *   style: { theme: 'light' }
+ * }, 'card-container');
+ * ```
+ * 
+ * UTILITY METHODS:
+ * 
+ * 1. parseConfigFromHTML(elementId: string): WidgetConfig | null
+ *    - Parses widget configuration from HTML data attribute
+ *    - Usage: const config = WidgetXFormer.parseConfigFromHTML('config-element');
+ * 
+ * 2. autoInitialize(): void
+ *    - Automatically initializes all widgets with data-config-ref attribute
+ *    - Usage: WidgetXFormer.autoInitialize();
+ * 
+ * THEMES:
+ * - 'light': Fluent UI light theme (default)
+ * - 'fluent-dark': Fluent UI dark theme
+ * - 'default': Traditional light theme
+ * - 'brand': Custom brand theme
+ * - 'dark': Traditional dark theme
+ * 
+ * FLUENT UI FEATURES:
+ * - All widgets automatically use Fluent UI design tokens
+ * - Consistent typography, spacing, colors, and animations
+ * - Accessible design patterns
+ * - Responsive layout support
+ * - Dark/light theme support
+ * 
+ * ERROR HANDLING:
+ * - Invalid widget types log errors to console
+ * - Missing containers log errors to console
+ * - Malformed data structures fall back to default rendering
+ * 
+ * =====================================================================
  */
 
 import { getFluentTokens, applyFluentTokens, type FluentTheme } from './fluent-tokens';
@@ -236,17 +493,19 @@ class WidgetXFormer {
   private renderTabs(config: WidgetConfig, container: HTMLElement): void {
     const tabsData = config.data as { items: TabItem[] };
     const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
 
     const tabsContainer = document.createElement('div');
-    tabsContainer.className = 'widget-tabs';
+    tabsContainer.className = 'fluent-tabs';
 
     // Create tab headers
     const tabHeaders = document.createElement('div');
     tabHeaders.className = 'tab-headers';
     tabHeaders.style.cssText = `
       display: flex;
-      border-bottom: 2px solid ${theme.border};
-      margin-bottom: 1rem;
+      border-bottom: 2px solid ${theme.surfaceBorder || theme.border};
+      margin-bottom: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
     `;
 
     // Create tab content container
@@ -259,14 +518,16 @@ class WidgetXFormer {
       tabHeader.textContent = tab.label;
       tabHeader.className = 'tab-header';
       tabHeader.style.cssText = `
-        padding: 0.75rem 1.5rem;
+        padding: ${fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.spacingHorizontalL.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
         border: none;
         background: ${index === 0 ? theme.primary : 'transparent'};
         color: ${index === 0 ? '#ffffff' : theme.text};
         cursor: pointer;
-        border-radius: 4px 4px 0 0;
-        font-weight: 500;
-        transition: all 0.3s ease;
+        border-radius: ${fluentTokens.borderRadiusMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.borderRadiusMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0 0;
+        font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        transition: all ${fluentTokens.durationFast.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       `;
 
       // Create tab content panel
@@ -274,8 +535,9 @@ class WidgetXFormer {
       tabPanel.className = 'tab-panel';
       tabPanel.style.cssText = `
         display: ${index === 0 ? 'block' : 'none'};
-        padding: 1rem 0;
+        padding: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
         line-height: 1.6;
+        font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       `;
       tabPanel.textContent = tab.content;
 
@@ -471,18 +733,20 @@ class WidgetXFormer {
   private renderAccordion(config: WidgetConfig, container: HTMLElement): void {
     const accordionData = config.data as { items: AccordionItem[] };
     const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
 
     const accordionContainer = document.createElement('div');
-    accordionContainer.className = 'widget-accordion';
+    accordionContainer.className = 'fluent-accordion';
 
     accordionData.items.forEach((item) => {
       const itemContainer = document.createElement('div');
       itemContainer.className = 'accordion-item';
       itemContainer.style.cssText = `
-        border: 1px solid ${theme.border};
-        border-radius: 4px;
-        margin-bottom: 0.5rem;
+        border: 1px solid ${theme.surfaceBorder || theme.border};
+        border-radius: ${fluentTokens.borderRadiusMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        margin-bottom: ${fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
         overflow: hidden;
+        box-shadow: ${fluentTokens.shadow2.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       `;
 
       // Create header
@@ -491,26 +755,31 @@ class WidgetXFormer {
       header.textContent = item.title;
       header.style.cssText = `
         width: 100%;
-        padding: 1rem;
-        background: ${theme.background};
+        padding: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.spacingHorizontalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        background: ${theme.surfaceBackground || theme.background};
         border: none;
         text-align: left;
         cursor: pointer;
-        font-weight: 500;
+        font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
         color: ${theme.text};
-        transition: background-color 0.3s ease;
+        transition: background-color ${fluentTokens.durationFast.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       `;
 
       // Create content panel
       const content = document.createElement('div');
       content.className = 'accordion-content';
       content.style.cssText = `
-        padding: ${item.expanded ? '1rem' : '0'};
+        padding: ${item.expanded ? fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1') + ' ' + fluentTokens.spacingHorizontalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1') : '0'};
         max-height: ${item.expanded ? 'none' : '0'};
         overflow: hidden;
-        background: ${theme.background};
-        transition: all 0.3s ease;
-        border-top: ${item.expanded ? `1px solid ${theme.border}` : 'none'};
+        background: ${theme.surfaceBackground || theme.background};
+        transition: all ${fluentTokens.durationNormal.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        border-top: ${item.expanded ? `1px solid ${theme.surfaceBorder || theme.border}` : 'none'};
+        font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        line-height: ${fluentTokens.lineHeightBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       `;
       content.textContent = item.content;
 
@@ -520,12 +789,12 @@ class WidgetXFormer {
         
         if (isExpanded) {
           content.style.maxHeight = '0';
-          content.style.padding = '0 1rem';
+          content.style.padding = `0 ${fluentTokens.spacingHorizontalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')}`;
           content.style.borderTop = 'none';
         } else {
           content.style.maxHeight = content.scrollHeight + 'px';
-          content.style.padding = '1rem';
-          content.style.borderTop = `1px solid ${theme.border}`;
+          content.style.padding = `${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.spacingHorizontalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')}`;
+          content.style.borderTop = `1px solid ${theme.surfaceBorder || theme.border}`;
         }
       });
 
@@ -540,24 +809,29 @@ class WidgetXFormer {
   private renderCard(config: WidgetConfig, container: HTMLElement): void {
     const cardData = config.data;
     const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
 
     const card = document.createElement('div');
-    card.className = 'widget-card';
+    card.className = 'fluent-card-traditional';
     card.style.cssText = `
-      background: ${theme.background};
-      border: 1px solid ${theme.border};
-      border-radius: 8px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background: ${theme.surfaceBackground || theme.background};
+      border: 1px solid ${theme.surfaceBorder || theme.border};
+      border-radius: ${fluentTokens.borderRadiusLarge.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      padding: ${fluentTokens.spacingVerticalXL.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.spacingHorizontalXL.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      box-shadow: ${fluentTokens.shadow4.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      transition: all ${fluentTokens.durationNormal.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
     `;
 
     if (cardData.title) {
       const title = document.createElement('h3');
       title.textContent = cardData.title;
       title.style.cssText = `
-        margin: 0 0 1rem 0;
+        margin: 0 0 ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
         color: ${theme.text};
-        font-size: 1.25rem;
+        font-size: ${fluentTokens.fontSizeBase500.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        line-height: ${fluentTokens.lineHeightBase500.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       `;
       card.appendChild(title);
     }
@@ -567,8 +841,9 @@ class WidgetXFormer {
       content.textContent = cardData.content;
       content.style.cssText = `
         margin: 0;
-        line-height: 1.6;
+        line-height: ${fluentTokens.lineHeightBase400.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
         color: ${theme.text};
+        font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       `;
       card.appendChild(content);
     }
@@ -579,29 +854,36 @@ class WidgetXFormer {
   private renderMetric(config: WidgetConfig, container: HTMLElement): void {
     const metricData = config.data;
     const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
 
     const metric = document.createElement('div');
-    metric.className = 'widget-metric';
+    metric.className = 'fluent-metric';
     metric.style.cssText = `
       text-align: center;
-      padding: 2rem;
+      padding: ${fluentTokens.spacingVerticalXXL.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      background: ${theme.surfaceBackground || theme.background};
+      border-radius: ${fluentTokens.borderRadiusLarge.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      box-shadow: ${fluentTokens.shadow4.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
     `;
 
     const value = document.createElement('div');
     value.textContent = metricData.value;
     value.style.cssText = `
-      font-size: 3rem;
-      font-weight: bold;
+      font-size: ${fluentTokens.fontSizeHero1000.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-weight: ${fluentTokens.fontWeightBold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       color: ${theme.primary};
-      margin-bottom: 0.5rem;
+      margin-bottom: ${fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      line-height: ${fluentTokens.lineHeightHero1000.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
     `;
 
     const label = document.createElement('div');
     label.textContent = metricData.label;
     label.style.cssText = `
-      font-size: 1rem;
+      font-size: ${fluentTokens.fontSizeBase400.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       color: ${theme.text};
       opacity: 0.8;
+      font-weight: ${fluentTokens.fontWeightMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
     `;
 
     metric.appendChild(value);
@@ -612,13 +894,29 @@ class WidgetXFormer {
   private renderTable(config: WidgetConfig, container: HTMLElement): void {
     const tableData = config.data;
     const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = config.style?.fluentDesign ? getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light') : null;
 
     const table = document.createElement('table');
-    table.style.cssText = `
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1rem 0;
-    `;
+    table.className = config.style?.fluentDesign ? 'fluent-table' : 'widget-table';
+    
+    if (config.style?.fluentDesign && fluentTokens) {
+      table.style.cssText = `
+        width: 100%;
+        border-collapse: collapse;
+        margin: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
+        font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        border-radius: ${fluentTokens.borderRadiusMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        overflow: hidden;
+        box-shadow: ${fluentTokens.shadow2.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      `;
+    } else {
+      table.style.cssText = `
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+      `;
+    }
 
     // Create header
     if (tableData.headers) {
@@ -628,13 +926,25 @@ class WidgetXFormer {
       tableData.headers.forEach((header: string) => {
         const th = document.createElement('th');
         th.textContent = header;
-        th.style.cssText = `
-          padding: 0.75rem;
-          text-align: left;
-          background: ${theme.primary};
-          color: white;
-          font-weight: 500;
-        `;
+        
+        if (config.style?.fluentDesign && fluentTokens) {
+          th.style.cssText = `
+            padding: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.spacingHorizontalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+            text-align: left;
+            background: ${theme.primary};
+            color: white;
+            font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+            font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          `;
+        } else {
+          th.style.cssText = `
+            padding: 0.75rem;
+            text-align: left;
+            background: ${theme.primary};
+            color: white;
+            font-weight: 500;
+          `;
+        }
         headerRow.appendChild(th);
       });
       
@@ -648,15 +958,33 @@ class WidgetXFormer {
       
       tableData.rows.forEach((row: string[], index: number) => {
         const tr = document.createElement('tr');
-        tr.style.backgroundColor = index % 2 === 0 ? theme.background : '#f8f9fa';
+        
+        if (config.style?.fluentDesign && fluentTokens) {
+          tr.style.backgroundColor = index % 2 === 0 ? 
+            (theme.surfaceBackground || theme.background) : 
+            (theme.background || '#f8f9fa');
+          tr.style.transition = `background-color ${fluentTokens.durationFast.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')}`;
+        } else {
+          tr.style.backgroundColor = index % 2 === 0 ? theme.background : '#f8f9fa';
+        }
         
         row.forEach((cell: string) => {
           const td = document.createElement('td');
           td.textContent = cell;
-          td.style.cssText = `
-            padding: 0.75rem;
-            border-bottom: 1px solid ${theme.border};
-          `;
+          
+          if (config.style?.fluentDesign && fluentTokens) {
+            td.style.cssText = `
+              padding: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.spacingHorizontalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+              border-bottom: 1px solid ${theme.surfaceBorder || theme.border};
+              font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+              color: ${theme.text};
+            `;
+          } else {
+            td.style.cssText = `
+              padding: 0.75rem;
+              border-bottom: 1px solid ${theme.border};
+            `;
+          }
           tr.appendChild(td);
         });
         
@@ -673,15 +1001,27 @@ class WidgetXFormer {
     // Note: mapData would be used for actual map data visualization
     // const mapData = config.data;
     const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = config.style?.fluentDesign ? getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light') : null;
 
     // Create a simple SVG world map representation
     const svgContainer = document.createElement('div');
+    svgContainer.className = config.style?.fluentDesign ? 'fluent-worldmap' : 'widget-worldmap';
+    
+    if (config.style?.fluentDesign && fluentTokens) {
+      svgContainer.style.cssText = `
+        border-radius: ${fluentTokens.borderRadiusMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        box-shadow: ${fluentTokens.shadow4.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        overflow: hidden;
+        font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      `;
+    }
+    
     svgContainer.innerHTML = `
-      <svg width="100%" height="300" viewBox="0 0 800 400" style="background: #f0f8ff;">
-        <text x="400" y="200" text-anchor="middle" fill="${theme.text}" font-size="16">
+      <svg width="100%" height="300" viewBox="0 0 800 400" style="background: ${config.style?.fluentDesign ? (theme.surfaceBackground || theme.background) : '#f0f8ff'};">
+        <text x="400" y="200" text-anchor="middle" fill="${theme.text}" font-size="${config.style?.fluentDesign && fluentTokens ? fluentTokens.fontSizeBase500.replace(/var\([^,]+,\s*([^)]+)\)/, '$1') : '16px'}" ${config.style?.fluentDesign && fluentTokens ? `font-family="${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')}" font-weight="${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')}"` : ''}>
           World Map Visualization
         </text>
-        <text x="400" y="220" text-anchor="middle" fill="${theme.text}" font-size="12" opacity="0.7">
+        <text x="400" y="220" text-anchor="middle" fill="${theme.text}" font-size="${config.style?.fluentDesign && fluentTokens ? fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1') : '12px'}" opacity="0.7" ${config.style?.fluentDesign && fluentTokens ? `font-family="${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')}"` : ''}>
           (Integration with mapping libraries like D3.js or Leaflet recommended)
         </text>
       </svg>
@@ -694,6 +1034,7 @@ class WidgetXFormer {
     const timelineData = config.data as { events: TimelineEvent[], config?: TimelineConfig };
     const timelineConfig = timelineData.config || {} as TimelineConfig;
     const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
 
     // Default configuration
     const settings = {
@@ -724,22 +1065,28 @@ class WidgetXFormer {
 
     // Create timeline container
     const timelineContainer = document.createElement('div');
-    timelineContainer.className = 'widget-timeline';
+    timelineContainer.className = config.style?.fluentDesign ? 'fluent-timeline' : 'widget-timeline';
+    
+    const animationDuration = config.style?.fluentDesign && fluentTokens ? 
+      fluentTokens.durationSlow.replace(/var\([^,]+,\s*([^)]+)\)/, '$1') : 
+      '0.6s';
+    
     timelineContainer.style.cssText = `
       position: relative;
       ${settings.orientation === 'horizontal' ? 'overflow-x: auto; padding: 2rem 0;' : 'padding: 1rem 0;'}
-      ${settings.animate ? 'animation: fadeIn 0.6s ease-in;' : ''}
+      ${settings.animate ? `animation: fadeIn ${animationDuration} ease-in;` : ''}
+      ${config.style?.fluentDesign && fluentTokens ? `font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};` : ''}
     `;
 
     if (settings.orientation === 'vertical') {
-      this.renderVerticalTimeline(timelineContainer, groupedEvents, settings, theme);
+      this.renderVerticalTimeline(timelineContainer, groupedEvents, settings, theme, fluentTokens);
     } else {
-      this.renderHorizontalTimeline(timelineContainer, groupedEvents, settings, theme);
+      this.renderHorizontalTimeline(timelineContainer, groupedEvents, settings, theme, fluentTokens);
     }
 
     // Add progress indicator if enabled
     if (settings.showProgress) {
-      this.addTimelineProgress(timelineContainer, events, theme);
+      this.addTimelineProgress(timelineContainer, events, theme, fluentTokens);
     }
 
     container.appendChild(timelineContainer);
@@ -777,7 +1124,7 @@ class WidgetXFormer {
     return Array.from(grouped.entries()).map(([group, events]) => ({group, events}));
   }
 
-  private renderVerticalTimeline(container: HTMLElement, groupedEvents: Array<{group: string, events: TimelineEvent[]}>, settings: any, theme: any): void {
+  private renderVerticalTimeline(container: HTMLElement, groupedEvents: Array<{group: string, events: TimelineEvent[]}>, settings: any, theme: any, fluentTokens: any): void {
     const timelineTrack = document.createElement('div');
     timelineTrack.className = 'timeline-track';
     timelineTrack.style.cssText = `
@@ -808,12 +1155,14 @@ class WidgetXFormer {
         const groupHeader = document.createElement('div');
         groupHeader.className = 'timeline-group-header';
         groupHeader.style.cssText = `
-          margin: 2rem 0 1rem 0;
-          padding: 0.5rem 1rem;
+          margin: ${fluentTokens.spacingVerticalXXL.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0 ${fluentTokens.spacingVerticalL.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
+          padding: ${fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.spacingHorizontalL.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
           background: ${theme.primary};
           color: white;
-          border-radius: 20px;
-          font-weight: 600;
+          border-radius: ${fluentTokens.borderRadiusCircular.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          font-size: ${fluentTokens.fontSizeBase400.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
           text-align: center;
           ${settings.layout === 'center' ? 'max-width: 200px; margin-left: auto; margin-right: auto;' : ''}
         `;
@@ -822,7 +1171,7 @@ class WidgetXFormer {
       }
 
       events.forEach((event) => {
-        const eventElement = this.createTimelineEvent(event, eventIndex, settings, theme, 'vertical');
+        const eventElement = this.createTimelineEvent(event, eventIndex, settings, theme, 'vertical', fluentTokens);
         timelineTrack.appendChild(eventElement);
         eventIndex++;
       });
@@ -831,7 +1180,7 @@ class WidgetXFormer {
     container.appendChild(timelineTrack);
   }
 
-  private renderHorizontalTimeline(container: HTMLElement, groupedEvents: Array<{group: string, events: TimelineEvent[]}>, settings: any, theme: any): void {
+  private renderHorizontalTimeline(container: HTMLElement, groupedEvents: Array<{group: string, events: TimelineEvent[]}>, settings: any, theme: any, fluentTokens: any): void {
     const timelineTrack = document.createElement('div');
     timelineTrack.className = 'timeline-track-horizontal';
     timelineTrack.style.cssText = `
@@ -861,7 +1210,7 @@ class WidgetXFormer {
     let eventIndex = 0;
     groupedEvents.forEach(({events}) => {
       events.forEach((event) => {
-        const eventElement = this.createTimelineEvent(event, eventIndex, settings, theme, 'horizontal');
+        const eventElement = this.createTimelineEvent(event, eventIndex, settings, theme, 'horizontal', fluentTokens);
         timelineTrack.appendChild(eventElement);
         eventIndex++;
       });
@@ -870,7 +1219,7 @@ class WidgetXFormer {
     container.appendChild(timelineTrack);
   }
 
-  private createTimelineEvent(event: TimelineEvent, index: number, settings: any, theme: any, orientation: string): HTMLElement {
+  private createTimelineEvent(event: TimelineEvent, index: number, settings: any, theme: any, orientation: string, fluentTokens: any): HTMLElement {
     const eventContainer = document.createElement('div');
     eventContainer.className = 'timeline-event';
     
@@ -939,11 +1288,12 @@ class WidgetXFormer {
           `margin-left: ${isLeft ? '0' : '60px'}; margin-right: ${isLeft ? '60px' : '0'}; text-align: ${isLeft ? 'right' : 'left'};` :
           'margin-left: 60px;'
       }
-      background: white;
-      padding: ${settings.compactMode ? '0.75rem' : '1rem'};
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background: ${theme.background};
+      padding: ${settings.compactMode ? fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1') : fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${settings.compactMode ? fluentTokens.spacingHorizontalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1') : fluentTokens.spacingHorizontalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      border-radius: ${fluentTokens.borderRadiusLarge.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      box-shadow: ${fluentTokens.shadow4.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       border-left: 4px solid ${this.getStatusColor(event.status, theme)};
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
     `;
 
     // Event date
@@ -951,10 +1301,10 @@ class WidgetXFormer {
       const dateElement = document.createElement('div');
       dateElement.className = 'timeline-date';
       dateElement.style.cssText = `
-        font-size: ${settings.compactMode ? '0.75rem' : '0.85rem'};
+        font-size: ${settings.compactMode ? fluentTokens.fontSizeBase100.replace(/var\([^,]+,\s*([^)]+)\)/, '$1') : fluentTokens.fontSizeBase200.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
         color: ${theme.primary};
-        font-weight: 600;
-        margin-bottom: 0.5rem;
+        font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        margin-bottom: ${fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       `;
       dateElement.textContent = this.formatDate(event.date, settings.dateFormat);
       content.appendChild(dateElement);
@@ -963,10 +1313,10 @@ class WidgetXFormer {
     // Event title
     const title = document.createElement('h4');
     title.style.cssText = `
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 ${fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
       color: ${theme.text};
-      font-size: ${settings.compactMode ? '1rem' : '1.1rem'};
-      font-weight: 600;
+      font-size: ${settings.compactMode ? fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1') : fluentTokens.fontSizeBase400.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
     `;
     title.textContent = event.title;
     content.appendChild(title);
@@ -978,7 +1328,7 @@ class WidgetXFormer {
         margin: 0;
         color: ${theme.text};
         opacity: 0.8;
-        font-size: ${settings.compactMode ? '0.85rem' : '0.9rem'};
+        font-size: ${settings.compactMode ? fluentTokens.fontSizeBase200.replace(/var\([^,]+,\s*([^)]+)\)/, '$1') : fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
         line-height: 1.4;
       `;
       description.textContent = event.description;
@@ -990,13 +1340,13 @@ class WidgetXFormer {
       const category = document.createElement('span');
       category.style.cssText = `
         display: inline-block;
-        padding: 0.25rem 0.5rem;
+        padding: ${fluentTokens.spacingVerticalXS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.spacingHorizontalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
         background: ${theme.primary}20;
         color: ${theme.primary};
-        font-size: 0.75rem;
-        border-radius: 12px;
-        margin-top: 0.5rem;
-        font-weight: 500;
+        font-size: ${fluentTokens.fontSizeBase100.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        border-radius: ${fluentTokens.borderRadiusCircular.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        margin-top: ${fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       `;
       category.textContent = event.category;
       content.appendChild(category);
@@ -1062,27 +1412,29 @@ class WidgetXFormer {
     return this.formatDate(date, 'MMM DD, YYYY');
   }
 
-  private addTimelineProgress(container: HTMLElement, events: TimelineEvent[], theme: any): void {
+  private addTimelineProgress(container: HTMLElement, events: TimelineEvent[], theme: any, fluentTokens: any): void {
     const completedEvents = events.filter(e => e.status === 'completed').length;
     const totalEvents = events.length;
     const progressPercent = (completedEvents / totalEvents) * 100;
 
     const progressContainer = document.createElement('div');
     progressContainer.style.cssText = `
-      margin-bottom: 1rem;
-      padding: 1rem;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      padding: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      background: ${theme.background};
+      border-radius: ${fluentTokens.borderRadiusLarge.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      box-shadow: ${fluentTokens.shadow4.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
     `;
 
     const progressLabel = document.createElement('div');
     progressLabel.style.cssText = `
       display: flex;
       justify-content: space-between;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
+      margin-bottom: ${fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       color: ${theme.text};
+      font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
     `;
     progressLabel.innerHTML = `
       <span>Progress</span>
@@ -1093,8 +1445,8 @@ class WidgetXFormer {
     progressBar.style.cssText = `
       width: 100%;
       height: 8px;
-      background: #e0e0e0;
-      border-radius: 4px;
+      background: ${theme.secondary}40;
+      border-radius: ${fluentTokens.borderRadiusSmall.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
       overflow: hidden;
     `;
 
@@ -1103,8 +1455,8 @@ class WidgetXFormer {
       height: 100%;
       background: linear-gradient(to right, ${theme.primary}, ${theme.secondary});
       width: ${progressPercent}%;
-      transition: width 1s ease-out;
-      border-radius: 4px;
+      transition: width ${fluentTokens.durationSlow.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      border-radius: ${fluentTokens.borderRadiusSmall.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
     `;
 
     progressBar.appendChild(progressFill);

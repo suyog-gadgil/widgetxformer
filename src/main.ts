@@ -102,7 +102,7 @@ const widgetConfigs = {
         animate: true
       }
     },
-    style: { theme: 'light', fluentDesign: true }
+    style: { theme: 'light' }
   },
 
   // New Fluent UI widgets
@@ -117,7 +117,7 @@ const widgetConfigs = {
         { text: 'Secondary', appearance: 'secondary' }
       ]
     },
-    style: { theme: 'light', fluentDesign: true }
+    style: { theme: 'light' }
   },
 
   fluentProgress: {
@@ -127,7 +127,7 @@ const widgetConfigs = {
       value: 65,
       description: '65% complete - 2.3 MB of 3.5 MB'
     },
-    style: { theme: 'light', fluentDesign: true }
+    style: { theme: 'light' }
   }
 };
 
@@ -215,11 +215,9 @@ class WidgetXFormerApp {
   }
 
   private renderWidgets(): void {
-    // Update theme for all widgets (except Fluent ones which have their own theme)
+    // Update theme for all widgets
     Object.values(widgetConfigs).forEach(config => {
-      if (!config.style || !(config.style as any).fluentDesign) {
-        config.style = { ...config.style, theme: this.currentTheme };
-      }
+      config.style = { ...config.style, theme: this.currentTheme };
     });
 
     // Render widgets

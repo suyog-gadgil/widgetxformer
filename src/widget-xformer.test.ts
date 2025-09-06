@@ -70,7 +70,7 @@ describe('WidgetXFormer', () => {
       widgetXFormer.render(config, 'test-container')
 
       // Check if tabs container is created
-      const tabsContainer = container.querySelector('.widget-tabs')
+      const tabsContainer = container.querySelector('.fluent-tabs')
       expect(tabsContainer).toBeTruthy()
 
       // Check if tab headers are created
@@ -184,7 +184,7 @@ describe('WidgetXFormer', () => {
       widgetXFormer.render(config, 'test-container')
 
       // Check if accordion container is created
-      const accordionContainer = container.querySelector('.widget-accordion')
+      const accordionContainer = container.querySelector('.fluent-accordion')
       expect(accordionContainer).toBeTruthy()
 
       // Check if accordion items are created
@@ -249,7 +249,7 @@ describe('WidgetXFormer', () => {
       widgetXFormer.render(config, 'test-container')
 
       // Check if card is created
-      const card = container.querySelector('.widget-card')
+      const card = container.querySelector('.fluent-card-traditional')
       expect(card).toBeTruthy()
 
       // Check if title is rendered
@@ -271,7 +271,7 @@ describe('WidgetXFormer', () => {
 
       widgetXFormer.render(config, 'test-container')
 
-      const card = container.querySelector('.widget-card')
+      const card = container.querySelector('.fluent-card-traditional')
       const title = card?.querySelector('h3')
       const content = card?.querySelector('p')
 
@@ -293,7 +293,7 @@ describe('WidgetXFormer', () => {
       widgetXFormer.render(config, 'test-container')
 
       // Check if metric container is created
-      const metric = container.querySelector('.widget-metric')
+      const metric = container.querySelector('.fluent-metric')
       expect(metric).toBeTruthy()
 
       // Check if value and label are rendered
@@ -685,7 +685,7 @@ describe('WidgetXFormer', () => {
       WidgetXFormer.autoInitialize()
 
       // Check if widget was rendered
-      const card = widgetElement.querySelector('.widget-card')
+      const card = widgetElement.querySelector('.fluent-card-traditional')
       expect(card).toBeTruthy()
       
       const title = card?.querySelector('h3')

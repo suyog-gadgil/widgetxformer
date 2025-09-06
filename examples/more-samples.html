@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini-Generated Widgets & Infographics</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Leaflet.js for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom styles for a polished look */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light gray background */
+        }
+        .widget-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: 1px solid #e5e7eb;
+        }
+        .widget-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        .widget-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 12px;
+        }
+        /* Leaflet map container height */
+        #map {
+            height: 350px;
+            border-radius: 8px;
+        }
+        /* --- TIMELINE STYLES --- */
+        /* Vertical Icon Timeline */
+        .icon-timeline-item {
+            position: relative;
+            padding-left: 40px;
+            padding-bottom: 24px;
+            border-left: 2px solid #cbd5e1;
+        }
+        .icon-timeline-item:last-child {
+            border-left-color: transparent;
+            padding-bottom: 0;
+        }
+        .icon-timeline-item .icon-marker {
+            position: absolute;
+            left: -18px;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            color: white;
+            border: 4px solid white;
+        }
+
+        /* Horizontal Timeline */
+        .horizontal-timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding: 20px 0;
+            margin-top: 2rem;
+        }
+        .horizontal-timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #cbd5e1;
+            transform: translateY(-50%);
+        }
+        .horizontal-timeline-item {
+            position: relative;
+            text-align: center;
+            width: 150px;
+        }
+        .horizontal-timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            border: 3px solid white;
+            z-index: 1;
+        }
+        .horizontal-timeline-item .time {
+            position: absolute;
+            top: -25px; /* Position time above the dot */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+        .horizontal-timeline-item .content {
+            margin-top: 50px; /* Space for the dot and time */
+        }
+        
+        /* Alternating Timeline */
+        .alternating-timeline {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .alternating-timeline::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            background-color: #cbd5e1;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1.5px;
+        }
+        .alternating-timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        .alternating-timeline-item.left {
+            left: 0;
+        }
+        .alternating-timeline-item.right {
+            left: 50%;
+        }
+        .alternating-timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: white;
+            border: 4px solid #3b82f6;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .right::after {
+            left: -10px;
+        }
+        .alternating-timeline-content {
+            padding: 15px 20px;
+            background-color: #f8fafc; /* Slightly different bg for contrast */
+            position: relative;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        /* --- END TIMELINE STYLES --- */
+
+        /* Heatmap styles */
+        .heatmap-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .heatmap-day { width: 100%; padding-bottom: 100%; border-radius: 2px; }
+        /* Funnel styles */
+        .funnel-stage {
+            position: relative;
+            background-color: #3b82f6;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            margin: 0 auto 2px;
+            clip-path: polygon(15% 0, 85% 0, 100% 100%, 0% 100%);
+        }
+        /* D3 Tooltip */
+        .d3-tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">Gemini-Generated Infographics</h1>
+            <p class="text-lg text-gray-600 mt-4 max-w-3xl mx-auto">A showcase of interactive widgets and visualizations that can be created. All components are fully responsive.</p>
+        </header>
+
+        <!-- Widgets Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Card Widgets (Col Span 3) -->
+            <div class="md:col-span-2 lg:col-span-3 widget-card">
+                <h2 class="widget-title">Cards</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Profile Card -->
+                    <div class="p-6 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                        <img src="https://placehold.co/100x100/60a5fa/ffffff?text=AV" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white shadow-lg" alt="Avatar">
+                        <h3 class="text-lg font-semibold text-center text-gray-800">Alex Vance</h3>
+                        <p class="text-center text-gray-500">Lead Developer</p>
+                        <div class="flex justify-center mt-4 space-x-3">
+                           <i data-lucide="mail" class="w-5 h-5 text-gray-400"></i>
+                           <i data-lucide="phone" class="w-5 h-5 text-gray-400"></i>
+                           <i data-lucide="linkedin" class="w-5 h-5 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <!-- Stats Card -->
+                    <div class="p-6 border rounded-lg shadow-sm bg-blue-500 text-white flex flex-col justify-between hover:bg-blue-600 transition-colors">
+                        <div>
+                           <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold">New Users</h3>
+                                <i data-lucide="users" class="w-6 h-6 opacity-70"></i>
+                           </div>
+                            <p class="text-4xl font-bold mt-2">1,257</p>
+                        </div>
+                        <p class="text-sm opacity-80 mt-4">+12% from last week</p>
+                    </div>
+                    <!-- Notification Card -->
+                    <div class="p-6 border rounded-lg shadow-sm flex items-start space-x-4">
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i data-lucide="check-circle-2" class="w-6 h-6 text-green-600"></i>
+                        </div>
+                        <div>
+                           <h3 class="font-semibold text-gray-800">Deployment Successful</h3>
+                           <p class="text-gray-600 text-sm mt-1">Your project has been successfully deployed to production.</p>
+                           <button class="text-sm font-medium text-blue-600 hover:underline mt-2">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Widgets (Col Span 3) -->
+            <div class="md:col-span-2 lg:col-span-3 widget-card">
+                <h2 class="widget-title">Progress & Goals</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                    <!-- Linear Progress Bars -->
+                    <div>
+                        <p class="mb-1 text-sm font-medium">Task Completion</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 75%"></div>
+                        </div>
+                        <p class="mb-1 mt-4 text-sm font-medium">Data Upload</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                             <div id="dynamic-progress" class="bg-green-600 h-2.5 rounded-full transition-all duration-500" style="width: 20%"></div>
+                        </div>
+                    </div>
+                    <!-- KPI Donut Chart -->
+                    <div class="relative h-48 w-48 mx-auto">
+                        <canvas id="kpiDonutChart"></canvas>
+                    </div>
+                     <!-- Funnel Chart -->
+                    <div>
+                        <h3 class="font-semibold text-center mb-2">Sales Funnel</h3>
+                        <div class="funnel-stage" style="width: 90%; background-color: #60a5fa;">Visitors (100%)</div>
+                        <div class="funnel-stage" style="width: 70%; background-color: #3b82f6;">Sign Ups (45%)</div>
+                        <div class="funnel-stage" style="width: 50%; background-color: #2563eb;">Purchases (15%)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bar Chart -->
+            <div class="widget-card">
+                <h2 class="widget-title">Quarterly Revenue (Bar Chart)</h2>
+                <canvas id="barChart"></canvas>
+            </div>
+
+            <!-- Pie Chart -->
+            <div class="widget-card">
+                <h2 class="widget-title">Traffic Source (Pie Chart)</h2>
+                <canvas id="pieChart" class="max-h-80 mx-auto"></canvas>
+            </div>
+
+            <!-- Line Chart -->
+            <div class="widget-card">
+                <h2 class="widget-title">User Signups (Line Chart)</h2>
+                <canvas id="lineChart"></canvas>
+            </div>
+            
+            <!-- Scatter Plot -->
+             <div class="widget-card">
+                <h2 class="widget-title">Ad Spend vs. Conversions</h2>
+                <canvas id="scatterPlot"></canvas>
+            </div>
+
+            <!-- Bubble Chart -->
+            <div class="widget-card">
+                <h2 class="widget-title">Market Analysis</h2>
+                <canvas id="bubbleChart"></canvas>
+            </div>
+
+            <!-- Interactive Slider -->
+            <div class="widget-card">
+                <h2 class="widget-title">Interactive Control</h2>
+                <label for="value-slider" class="block mb-2 text-sm font-medium text-gray-900">Adjust Threshold: <span id="slider-value" class="font-bold text-blue-600">50</span></label>
+                <input id="value-slider" type="range" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                <p class="text-sm text-gray-500 mt-4">This slider can be hooked up to dynamically update data in other widgets.</p>
+            </div>
+
+            <!-- Heatmap Calendar (Col Span 2) -->
+            <div class="widget-card md:col-span-2">
+                <h2 class="widget-title">User Activity Heatmap</h2>
+                <div id="heatmap-calendar" class="heatmap-calendar"></div>
+            </div>
+
+            <!-- Gauge -->
+            <div class="widget-card flex flex-col items-center justify-center">
+                <h2 class="widget-title w-full">System Load</h2>
+                <div class="relative w-48 h-24 overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-full border-t-8 border-l-8 border-r-8 border-gray-200 rounded-t-full" style="transform: rotate(180deg);"></div>
+                    <div id="gauge-needle" class="absolute top-0 left-1/2 w-0.5 h-20 bg-red-500 origin-bottom" style="transform: rotate(0deg); transition: transform 0.5s;"></div>
+                </div>
+                <p id="gauge-value" class="text-2xl font-bold mt-2">65%</p>
+            </div>
+
+            <!-- Interactive Map (Col Span 2) -->
+            <div class="widget-card md:col-span-2">
+                <h2 class="widget-title">Interactive Map</h2>
+                <div id="map"></div>
+                <p id="map-message" class="text-center text-sm text-gray-500 mt-2">Click on the marker for more info.</p>
+            </div>
+
+            <!-- Interactive Table (Col Span 2) -->
+            <div class="widget-card md:col-span-2">
+                <h2 class="widget-title">Filterable Project List</h2>
+                <input type="text" id="tableSearch" placeholder="Search for projects..." class="w-full p-2 mb-4 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Project Name</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                                <th scope="col" class="px-6 py-3">Team Lead</th>
+                                <th scope-col" class="px-6 py-3">Due Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projectTable">
+                            <tr>
+                                <td class="px-6 py-4 font-medium text-gray-900">Project Alpha</td>
+                                <td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">Completed</span></td>
+                                <td class="px-6 py-4">Jane Doe</td>
+                                <td class="px-6 py-4">2024-08-15</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-medium text-gray-900">Project Beta</td>
+                                <td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">In Progress</span></td>
+                                <td class="px-6 py-4">John Smith</td>
+                                <td class="px-6 py-4">2024-09-30</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-medium text-gray-900">Project Gamma</td>
+                                <td class="px-6 py-4"><span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">On Hold</span></td>
+                                <td class="px-6 py-4">Alex Johnson</td>
+                                <td class="px-6 py-4">2024-10-10</td>
+                            </tr>
+                             <tr>
+                                <td class="px-6 py-4 font-medium text-gray-900">Data Migration</td>
+                                <td class="px-6 py-4"><span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">Overdue</span></td>
+                                <td class="px-6 py-4">Maria Garcia</td>
+                                <td class="px-6 py-4">2024-07-01</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Vertical Icon Timeline Card -->
+            <div class="md:col-span-2 lg:col-span-3 widget-card">
+                <h2 class="widget-title">Vertical Timeline with Icons</h2>
+                <div class="max-w-md mx-auto pt-4">
+                   <div class="icon-timeline-item">
+                        <div class="icon-marker"><i data-lucide="clipboard-list" class="w-5 h-5"></i></div>
+                        <p class="font-semibold text-blue-600">Phase 1: Planning</p>
+                        <p class="text-sm text-gray-500 mb-1">June 1, 2024</p>
+                        <p class="text-gray-700">Initial requirements gathering and project kickoff.</p>
+                   </div>
+                   <div class="icon-timeline-item">
+                        <div class="icon-marker"><i data-lucide="pencil-ruler" class="w-5 h-5"></i></div>
+                        <p class="font-semibold text-blue-600">Phase 2: Design</p>
+                        <p class="text-sm text-gray-500 mb-1">July 15, 2024</p>
+                        <p class="text-gray-700">UI/UX mockups completed and prototype delivered.</p>
+                   </div>
+                   <div class="icon-timeline-item">
+                        <div class="icon-marker"><i data-lucide="code-2" class="w-5 h-5"></i></div>
+                        <p class="font-semibold text-blue-600">Phase 3: Development</p>
+                        <p class="text-sm text-gray-500 mb-1">September 30, 2024</p>
+                        <p class="text-gray-700">Core features implemented and alpha build deployed.</p>
+                   </div>
+                   <div class="icon-timeline-item">
+                        <div class="icon-marker"><i data-lucide="rocket" class="w-5 h-5"></i></div>
+                        <p class="font-semibold text-blue-600">Phase 4: Launch</p>
+                        <p class="text-sm text-gray-500 mb-1">November 1, 2024</p>
+                        <p class="text-gray-700">Final testing complete and product launched.</p>
+                   </div>
+                </div>
+            </div>
+
+            <!-- Horizontal Timeline Card -->
+            <div class="md:col-span-2 lg:col-span-3 widget-card bg-slate-50">
+                <h2 class="widget-title">Horizontal Timeline</h2>
+                <div class="horizontal-timeline">
+                   <div class="horizontal-timeline-item">
+                       <div class="time">Q1</div>
+                       <div class="content">
+                           <h4 class="font-semibold">Kickoff</h4>
+                           <p class="text-xs text-gray-500">Project Start</p>
+                       </div>
+                   </div>
+                   <div class="horizontal-timeline-item">
+                       <div class="time">Q2</div>
+                       <div class="content">
+                           <h4 class="font-semibold">Alpha</h4>
+                           <p class="text-xs text-gray-500">Internal Release</p>
+                       </div>
+                   </div>
+                   <div class="horizontal-timeline-item">
+                       <div class="time">Q3</div>
+                       <div class="content">
+                           <h4 class="font-semibold">Beta</h4>
+                           <p class="text-xs text-gray-500">User Testing</p>
+                       </div>
+                   </div>
+                   <div class="horizontal-timeline-item">
+                       <div class="time">Q4</div>
+                       <div class="content">
+                           <h4 class="font-semibold">Launch</h4>
+                           <p class="text-xs text-gray-500">Public Release</p>
+                       </div>
+                   </div>
+                </div>
+            </div>
+
+            <!-- Alternating Timeline Card -->
+            <div class="md:col-span-2 lg:col-span-3 widget-card bg-sky-50">
+                <h2 class="widget-title">Alternating Timeline</h2>
+                <div class="alternating-timeline pt-4">
+                    <div class="alternating-timeline-item left">
+                        <div class="alternating-timeline-content">
+                            <h4 class="font-semibold">2021: Foundation</h4>
+                            <p class="text-sm text-gray-600">Company founded and initial seed funding secured.</p>
+                        </div>
+                    </div>
+                     <div class="alternating-timeline-item right">
+                        <div class="alternating-timeline-content">
+                            <h4 class="font-semibold">2022: Growth</h4>
+                            <p class="text-sm text-gray-600">Launched MVP, onboarded first 1,000 users.</p>
+                        </div>
+                    </div>
+                     <div class="alternating-timeline-item left">
+                        <div class="alternating-timeline-content">
+                            <h4 class="font-semibold">2023: Expansion</h4>
+                            <p class="text-sm text-gray-600">Secured Series A funding and expanded team.</p>
+                        </div>
+                    </div>
+                     <div class="alternating-timeline-item right">
+                        <div class="alternating-timeline-content">
+                            <h4 class="font-semibold">2024: Scale</h4>
+                            <p class="text-sm text-gray-600">Reached 100,000 active users and international launch.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="d3-tooltip"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Activate Lucide Icons
+            lucide.createIcons();
+
+            // Initialize all widgets
+            initBarChart();
+            initPieChart();
+            initLineChart();
+            initMap();
+            initTableFilter();
+            initGauge();
+            initProgressWidgets();
+            initKpiDonut();
+            initScatterPlot();
+            initBubbleChart();
+            initSlider();
+            initHeatmap();
+
+        });
+        
+        // --- D3 Tooltip ---
+        const tooltip = document.querySelector(".d3-tooltip");
+
+        // --- New Widget Initializations ---
+        function initProgressWidgets() {
+            const progressBar = document.getElementById('dynamic-progress');
+            let width = 20;
+            setInterval(() => {
+                width = (width >= 100) ? 10 : width + 10;
+                progressBar.style.width = `${width}%`;
+            }, 2000);
+        }
+
+        function initKpiDonut() {
+            const ctx = document.getElementById('kpiDonutChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Remaining'],
+                    datasets: [{
+                        data: [82, 18],
+                        backgroundColor: ['#2563eb', '#e5e7eb'],
+                        borderColor: '#ffffff',
+                        borderWidth: 4,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                },
+                plugins: [{
+                    id: 'centerText',
+                    afterDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        const R = chart.chartArea.right;
+                        const L = chart.chartArea.left;
+                        const T = chart.chartArea.top;
+                        const B = chart.chartArea.bottom;
+                        const width = R - L;
+                        const height = B - T;
+
+                        ctx.restore();
+                        const fontSize = (height / 114).toFixed(2);
+                        ctx.font = `bold ${fontSize}em Inter, sans-serif`;
+                        ctx.textBaseline = 'middle';
+                        ctx.fillStyle = '#111827';
+                        
+                        const text = '82%';
+                        const textX = Math.round((width - ctx.measureText(text).width) / 2) + L;
+                        const textY = T + (height / 2);
+                        
+                        ctx.fillText(text, textX, textY);
+                        ctx.save();
+                    }
+                }]
+            });
+        }
+
+        function initScatterPlot() {
+            const ctx = document.getElementById('scatterPlot').getContext('2d');
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Campaign Performance',
+                        data: Array.from({length: 20}, () => ({
+                            x: Math.random() * 100,
+                            y: Math.random() * 100
+                        })),
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)'
+                    }]
+                },
+                options: { responsive: true, scales: { x: { beginAtZero: true }, y: { beginAtZero: true } } }
+            });
+        }
+
+        function initBubbleChart() {
+            const ctx = document.getElementById('bubbleChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: 'Product A',
+                        data: [{x: 20, y: 30, r: 15}],
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                    }, {
+                        label: 'Product B',
+                        data: [{x: 40, y: 15, r: 25}],
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    }, {
+                        label: 'Product C',
+                        data: [{x: 30, y: 25, r: 10}],
+                        backgroundColor: 'rgba(255, 206, 86, 0.6)'
+                    }]
+                },
+                options: { responsive: true, scales: { x: { beginAtZero: true }, y: { beginAtZero: true } } }
+            });
+        }
+
+        function initSlider() {
+            const slider = document.getElementById('value-slider');
+            const valueLabel = document.getElementById('slider-value');
+            slider.addEventListener('input', (event) => {
+                valueLabel.textContent = event.target.value;
+            });
+        }
+
+        function initHeatmap() {
+            const container = document.getElementById('heatmap-calendar');
+            for (let i = 0; i < 91; i++) { // ~3 months
+                const day = document.createElement('div');
+                const intensity = Math.random();
+                let bgColor = 'bg-gray-100';
+                if (intensity > 0.4) bgColor = 'bg-blue-200';
+                if (intensity > 0.6) bgColor = 'bg-blue-400';
+                if (intensity > 0.8) bgColor = 'bg-blue-600';
+                day.className = `heatmap-day ${bgColor}`;
+                day.title = `Activity: ${(intensity * 100).toFixed(0)}%`;
+                container.appendChild(day);
+            }
+        }
+
+        // --- Existing Chart Initializations ---
+        function initBarChart() {
+            const ctx = document.getElementById('barChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Revenue in USD (Millions)',
+                        data: [12, 19, 9, 15],
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: $${context.raw}M`;
+                                }
+                            }
+                        }
+                    },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function initPieChart() {
+            const ctx = document.getElementById('pieChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Organic Search', 'Direct', 'Referral', 'Social Media'],
+                    datasets: [{
+                        data: [55, 25, 15, 5],
+                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#6366F1'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                           position: 'bottom',
+                           labels: { boxWidth: 12, padding: 20 }
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function initLineChart() {
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'New Users',
+                        data: [65, 59, 80, 81, 56, 55, 90],
+                        fill: true,
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: 'rgb(59, 130, 246)',
+                        tension: 0.3
+                    }]
+                },
+                 options: {
+                    responsive: true,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+        
+        function initMap() {
+            const map = L.map('map').setView([47.6062, -122.3321], 13); // Centered on Seattle
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            const marker = L.marker([47.6062, -122.3321]).addTo(map);
+            marker.bindPopup("<b>Hello from Seattle!</b><br>This is an interactive map.").openPopup();
+
+            marker.on('click', () => {
+                const message = document.getElementById('map-message');
+                message.textContent = "You clicked the Seattle marker!";
+                setTimeout(() => message.textContent = "Click on the marker for more info.", 3000);
+            });
+        }
+
+        function initTableFilter() {
+            const searchInput = document.getElementById('tableSearch');
+            searchInput.addEventListener('keyup', () => {
+                const filter = searchInput.value.toUpperCase();
+                const table = document.getElementById('projectTable');
+                const tr = table.getElementsByTagName('tr');
+                for (let i = 0; i < tr.length; i++) {
+                    const tds = tr[i].getElementsByTagName('td');
+                    let found = false;
+                    for(let j=0; j < tds.length; j++) {
+                        const td = tds[j];
+                        if (td) {
+                            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(found) {
+                       tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            });
+        }
+
+        function initGauge() {
+            const needle = document.getElementById('gauge-needle');
+            const valueText = document.getElementById('gauge-value');
+            
+            // Simulate changing value
+            setInterval(() => {
+                const randomValue = Math.floor(Math.random() * 101); // 0 to 100
+                const rotation = (randomValue / 100) * 180 - 90; // Map 0-100 to -90 to 90 degrees
+                
+                needle.style.transform = `rotate(${rotation}deg)`;
+                valueText.textContent = `${randomValue}%`;
+            }, 3000);
+        }
+
+    </script>
+</body>
+</html>
+
