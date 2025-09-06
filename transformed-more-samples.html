@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformed Widgets using WidgetXFormer</title>
+    
+    <!-- Import WidgetXFormer styles -->
+    <link rel="stylesheet" href="./src/style.css">
+    
+    <style>
+        /* Custom styles for a polished look */
+        body {
+            font-family: 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #f3f2f1;
+            margin: 0;
+            padding: 20px;
+        }
+        .widget-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.14), 0 0px 2px rgba(0, 0, 0, 0.12);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: 1px solid #e1e1e1;
+            margin-bottom: 24px;
+        }
+        .widget-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.14), 0 0px 2px rgba(0, 0, 0, 0.12);
+        }
+        .widget-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #323130;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e1e1e1;
+            padding-bottom: 12px;
+        }
+        .grid {
+            display: grid;
+            gap: 24px;
+        }
+        .grid-cols-1 { grid-template-columns: 1fr; }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .col-span-2 { grid-column: span 2; }
+        .col-span-3 { grid-column: span 3; }
+        
+        @media (min-width: 768px) {
+            .md\\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .md\\:col-span-2 { grid-column: span 2; }
+        }
+        
+        @media (min-width: 1024px) {
+            .lg\\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .lg\\:col-span-3 { grid-column: span 3; }
+        }
+        
+        .max-w-7xl {
+            max-width: 80rem;
+        }
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mb-12 {
+            margin-bottom: 3rem;
+        }
+        .mt-4 {
+            margin-top: 1rem;
+        }
+        .not-convertible {
+            background-color: #fff4e6;
+            border: 2px dashed #d83b01;
+            color: #d83b01;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-style: italic;
+        }
+        .conversion-note {
+            background-color: #e6f7ff;
+            border-left: 4px solid #0078d4;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 style="font-size: 2.5rem; font-weight: 700; color: #323130;">Transformed Widgets using WidgetXFormer</h1>
+            <p style="font-size: 1.125rem; color: #605e5c; max-width: 48rem; margin: 1rem auto 0;">All widgets converted to use the WidgetXFormer library with Fluent UI design tokens. Interactive widgets and visualizations rendered from JSON configuration.</p>
+            
+            <div class="conversion-note">
+                <strong>Conversion Status:</strong> This page demonstrates how custom widget code from the original more-samples.html can be replaced with WidgetXFormer method calls. All widgets use Fluent UI design tokens for consistent styling.
+            </div>
+        </header>
+
+        <!-- Widgets Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+
+            <!-- Profile Card -->
+            <div class="widget-card">
+                <h2 class="widget-title">Profile Card</h2>
+                <div id="profile-card-demo"></div>
+            </div>
+
+            <!-- Stats Card -->
+            <div class="widget-card">
+                <h2 class="widget-title">Stats Card</h2>
+                <div id="stats-card-demo"></div>
+            </div>
+
+            <!-- Notification Card -->
+            <div class="widget-card">
+                <h2 class="widget-title">Notification Card</h2>
+                <div id="notification-card-demo"></div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="widget-card">
+                <h2 class="widget-title">Progress Bar</h2>
+                <div id="progress-bar-demo"></div>
+            </div>
+
+            <!-- KPI Donut Chart -->
+            <div class="widget-card">
+                <h2 class="widget-title">KPI Donut Chart</h2>
+                <div id="kpi-donut-demo"></div>
+            </div>
+
+            <!-- Gauge -->
+            <div class="widget-card">
+                <h2 class="widget-title">System Load Gauge</h2>
+                <div id="gauge-demo"></div>
+            </div>
+
+            <!-- Bar Chart -->
+            <div class="widget-card">
+                <h2 class="widget-title">Quarterly Revenue (Bar Chart)</h2>
+                <div id="bar-chart-demo"></div>
+            </div>
+
+            <!-- Pie Chart -->
+            <div class="widget-card">
+                <h2 class="widget-title">Traffic Source (Pie Chart)</h2>
+                <div id="pie-chart-demo"></div>
+            </div>
+
+            <!-- Line Chart -->
+            <div class="widget-card">
+                <h2 class="widget-title">User Signups (Line Chart)</h2>
+                <div id="line-chart-demo"></div>
+            </div>
+
+            <!-- Scatter Plot -->
+            <div class="widget-card">
+                <h2 class="widget-title">Ad Spend vs. Conversions</h2>
+                <div id="scatter-plot-demo"></div>
+            </div>
+
+            <!-- Bubble Chart -->
+            <div class="widget-card">
+                <h2 class="widget-title">Market Analysis</h2>
+                <div id="bubble-chart-demo"></div>
+            </div>
+
+            <!-- Interactive Slider -->
+            <div class="widget-card">
+                <h2 class="widget-title">Interactive Control</h2>
+                <div id="slider-demo"></div>
+            </div>
+
+            <!-- Heatmap Calendar -->
+            <div class="widget-card md:col-span-2">
+                <h2 class="widget-title">User Activity Heatmap</h2>
+                <div id="heatmap-demo"></div>
+            </div>
+
+            <!-- Funnel Chart -->
+            <div class="widget-card">
+                <h2 class="widget-title">Sales Funnel</h2>
+                <div id="funnel-demo"></div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="widget-card md:col-span-2">
+                <h2 class="widget-title">Filterable Project List</h2>
+                <div id="table-demo"></div>
+            </div>
+
+            <!-- Timeline - Vertical -->
+            <div class="widget-card lg:col-span-3">
+                <h2 class="widget-title">Vertical Timeline with Icons</h2>
+                <div id="timeline-vertical-demo"></div>
+            </div>
+
+            <!-- Timeline - Horizontal -->
+            <div class="widget-card lg:col-span-3">
+                <h2 class="widget-title">Horizontal Timeline</h2>
+                <div id="timeline-horizontal-demo"></div>
+            </div>
+
+            <!-- Timeline - Alternating -->
+            <div class="widget-card lg:col-span-3">
+                <h2 class="widget-title">Alternating Timeline</h2>
+                <div id="timeline-alternating-demo"></div>
+            </div>
+
+            <!-- NOT CONVERTIBLE WIDGETS -->
+            
+            <!-- Interactive Map -->
+            <div class="widget-card md:col-span-2">
+                <h2 class="widget-title">Interactive Map</h2>
+                <div class="not-convertible">
+                    <strong>Not Convertible</strong><br>
+                    Interactive Leaflet.js map requires specialized mapping library integration.<br>
+                    Reason: WidgetXFormer's worldmap widget uses a different approach with country-based data rather than marker-based interactive maps.
+                </div>
+            </div>
+
+            <!-- Custom Styled Timeline Components -->
+            <div class="widget-card lg:col-span-3">
+                <h2 class="widget-title">Custom CSS Timeline Styles</h2>
+                <div class="not-convertible">
+                    <strong>Partially Convertible</strong><br>
+                    The complex CSS-based timeline styling with custom clip-paths, alternating layouts, and specific positioning would require custom CSS.<br>
+                    Reason: WidgetXFormer timeline uses Fluent UI design tokens and may not exactly replicate the complex custom CSS styling from the original.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Import WidgetXFormer -->
+    <script type="module">
+        import WidgetXFormer from './src/widget-xformer.js';
+
+        const widgetXFormer = WidgetXFormer.getInstance();
+        const theme = 'light'; // Using Fluent UI light theme
+
+        // Initialize all convertible widgets
+        function initializeWidgets() {
+            console.log('Starting widget initialization...');
+            
+            try {
+            // Profile Card
+            console.log('Rendering profile card...');
+            widgetXFormer.render({
+                type: 'profile-card',
+                data: {
+                    avatar: 'https://via.placeholder.com/80x80/0078d4/ffffff?text=JD',
+                    name: 'John Doe',
+                    title: 'Senior Software Engineer',
+                    department: 'Engineering Team',
+                    email: 'john.doe@company.com',
+                    phone: '+1 (555) 123-4567',
+                    location: 'San Francisco, CA',
+                    skills: ['React', 'TypeScript', 'Node.js', 'Azure'],
+                    bio: 'Passionate about building scalable web applications and mentoring junior developers.'
+                },
+                style: { theme }
+            }, 'profile-card-demo');
+
+            // Stats Card
+            console.log('Rendering stats card...');
+            widgetXFormer.render({
+                type: 'stats-card',
+                data: {
+                    title: 'Q4 Performance Metrics',
+                    stats: [
+                        { label: 'Total Revenue', value: '$2.4M', change: '+12%', trend: 'up' },
+                        { label: 'Active Users', value: '45.2K', change: '+8%', trend: 'up' },
+                        { label: 'Conversion Rate', value: '3.2%', change: '-2%', trend: 'down' },
+                        { label: 'Customer Satisfaction', value: '4.8/5', change: '+0.2', trend: 'up' }
+                    ]
+                },
+                style: { theme }
+            }, 'stats-card-demo');
+
+            // Notification Card
+            console.log('Rendering notification card...');
+            widgetXFormer.render({
+                type: 'notification-card',
+                data: {
+                    type: 'info',
+                    title: 'System Update Available',
+                    message: 'A new version of the application is available with enhanced security features and performance improvements.',
+                    timestamp: '2024-01-15T10:30:00Z',
+                    actions: [
+                        { label: 'Update Now', type: 'primary' },
+                        { label: 'Remind Later', type: 'secondary' }
+                    ]
+                },
+                style: { theme }
+            }, 'notification-card-demo');
+
+            // Progress Bar
+            console.log('Rendering progress bar...');
+            widgetXFormer.render({
+                type: 'progress-bar',
+                data: {
+                    label: 'Project Completion',
+                    value: 75,
+                    max: 100,
+                    showPercentage: true,
+                    showValue: true,
+                    color: '#107c10',
+                    backgroundColor: '#f3f2f1',
+                    height: 24,
+                    animated: true
+                },
+                style: { theme }
+            }, 'progress-bar-demo');
+
+            // KPI Donut
+            console.log('Rendering KPI donut...');
+            widgetXFormer.render({
+                type: 'kpi-donut',
+                data: {
+                    title: 'Sales Target Achievement',
+                    value: 82,
+                    target: 100,
+                    unit: '%',
+                    color: '#0078d4',
+                    backgroundColor: '#f3f2f1',
+                    size: 150,
+                    showTarget: true,
+                    showPercentage: true
+                },
+                style: { theme }
+            }, 'kpi-donut-demo');
+
+            // Gauge
+            console.log('Rendering gauge...');
+            widgetXFormer.render({
+                type: 'gauge',
+                data: {
+                    title: 'System Load',
+                    value: 65,
+                    min: 0,
+                    max: 100,
+                    unit: '%',
+                    color: '#107c10',
+                    dangerZone: 90,
+                    warningZone: 75,
+                    size: 180,
+                    showValue: true,
+                    animated: true
+                },
+                style: { theme }
+            }, 'gauge-demo');
+
+            // Bar Chart
+            console.log('Rendering bar chart...');
+            widgetXFormer.render({
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Revenue ($M)',
+                        data: [1.2, 1.8, 2.1, 2.4],
+                        backgroundColor: ['#0078d4', '#106ebe', '#005a9e', '#004578']
+                    }]
+                },
+                style: { theme }
+            }, 'bar-chart-demo');
+
+            // Pie Chart
+            console.log('Rendering pie chart...');
+            widgetXFormer.render({
+                type: 'doughnut',
+                data: {
+                    labels: ['Organic Search', 'Social Media', 'Direct', 'Email', 'Paid Ads'],
+                    datasets: [{
+                        label: 'Traffic Sources',
+                        data: [35, 25, 20, 12, 8],
+                        backgroundColor: ['#0078d4', '#106ebe', '#005a9e', '#004578', '#003d65']
+                    }]
+                },
+                style: { theme }
+            }, 'pie-chart-demo');
+
+            // Line Chart
+            console.log('Rendering line chart...');
+            widgetXFormer.render({
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'User Signups',
+                        data: [120, 190, 300, 500, 450, 620],
+                        borderColor: '#0078d4',
+                        backgroundColor: 'rgba(0, 120, 212, 0.1)',
+                        fill: true
+                    }]
+                },
+                style: { theme }
+            }, 'line-chart-demo');
+
+            // Scatter Plot
+            console.log('Rendering scatter plot...');
+            widgetXFormer.render({
+                type: 'scatter',
+                data: {
+                    labels: [], // Not used for scatter plots
+                    datasets: [{
+                        label: 'Ad Spend vs. Conversions',
+                        data: [
+                            { x: 1000, y: 25 },
+                            { x: 1500, y: 35 },
+                            { x: 2000, y: 45 },
+                            { x: 2500, y: 55 },
+                            { x: 3000, y: 70 },
+                            { x: 3500, y: 75 },
+                            { x: 4000, y: 85 },
+                            { x: 4500, y: 90 }
+                        ],
+                        backgroundColor: '#0078d4'
+                    }]
+                },
+                style: { theme }
+            }, 'scatter-plot-demo');
+
+            // Bubble Chart
+            console.log('Rendering bubble chart...');
+            widgetXFormer.render({
+                type: 'bubble',
+                data: {
+                    labels: [], // Not used for bubble charts
+                    datasets: [{
+                        label: 'Market Analysis',
+                        data: [
+                            { x: 25, y: 15, r: 15 },
+                            { x: 15, y: 20, r: 10 },
+                            { x: 35, y: 8, r: 12 },
+                            { x: 20, y: 25, r: 8 },
+                            { x: 10, y: -5, r: 6 }
+                        ],
+                        backgroundColor: '#0078d4'
+                    }]
+                },
+                style: { theme }
+            }, 'bubble-chart-demo');
+
+            // Interactive Slider
+            console.log('Rendering slider...');
+            widgetXFormer.render({
+                type: 'slider',
+                data: {
+                    label: 'Adjust Threshold',
+                    value: 50,
+                    min: 0,
+                    max: 100,
+                    step: 1,
+                    unit: '',
+                    showValue: true,
+                    showRange: true,
+                    color: '#0078d4',
+                    description: 'This slider can be hooked up to dynamically update data in other widgets.',
+                    onChange: (value) => {
+                        console.log('Threshold changed to:', value);
+                        // Could update other widgets here
+                    }
+                },
+                style: { theme }
+            }, 'slider-demo');
+
+            // Heatmap Calendar
+            console.log('Rendering heatmap...');
+            widgetXFormer.render({
+                type: 'heatmap',
+                data: {
+                    title: 'User Activity Heatmap (Last 13 weeks)',
+                    columns: 7, // 7 days per week
+                    rows: 13,   // 13 weeks
+                    cellSize: 16,
+                    showValues: false,
+                    colorScale: {
+                        min: '#ebedf0',
+                        max: '#0078d4'
+                    }
+                    // Data will be auto-generated
+                },
+                style: { theme }
+            }, 'heatmap-demo');
+
+            // Funnel Chart
+            console.log('Rendering funnel...');
+            widgetXFormer.render({
+                type: 'funnel',
+                data: {
+                    title: 'Sales Conversion Funnel',
+                    stages: [
+                        { label: 'Website Visitors', value: 10000, color: '#0078d4' },
+                        { label: 'Product Views', value: 5000, color: '#106ebe' },
+                        { label: 'Add to Cart', value: 1500, color: '#005a9e' },
+                        { label: 'Checkout Started', value: 800, color: '#004578' },
+                        { label: 'Purchase Completed', value: 450, color: '#003d65' }
+                    ],
+                    showValues: true,
+                    showPercentages: true
+                },
+                style: { theme }
+            }, 'funnel-demo');
+
+            // Data Table
+            console.log('Rendering table...');
+            widgetXFormer.render({
+                type: 'table',
+                data: {
+                    headers: ['Project', 'Status', 'Progress', 'Deadline', 'Team'],
+                    rows: [
+                        ['Mobile App Redesign', 'In Progress', '75%', '2024-03-15', 'UI/UX Team'],
+                        ['API Integration', 'Completed', '100%', '2024-02-28', 'Backend Team'],
+                        ['Performance Optimization', 'Planning', '10%', '2024-04-01', 'DevOps Team'],
+                        ['User Authentication', 'In Progress', '60%', '2024-03-10', 'Security Team'],
+                        ['Database Migration', 'Testing', '90%', '2024-03-05', 'Data Team']
+                    ]
+                },
+                style: { theme }
+            }, 'table-demo');
+
+            // Vertical Timeline
+            widgetXFormer.render({
+                type: 'timeline',
+                data: {
+                    events: [
+                        {
+                            id: '1',
+                            date: '2024-01-15',
+                            title: 'Project Kickoff',
+                            description: 'Initial project planning and team assembly. Set up development environment and defined project scope.',
+                            icon: '🚀',
+                            status: 'completed',
+                            category: 'Milestone'
+                        },
+                        {
+                            id: '2',
+                            date: '2024-02-01',
+                            title: 'Design Phase Complete',
+                            description: 'Finished UI/UX design mockups and user journey mapping. Stakeholder approval received.',
+                            icon: '🎨',
+                            status: 'completed',
+                            category: 'Design'
+                        },
+                        {
+                            id: '3',
+                            date: '2024-02-15',
+                            title: 'Development Sprint 1',
+                            description: 'Core functionality implementation in progress. Setting up CI/CD pipeline.',
+                            icon: '⚡',
+                            status: 'current',
+                            category: 'Development'
+                        },
+                        {
+                            id: '4',
+                            date: '2024-03-01',
+                            title: 'Beta Testing',
+                            description: 'Internal testing phase with selected user groups. Gathering feedback and bug reports.',
+                            icon: '🧪',
+                            status: 'upcoming',
+                            category: 'Testing'
+                        },
+                        {
+                            id: '5',
+                            date: '2024-03-15',
+                            title: 'Production Release',
+                            description: 'Final deployment to production with full feature rollout and monitoring.',
+                            icon: '🎯',
+                            status: 'upcoming',
+                            category: 'Release'
+                        }
+                    ],
+                    config: {
+                        orientation: 'vertical',
+                        layout: 'left',
+                        showProgress: true,
+                        showIcons: true,
+                        animate: true,
+                        interactive: true
+                    }
+                },
+                style: { theme }
+            }, 'timeline-vertical-demo');
+
+            // Horizontal Timeline
+            widgetXFormer.render({
+                type: 'timeline',
+                data: {
+                    events: [
+                        {
+                            id: '1',
+                            date: '2020-01-01',
+                            title: 'Company Founded',
+                            description: 'Started as a small tech startup',
+                            status: 'completed'
+                        },
+                        {
+                            id: '2',
+                            date: '2021-06-15',
+                            title: 'First Product Launch',
+                            description: 'Released flagship product',
+                            status: 'completed'
+                        },
+                        {
+                            id: '3',
+                            date: '2022-03-10',
+                            title: 'Series A Funding',
+                            description: 'Raised $5M funding round',
+                            status: 'completed'
+                        },
+                        {
+                            id: '4',
+                            date: '2023-09-01',
+                            title: 'International Expansion',
+                            description: 'Opened offices in Europe',
+                            status: 'completed'
+                        },
+                        {
+                            id: '5',
+                            date: '2024-12-01',
+                            title: 'IPO Planning',
+                            description: 'Preparing for public offering',
+                            status: 'upcoming'
+                        }
+                    ],
+                    config: {
+                        orientation: 'horizontal',
+                        showProgress: true,
+                        animate: true
+                    }
+                },
+                style: { theme }
+            }, 'timeline-horizontal-demo');
+
+            // Alternating Timeline
+            widgetXFormer.render({
+                type: 'timeline',
+                data: {
+                    events: [
+                        {
+                            id: '1',
+                            date: '2024-01-01',
+                            title: 'Q1 Planning',
+                            description: 'Strategic planning for the year ahead with focus on growth initiatives.',
+                            status: 'completed'
+                        },
+                        {
+                            id: '2',
+                            date: '2024-04-01',
+                            title: 'Q2 Execution',
+                            description: 'Implementation of key projects and product development milestones.',
+                            status: 'completed'
+                        },
+                        {
+                            id: '3',
+                            date: '2024-07-01',
+                            title: 'Q3 Optimization',
+                            description: 'Performance optimization and user experience improvements.',
+                            status: 'current'
+                        },
+                        {
+                            id: '4',
+                            date: '2024-10-01',
+                            title: 'Q4 Scale',
+                            description: 'Scaling operations and preparing for market expansion.',
+                            status: 'upcoming'
+                        }
+                    ],
+                    config: {
+                        orientation: 'vertical',
+                        layout: 'alternating',
+                        showProgress: true,
+                        animate: true,
+                        groupBy: 'none'
+                    }
+                },
+                style: { theme }
+            }, 'timeline-alternating-demo');
+
+            console.log('All widgets initialized successfully!');
+            
+            } catch (error) {
+                console.error('Error initializing widgets:', error);
+            }
+        }
+
+        // Initialize widgets when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeWidgets);
+        
+        // Initialize immediately if DOM is already loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeWidgets);
+        } else {
+            initializeWidgets();
+        }
+
+    </script>
+</body>
+</html>

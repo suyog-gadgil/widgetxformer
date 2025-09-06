@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Verification Test</title>
+    <link rel="stylesheet" href="./src/style.css">
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #f3f2f1; 
+            margin: 20px; 
+        }
+        .test-container { 
+            background: white; 
+            padding: 20px; 
+            margin: 20px 0; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        .success { border-left: 4px solid #107c10; }
+        .error { border-left: 4px solid #d13438; }
+        h1 { color: #323130; }
+        h2 { color: #323130; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+    <h1>Widget Verification Test</h1>
+    <p>Testing the specific widgets that were reported as not working:</p>
+    
+    <div class="test-container" id="scatter-container">
+        <h2>✅ Ad Spend vs. Conversions (Scatter Plot)</h2>
+        <div id="scatter-verify"></div>
+    </div>
+    
+    <div class="test-container" id="bubble-container">
+        <h2>✅ Market Analysis (Bubble Chart)</h2>
+        <div id="bubble-verify"></div>
+    </div>
+    
+    <div class="test-container" id="slider-container">
+        <h2>✅ Interactive Control (Slider)</h2>
+        <div id="slider-verify"></div>
+    </div>
+    
+    <div class="test-container" id="heatmap-container">
+        <h2>✅ User Activity Heatmap</h2>
+        <div id="heatmap-verify"></div>
+    </div>
+    
+    <div class="test-container" id="funnel-container">
+        <h2>✅ Sales Funnel</h2>
+        <div id="funnel-verify"></div>
+    </div>
+
+    <script type="module">
+        import WidgetXFormer from './src/widget-xformer.js';
+
+        const widgetXFormer = WidgetXFormer.getInstance();
+        const theme = 'light';
+
+        function markAsSuccess(containerId) {
+            document.getElementById(containerId).classList.add('success');
+            const h2 = document.querySelector(`#${containerId} h2`);
+            h2.textContent = h2.textContent.replace('✅', '✅ SUCCESS:');
+        }
+
+        function markAsError(containerId, error) {
+            document.getElementById(containerId).classList.add('error');
+            const h2 = document.querySelector(`#${containerId} h2`);
+            h2.textContent = h2.textContent.replace('✅', '❌ FAILED:');
+            const errorMsg = document.createElement('p');
+            errorMsg.style.color = '#d13438';
+            errorMsg.textContent = `Error: ${error.message}`;
+            document.getElementById(containerId).appendChild(errorMsg);
+        }
+
+        // Test Scatter Plot
+        try {
+            widgetXFormer.render({
+                type: 'scatter',
+                data: {
+                    title: 'Ad Spend vs. Conversions',
+                    xAxis: { label: 'Ad Spend ($)', min: 0, max: 5000 },
+                    yAxis: { label: 'Conversions', min: 0, max: 100 },
+                    data: [
+                        { x: 1000, y: 25 },
+                        { x: 2000, y: 45 },
+                        { x: 3000, y: 70 },
+                        { x: 4000, y: 85 }
+                    ],
+                    pointColor: '#0078d4',
+                    pointSize: 6
+                },
+                style: { theme }
+            }, 'scatter-verify');
+            markAsSuccess('scatter-container');
+        } catch (error) {
+            markAsError('scatter-container', error);
+        }
+
+        // Test Bubble Chart
+        try {
+            widgetXFormer.render({
+                type: 'bubble',
+                data: {
+                    title: 'Market Analysis',
+                    xAxis: { label: 'Market Share (%)', min: 0, max: 50 },
+                    yAxis: { label: 'Growth Rate (%)', min: -10, max: 30 },
+                    data: [
+                        { x: 25, y: 15, size: 50, label: 'Product A', color: '#0078d4' },
+                        { x: 15, y: 20, size: 30, label: 'Product B', color: '#107c10' },
+                        { x: 35, y: 8, size: 40, label: 'Product C', color: '#d13438' }
+                    ]
+                },
+                style: { theme }
+            }, 'bubble-verify');
+            markAsSuccess('bubble-container');
+        } catch (error) {
+            markAsError('bubble-container', error);
+        }
+
+        // Test Slider
+        try {
+            widgetXFormer.render({
+                type: 'slider',
+                data: {
+                    label: 'Interactive Control',
+                    value: 50,
+                    min: 0,
+                    max: 100,
+                    step: 1,
+                    showValue: true,
+                    showRange: true,
+                    color: '#0078d4',
+                    description: 'This slider updates dynamically.',
+                    onChange: (value) => console.log('Slider value:', value)
+                },
+                style: { theme }
+            }, 'slider-verify');
+            markAsSuccess('slider-container');
+        } catch (error) {
+            markAsError('slider-container', error);
+        }
+
+        // Test Heatmap
+        try {
+            widgetXFormer.render({
+                type: 'heatmap',
+                data: {
+                    title: 'User Activity Heatmap',
+                    columns: 7,
+                    rows: 10,
+                    cellSize: 20,
+                    showValues: false,
+                    colorScale: {
+                        min: '#ebedf0',
+                        max: '#0078d4'
+                    }
+                },
+                style: { theme }
+            }, 'heatmap-verify');
+            markAsSuccess('heatmap-container');
+        } catch (error) {
+            markAsError('heatmap-container', error);
+        }
+
+        // Test Funnel
+        try {
+            widgetXFormer.render({
+                type: 'funnel',
+                data: {
+                    title: 'Sales Funnel',
+                    stages: [
+                        { label: 'Visitors', value: 10000, color: '#0078d4' },
+                        { label: 'Leads', value: 5000, color: '#106ebe' },
+                        { label: 'Prospects', value: 1500, color: '#005a9e' },
+                        { label: 'Customers', value: 450, color: '#003d65' }
+                    ],
+                    showValues: true,
+                    showPercentages: true
+                },
+                style: { theme }
+            }, 'funnel-verify');
+            markAsSuccess('funnel-container');
+        } catch (error) {
+            markAsError('funnel-container', error);
+        }
+
+        console.log('Widget verification tests completed');
+    </script>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WidgetXFormer - New Widgets Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 2rem;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .demo-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .demo-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .demo-item h3 {
+            margin: 0 0 1rem 0;
+            color: #333;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 0.5rem;
+        }
+        .widget-container {
+            min-height: 200px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .theme-controls {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .theme-controls button {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 0.5rem;
+            font-size: 1rem;
+        }
+        .theme-controls button:hover {
+            background: #106ebe;
+        }
+        .code-sample {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>🎨 WidgetXFormer - New Widgets Showcase</h1>
+            <p>Explore the latest widget types inspired by modern UI patterns</p>
+            <p>All widgets support Fluent UI design tokens and themes</p>
+        </div>
+
+        <div class="theme-controls">
+            <button id="light-theme">Light Theme</button>
+            <button id="dark-theme">Dark Theme</button>
+            <button id="brand-theme">Brand Theme</button>
+        </div>
+
+        <div class="demo-grid">
+            <!-- Profile Card -->
+            <div class="demo-item">
+                <h3>👤 Profile Card</h3>
+                <div id="profile-card" class="widget-container"></div>
+                <div class="code-sample">
+widgetXFormer.render({
+  type: 'profile-card',
+  data: {
+    name: 'Alex Vance',
+    title: 'Lead Developer',
+    avatar: 'https://via.placeholder.com/96',
+    socialLinks: [
+      { icon: '📧', url: 'mailto:alex@example.com' },
+      { icon: '💼', url: 'https://linkedin.com' }
+    ]
+  }
+}, 'profile-card');
+                </div>
+            </div>
+
+            <!-- Stats Card -->
+            <div class="demo-item">
+                <h3>📊 Stats Card</h3>
+                <div id="stats-card" class="widget-container"></div>
+                <div class="code-sample">
+widgetXFormer.render({
+  type: 'stats-card',
+  data: {
+    title: 'New Users',
+    value: '1,257',
+    trend: '+12% from last week',
+    icon: '👥',
+    accentColor: '#10b981'
+  }
+}, 'stats-card');
+                </div>
+            </div>
+
+            <!-- Notification Card -->
+            <div class="demo-item">
+                <h3>🔔 Notification Card</h3>
+                <div id="notification-card" class="widget-container"></div>
+                <div class="code-sample">
+widgetXFormer.render({
+  type: 'notification-card',
+  data: {
+    title: 'Deployment Successful',
+    message: 'Your project has been deployed',
+    type: 'success',
+    icon: '✅',
+    action: {
+      text: 'View Details',
+      onClick: () => alert('Clicked!')
+    }
+  }
+}, 'notification-card');
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="demo-item">
+                <h3>📈 Progress Bar</h3>
+                <div id="progress-bar" class="widget-container"></div>
+                <div class="code-sample">
+widgetXFormer.render({
+  type: 'progress-bar',
+  data: {
+    label: 'Task Completion',
+    value: 75,
+    animated: true
+  }
+}, 'progress-bar');
+                </div>
+            </div>
+
+            <!-- KPI Donut -->
+            <div class="demo-item">
+                <h3>🎯 KPI Donut</h3>
+                <div id="kpi-donut" class="widget-container"></div>
+                <div class="code-sample">
+widgetXFormer.render({
+  type: 'kpi-donut',
+  data: {
+    value: 82,
+    label: 'Project Completion',
+    color: '#10b981'
+  }
+}, 'kpi-donut');
+                </div>
+            </div>
+
+            <!-- Gauge -->
+            <div class="demo-item">
+                <h3>⚡ Gauge</h3>
+                <div id="gauge" class="widget-container"></div>
+                <div class="code-sample">
+widgetXFormer.render({
+  type: 'gauge',
+  data: {
+    title: 'System Load',
+    value: 65,
+    color: '#f59e0b'
+  }
+}, 'gauge');
+                </div>
+            </div>
+
+            <!-- Funnel Chart -->
+            <div class="demo-item full-width">
+                <h3>🔽 Funnel Chart</h3>
+                <div id="funnel" class="widget-container"></div>
+                <div class="code-sample">
+widgetXFormer.render({
+  type: 'funnel',
+  data: {
+    title: 'Sales Funnel',
+    stages: [
+      { label: 'Visitors', value: 100, unit: '%' },
+      { label: 'Sign Ups', value: 45, unit: '%' },
+      { label: 'Purchases', value: 15, unit: '%' }
+    ]
+  }
+}, 'funnel');
+                </div>
+            </div>
+
+            <!-- Scatter Plot -->
+            <div class="demo-item">
+                <h3>📍 Scatter Plot</h3>
+                <div id="scatter" class="widget-container"></div>
+                <div class="code-sample">
+widgetXFormer.render({
+  type: 'scatter',
+  data: {
+    labels: ['Campaign Data'],
+    datasets: [{
+      label: 'Performance',
+      data: [
+        {x: 20, y: 30}, {x: 40, y: 15},
+        {x: 60, y: 80}, {x: 80, y: 65}
+      ]
+    }]
+  }
+}, 'scatter');
+                </div>
+            </div>
+
+            <!-- Bubble Chart -->
+            <div class="demo-item">
+                <h3>💭 Bubble Chart</h3>
+                <div id="bubble" class="widget-container"></div>
+                <div class="code-sample">
+widgetXFormer.render({
+  type: 'bubble',
+  data: {
+    labels: ['Products'],
+    datasets: [{
+      label: 'Product A',
+      data: [{x: 20, y: 30, r: 15}],
+      backgroundColor: '#ff6384'
+    }]
+  }
+}, 'bubble');
+                </div>
+            </div>
+
+            <!-- Heatmap -->
+            <div class="demo-item">
+                <h3>🔥 Heatmap</h3>
+                <div id="heatmap" class="widget-container"></div>
+                <div class="code-sample">
+widgetXFormer.render({
+  type: 'heatmap',
+  data: {
+    title: 'Activity Heatmap',
+    columns: 7,
+    rows: 10
+  }
+}, 'heatmap');
+                </div>
+            </div>
+
+            <!-- Slider -->
+            <div class="demo-item">
+                <h3>🎚️ Interactive Slider</h3>
+                <div id="slider" class="widget-container"></div>
+                <div class="code-sample">
+widgetXFormer.render({
+  type: 'slider',
+  data: {
+    label: 'Adjust Threshold',
+    min: 0,
+    max: 100,
+    value: 50,
+    description: 'Controls sensitivity',
+    onChange: (val) => console.log(val)
+  }
+}, 'slider');
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import WidgetXFormer from './src/widget-xformer.ts';
+
+        const widgetXFormer = WidgetXFormer.getInstance();
+        let currentTheme = 'light';
+
+        // Widget configurations
+        const widgets = {
+            profileCard: {
+                type: 'profile-card',
+                data: {
+                    name: 'Alex Vance',
+                    title: 'Lead Developer',
+                    avatar: 'https://via.placeholder.com/96/60a5fa/ffffff?text=AV',
+                    socialLinks: [
+                        { icon: '📧', url: 'mailto:alex@example.com' },
+                        { icon: '💼', url: 'https://linkedin.com/in/alex' },
+                        { icon: '🐦', url: 'https://twitter.com/alex' }
+                    ]
+                },
+                style: { theme: currentTheme }
+            },
+            
+            statsCard: {
+                type: 'stats-card',
+                data: {
+                    title: 'New Users',
+                    value: '1,257',
+                    trend: '+12% from last week',
+                    icon: '👥',
+                    accentColor: '#10b981',
+                    clickable: true,
+                    onClick: () => alert('Stats card clicked!')
+                },
+                style: { theme: currentTheme }
+            },
+
+            notificationCard: {
+                type: 'notification-card',
+                data: {
+                    title: 'Deployment Successful',
+                    message: 'Your project has been successfully deployed to production.',
+                    type: 'success',
+                    icon: '✅',
+                    action: {
+                        text: 'View Details',
+                        onClick: () => alert('Viewing deployment details...')
+                    }
+                },
+                style: { theme: currentTheme }
+            },
+
+            progressBar: {
+                type: 'progress-bar',
+                data: {
+                    label: 'Task Completion',
+                    value: 75,
+                    animated: true,
+                    color: '#3b82f6'
+                },
+                style: { theme: currentTheme }
+            },
+
+            kpiDonut: {
+                type: 'kpi-donut',
+                data: {
+                    value: 82,
+                    label: 'Project Completion',
+                    color: '#10b981'
+                },
+                style: { theme: currentTheme }
+            },
+
+            gauge: {
+                type: 'gauge',
+                data: {
+                    title: 'System Load',
+                    value: 65,
+                    color: '#f59e0b'
+                },
+                style: { theme: currentTheme }
+            },
+
+            funnel: {
+                type: 'funnel',
+                data: {
+                    title: 'Sales Funnel',
+                    stages: [
+                        { label: 'Visitors', value: 100, unit: '%', color: '#60a5fa' },
+                        { label: 'Sign Ups', value: 45, unit: '%', color: '#3b82f6' },
+                        { label: 'Purchases', value: 15, unit: '%', color: '#2563eb' }
+                    ]
+                },
+                style: { theme: currentTheme }
+            },
+
+            scatter: {
+                type: 'scatter',
+                data: {
+                    labels: ['Campaign Performance'],
+                    datasets: [{
+                        label: 'Ad Spend vs Conversions',
+                        data: [
+                            {x: 20, y: 30}, {x: 40, y: 15}, {x: 60, y: 80}, 
+                            {x: 80, y: 65}, {x: 30, y: 45}, {x: 70, y: 55}
+                        ],
+                        backgroundColor: '#3b82f6'
+                    }]
+                },
+                style: { theme: currentTheme }
+            },
+
+            bubble: {
+                type: 'bubble',
+                data: {
+                    labels: ['Market Analysis'],
+                    datasets: [
+                        {
+                            label: 'Product A',
+                            data: [{x: 20, y: 30, r: 15}],
+                            backgroundColor: '#ff6384'
+                        },
+                        {
+                            label: 'Product B',
+                            data: [{x: 40, y: 15, r: 25}],
+                            backgroundColor: '#36a2eb'
+                        },
+                        {
+                            label: 'Product C',
+                            data: [{x: 30, y: 25, r: 10}],
+                            backgroundColor: '#ffcd56'
+                        }
+                    ]
+                },
+                style: { theme: currentTheme }
+            },
+
+            heatmap: {
+                type: 'heatmap',
+                data: {
+                    title: 'User Activity Heatmap',
+                    columns: 7,
+                    rows: 10
+                },
+                style: { theme: currentTheme }
+            },
+
+            slider: {
+                type: 'slider',
+                data: {
+                    label: 'Adjust Threshold',
+                    min: 0,
+                    max: 100,
+                    value: 50,
+                    description: 'This slider can be hooked up to dynamically update data in other widgets.',
+                    onChange: (value) => {
+                        console.log('Slider value changed:', value);
+                        // Update the progress bar with the slider value
+                        widgets.progressBar.data.value = value;
+                        widgetXFormer.render(widgets.progressBar, 'progress-bar');
+                    }
+                },
+                style: { theme: currentTheme }
+            }
+        };
+
+        function renderAllWidgets() {
+            // Update theme for all widgets
+            Object.values(widgets).forEach(widget => {
+                widget.style = { theme: currentTheme };
+            });
+
+            // Render widgets
+            widgetXFormer.render(widgets.profileCard, 'profile-card');
+            widgetXFormer.render(widgets.statsCard, 'stats-card');
+            widgetXFormer.render(widgets.notificationCard, 'notification-card');
+            widgetXFormer.render(widgets.progressBar, 'progress-bar');
+            widgetXFormer.render(widgets.kpiDonut, 'kpi-donut');
+            widgetXFormer.render(widgets.gauge, 'gauge');
+            widgetXFormer.render(widgets.funnel, 'funnel');
+            widgetXFormer.render(widgets.scatter, 'scatter');
+            widgetXFormer.render(widgets.bubble, 'bubble');
+            widgetXFormer.render(widgets.heatmap, 'heatmap');
+            widgetXFormer.render(widgets.slider, 'slider');
+        }
+
+        // Theme control handlers
+        document.getElementById('light-theme').addEventListener('click', () => {
+            currentTheme = 'light';
+            document.body.style.backgroundColor = '#f5f5f5';
+            renderAllWidgets();
+        });
+
+        document.getElementById('dark-theme').addEventListener('click', () => {
+            currentTheme = 'fluent-dark';
+            document.body.style.backgroundColor = '#2d2d2d';
+            renderAllWidgets();
+        });
+
+        document.getElementById('brand-theme').addEventListener('click', () => {
+            currentTheme = 'brand';
+            document.body.style.backgroundColor = '#f5f5f5';
+            renderAllWidgets();
+        });
+
+        // Initial render
+        renderAllWidgets();
+    </script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Widget Test</title>
+    <link rel="stylesheet" href="./src/style.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f3f2f1;
+            margin: 20px;
+        }
+        .widget-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #323130;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Widget Debug Test</h1>
+    
+    <div class="widget-container">
+        <h2>Scatter Plot Test</h2>
+        <div id="scatter-test"></div>
+    </div>
+    
+    <div class="widget-container">
+        <h2>Bubble Chart Test</h2>
+        <div id="bubble-test"></div>
+    </div>
+    
+    <div class="widget-container">
+        <h2>Slider Test</h2>
+        <div id="slider-test"></div>
+    </div>
+    
+    <div class="widget-container">
+        <h2>Heatmap Test</h2>
+        <div id="heatmap-test"></div>
+    </div>
+    
+    <div class="widget-container">
+        <h2>Funnel Test</h2>
+        <div id="funnel-test"></div>
+    </div>
+
+    <script type="module">
+        import WidgetXFormer from './src/widget-xformer.js';
+
+        console.log('Starting widget tests...');
+        const widgetXFormer = WidgetXFormer.getInstance();
+        console.log('WidgetXFormer instance:', widgetXFormer);
+
+        // Test Scatter Plot
+        try {
+            console.log('Testing scatter plot...');
+            widgetXFormer.render({
+                type: 'scatter',
+                data: {
+                    title: 'Ad Spend vs. Conversions',
+                    xAxis: { label: 'Ad Spend ($)', min: 0, max: 5000 },
+                    yAxis: { label: 'Conversions', min: 0, max: 100 },
+                    data: [
+                        { x: 1000, y: 25 },
+                        { x: 2000, y: 45 },
+                        { x: 3000, y: 70 },
+                        { x: 4000, y: 85 }
+                    ],
+                    pointColor: '#0078d4',
+                    pointSize: 6
+                },
+                style: { theme: 'light' }
+            }, 'scatter-test');
+            console.log('Scatter plot rendered successfully');
+        } catch (error) {
+            console.error('Scatter plot error:', error);
+        }
+
+        // Test Bubble Chart
+        try {
+            console.log('Testing bubble chart...');
+            widgetXFormer.render({
+                type: 'bubble',
+                data: {
+                    title: 'Market Analysis',
+                    xAxis: { label: 'Market Share (%)', min: 0, max: 50 },
+                    yAxis: { label: 'Growth Rate (%)', min: -10, max: 30 },
+                    data: [
+                        { x: 25, y: 15, size: 50, label: 'Product A', color: '#0078d4' },
+                        { x: 15, y: 20, size: 30, label: 'Product B', color: '#107c10' },
+                        { x: 35, y: 8, size: 40, label: 'Product C', color: '#d13438' }
+                    ]
+                },
+                style: { theme: 'light' }
+            }, 'bubble-test');
+            console.log('Bubble chart rendered successfully');
+        } catch (error) {
+            console.error('Bubble chart error:', error);
+        }
+
+        // Test Slider
+        try {
+            console.log('Testing slider...');
+            widgetXFormer.render({
+                type: 'slider',
+                data: {
+                    label: 'Interactive Control',
+                    value: 50,
+                    min: 0,
+                    max: 100,
+                    step: 1,
+                    showValue: true,
+                    showRange: true,
+                    color: '#0078d4',
+                    description: 'This slider can be hooked up to dynamically update data in other widgets.',
+                    onChange: (value) => console.log('Slider value:', value)
+                },
+                style: { theme: 'light' }
+            }, 'slider-test');
+            console.log('Slider rendered successfully');
+        } catch (error) {
+            console.error('Slider error:', error);
+        }
+
+        // Test Heatmap
+        try {
+            console.log('Testing heatmap...');
+            widgetXFormer.render({
+                type: 'heatmap',
+                data: {
+                    title: 'User Activity Heatmap',
+                    columns: 7,
+                    rows: 13,
+                    cellSize: 16,
+                    showValues: false,
+                    colorScale: {
+                        min: '#ebedf0',
+                        max: '#0078d4'
+                    }
+                },
+                style: { theme: 'light' }
+            }, 'heatmap-test');
+            console.log('Heatmap rendered successfully');
+        } catch (error) {
+            console.error('Heatmap error:', error);
+        }
+
+        // Test Funnel
+        try {
+            console.log('Testing funnel...');
+            widgetXFormer.render({
+                type: 'funnel',
+                data: {
+                    title: 'Sales Funnel',
+                    stages: [
+                        { label: 'Visitors', value: 10000, color: '#0078d4' },
+                        { label: 'Leads', value: 5000, color: '#106ebe' },
+                        { label: 'Prospects', value: 1500, color: '#005a9e' },
+                        { label: 'Customers', value: 450, color: '#003d65' }
+                    ],
+                    showValues: true,
+                    showPercentages: true
+                },
+                style: { theme: 'light' }
+            }, 'funnel-test');
+            console.log('Funnel rendered successfully');
+        } catch (error) {
+            console.error('Funnel error:', error);
+        }
+
+        console.log('All widget tests completed');
+    </script>
+</body>
+</html>

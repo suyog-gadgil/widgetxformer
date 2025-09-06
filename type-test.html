@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChartData Type Test</title>
+    <link rel="stylesheet" href="./src/style.css">
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #f3f2f1; 
+            margin: 20px; 
+        }
+        .test-container { 
+            background: white; 
+            padding: 20px; 
+            margin: 20px 0; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        h2 { color: #323130; }
+    </style>
+</head>
+<body>
+    <h1>ChartData Type Test</h1>
+    
+    <div class="test-container">
+        <h2>Doughnut Chart with number[] data</h2>
+        <div id="doughnut-chart"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Scatter Plot with {x, y}[] data</h2>
+        <div id="scatter-chart"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Bubble Chart with {x, y, r}[] data</h2>
+        <div id="bubble-chart"></div>
+    </div>
+
+    <script type="module">
+        import WidgetXFormer from './src/widget-xformer.js';
+
+        const widgetXFormer = WidgetXFormer.getInstance();
+        const theme = 'light';
+
+        // Test 1: Doughnut chart with number[] data
+        widgetXFormer.render({
+            type: 'doughnut',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green'],
+                datasets: [{
+                    label: 'Votes',
+                    data: [12, 19, 3, 5],
+                    backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0']
+                }]
+            },
+            style: { theme }
+        }, 'doughnut-chart');
+
+        // Test 2: Scatter plot with {x, y}[] data
+        widgetXFormer.render({
+            type: 'scatter',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Dataset 1',
+                    data: [
+                        {x: 10, y: 20},
+                        {x: 15, y: 10},
+                        {x: 26, y: 12},
+                        {x: 30, y: 18},
+                        {x: 45, y: 25}
+                    ],
+                    backgroundColor: '#36a2eb'
+                }]
+            },
+            style: { theme }
+        }, 'scatter-chart');
+
+        // Test 3: Bubble chart with {x, y, r}[] data
+        widgetXFormer.render({
+            type: 'bubble',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Dataset 1',
+                    data: [
+                        {x: 20, y: 30, r: 15},
+                        {x: 40, y: 10, r: 10},
+                        {x: 30, y: 40, r: 20},
+                        {x: 50, y: 25, r: 12}
+                    ],
+                    backgroundColor: '#ff6384'
+                }]
+            },
+            style: { theme }
+        }, 'bubble-chart');
+
+        console.log('All chart types rendered successfully with correct data types');
+    </script>
+</body>
+</html>

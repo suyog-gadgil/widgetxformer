@@ -48,6 +48,17 @@
  * 11. 'fluent-card' - Enhanced Fluent UI card
  * 12. 'fluent-button' - Fluent UI button
  * 13. 'fluent-progressbar' - Fluent UI progress indicator
+ * 14. 'profile-card' - Profile/avatar card with social links
+ * 15. 'stats-card' - Statistics card with trend information
+ * 16. 'notification-card' - Notification/alert card with actions
+ * 17. 'progress-bar' - Linear progress bar indicator
+ * 18. 'kpi-donut' - KPI donut chart with center text
+ * 19. 'funnel' - Multi-stage funnel visualization
+ * 20. 'scatter' - Scatter plot chart
+ * 21. 'bubble' - Bubble chart with 3D data
+ * 22. 'gauge' - Circular gauge/meter widget
+ * 23. 'heatmap' - Calendar-style activity heatmap
+ * 24. 'slider' - Interactive range slider control
  * 
  * WIDGET DATA STRUCTURES:
  * 
@@ -156,6 +167,99 @@
  *   indeterminate?: boolean
  * }
  * 
+ * PROFILE-CARD:
+ * data: {
+ *   name: string,
+ *   title?: string,
+ *   avatar?: string,    // Image URL
+ *   socialLinks?: Array<{
+ *     icon: string,     // Icon or emoji
+ *     url: string
+ *   }>
+ * }
+ * 
+ * STATS-CARD:
+ * data: {
+ *   title: string,
+ *   value: string | number,
+ *   trend?: string,     // e.g., "+12% from last week"
+ *   icon?: string,      // Icon or emoji
+ *   accentColor?: string,
+ *   clickable?: boolean,
+ *   onClick?: Function
+ * }
+ * 
+ * NOTIFICATION-CARD:
+ * data: {
+ *   title: string,
+ *   message: string,
+ *   type?: 'success' | 'warning' | 'error' | 'info',
+ *   icon?: string,
+ *   action?: {
+ *     text: string,
+ *     onClick: Function
+ *   }
+ * }
+ * 
+ * PROGRESS-BAR:
+ * data: {
+ *   label?: string,
+ *   value: number,      // 0-100
+ *   height?: string,    // CSS height value
+ *   color?: string,
+ *   animated?: boolean
+ * }
+ * 
+ * KPI-DONUT:
+ * data: {
+ *   value: number,      // 0-100
+ *   label?: string,
+ *   color?: string
+ * }
+ * 
+ * FUNNEL:
+ * data: {
+ *   title?: string,
+ *   stages: Array<{
+ *     label: string,
+ *     value: number,
+ *     unit?: string,    // e.g., '%', 'users'
+ *     color?: string
+ *   }>
+ * }
+ * 
+ * SCATTER:
+ * data: ChartData with point format: { x: number, y: number }
+ * 
+ * BUBBLE:
+ * data: ChartData with point format: { x: number, y: number, r: number }
+ * 
+ * GAUGE:
+ * data: {
+ *   title?: string,
+ *   value: number,      // 0-100
+ *   color?: string
+ * }
+ * 
+ * HEATMAP:
+ * data: {
+ *   title?: string,
+ *   columns?: number,   // Grid columns (default: 7)
+ *   rows?: number,      // Grid rows (default: 13)
+ *   data?: number[]     // Activity values 0-1, auto-generated if not provided
+ * }
+ * 
+ * SLIDER:
+ * data: {
+ *   label?: string,
+ *   min?: number,       // Default: 0
+ *   max?: number,       // Default: 100
+ *   step?: number,      // Default: 1
+ *   value?: number,     // Initial value
+ *   description?: string,
+ *   onChange?: Function // Callback with new value
+ * }
+ * 
  * EXAMPLE USAGE:
  * 
  * 1. Basic Tab Widget:
@@ -229,6 +333,96 @@
  * }, 'card-container');
  * ```
  * 
+ * 5. Profile Card:
+ * ```javascript
+ * widgetRenderer.render({
+ *   type: 'profile-card',
+ *   data: {
+ *     name: 'Alex Vance',
+ *     title: 'Lead Developer',
+ *     avatar: 'https://example.com/avatar.jpg',
+ *     socialLinks: [
+ *       { icon: '📧', url: 'mailto:alex@example.com' },
+ *       { icon: '💼', url: 'https://linkedin.com/in/alex' }
+ *     ]
+ *   },
+ *   style: { theme: 'light' }
+ * }, 'profile-container');
+ * ```
+ * 
+ * 6. Stats Card:
+ * ```javascript
+ * widgetRenderer.render({
+ *   type: 'stats-card',
+ *   data: {
+ *     title: 'New Users',
+ *     value: '1,257',
+ *     trend: '+12% from last week',
+ *     icon: '👥',
+ *     accentColor: '#3b82f6'
+ *   },
+ *   style: { theme: 'light' }
+ * }, 'stats-container');
+ * ```
+ * 
+ * 7. Progress Bar:
+ * ```javascript
+ * widgetRenderer.render({
+ *   type: 'progress-bar',
+ *   data: {
+ *     label: 'Task Completion',
+ *     value: 75,
+ *     animated: true
+ *   },
+ *   style: { theme: 'light' }
+ * }, 'progress-container');
+ * ```
+ * 
+ * 8. KPI Donut:
+ * ```javascript
+ * widgetRenderer.render({
+ *   type: 'kpi-donut',
+ *   data: {
+ *     value: 82,
+ *     label: 'Project Completion',
+ *     color: '#10b981'
+ *   },
+ *   style: { theme: 'light' }
+ * }, 'kpi-container');
+ * ```
+ * 
+ * 9. Funnel Chart:
+ * ```javascript
+ * widgetRenderer.render({
+ *   type: 'funnel',
+ *   data: {
+ *     title: 'Sales Funnel',
+ *     stages: [
+ *       { label: 'Visitors', value: 100, unit: '%' },
+ *       { label: 'Sign Ups', value: 45, unit: '%' },
+ *       { label: 'Purchases', value: 15, unit: '%' }
+ *     ]
+ *   },
+ *   style: { theme: 'light' }
+ * }, 'funnel-container');
+ * ```
+ * 
+ * 10. Interactive Slider:
+ * ```javascript
+ * widgetRenderer.render({
+ *   type: 'slider',
+ *   data: {
+ *     label: 'Adjust Threshold',
+ *     min: 0,
+ *     max: 100,
+ *     value: 50,
+ *     description: 'Controls the sensitivity level',
+ *     onChange: (value) => console.log('New value:', value)
+ *   },
+ *   style: { theme: 'light' }
+ * }, 'slider-container');
+ * ```
+ * 
  * UTILITY METHODS:
  * 
  * 1. parseConfigFromHTML(elementId: string): WidgetConfig | null
@@ -282,7 +476,7 @@ export interface TabItem {
 
 export interface ChartDataset {
   label: string;
-  data: number[];
+  data: number[] | { x: number; y: number }[] | { x: number; y: number; r: number }[];
   backgroundColor?: string | string[];
   borderColor?: string | string[];
   borderWidth?: number;
@@ -426,6 +620,18 @@ class WidgetXFormer {
     this.renderers.set('fluent-card', this.renderFluentCard.bind(this));
     this.renderers.set('fluent-button', this.renderFluentButton.bind(this));
     this.renderers.set('fluent-progressbar', this.renderFluentProgressBar.bind(this));
+    // New widget types from more-samples.html
+    this.renderers.set('profile-card', this.renderProfileCard.bind(this));
+    this.renderers.set('stats-card', this.renderStatsCard.bind(this));
+    this.renderers.set('notification-card', this.renderNotificationCard.bind(this));
+    this.renderers.set('progress-bar', this.renderProgressBar.bind(this));
+    this.renderers.set('kpi-donut', this.renderKpiDonut.bind(this));
+    this.renderers.set('funnel', this.renderFunnel.bind(this));
+    this.renderers.set('scatter', this.renderScatterPlot.bind(this));
+    this.renderers.set('bubble', this.renderBubbleChart.bind(this));
+    this.renderers.set('gauge', this.renderGauge.bind(this));
+    this.renderers.set('heatmap', this.renderHeatmap.bind(this));
+    this.renderers.set('slider', this.renderSlider.bind(this));
   }
 
   public render(config: WidgetConfig, containerId: string): void {
@@ -607,10 +813,12 @@ class WidgetXFormer {
     const radius = Math.min(width, height) / 3;
     const innerRadius = radius * 0.5;
 
-    const total = data.datasets[0].data.reduce((sum, value) => sum + value, 0);
+    // Ensure we're working with numeric data for doughnut chart
+    const numericData = data.datasets[0].data as number[];
+    const total = numericData.reduce((sum, value) => sum + value, 0);
     let currentAngle = -Math.PI / 2;
 
-    data.datasets[0].data.forEach((value, index) => {
+    numericData.forEach((value, index) => {
       const sliceAngle = (value / total) * 2 * Math.PI;
       const color = Array.isArray(data.datasets[0].backgroundColor) 
         ? data.datasets[0].backgroundColor[index] 
@@ -634,7 +842,10 @@ class WidgetXFormer {
     const padding = 40;
     const chartWidth = width - 2 * padding;
     const chartHeight = height - 2 * padding;
-    const maxValue = Math.max(...data.datasets[0].data);
+    
+    // Ensure we're working with numeric data for bar chart
+    const numericData = data.datasets[0].data as number[];
+    const maxValue = Math.max(...numericData);
     const barWidth = chartWidth / data.labels.length * 0.8;
     const barSpacing = chartWidth / data.labels.length * 0.2;
 
@@ -648,7 +859,7 @@ class WidgetXFormer {
     ctx.stroke();
 
     // Draw bars
-    data.datasets[0].data.forEach((value, index) => {
+    numericData.forEach((value, index) => {
       const barHeight = (value / maxValue) * chartHeight;
       const x = padding + index * (barWidth + barSpacing) + barSpacing / 2;
       const y = height - padding - barHeight;
@@ -672,7 +883,10 @@ class WidgetXFormer {
     const padding = 40;
     const chartWidth = width - 2 * padding;
     const chartHeight = height - 2 * padding;
-    const maxValue = Math.max(...data.datasets[0].data);
+    
+    // Ensure we're working with numeric data for line chart
+    const numericData = data.datasets[0].data as number[];
+    const maxValue = Math.max(...numericData);
     const stepX = chartWidth / (data.labels.length - 1);
 
     // Draw axes
@@ -689,7 +903,7 @@ class WidgetXFormer {
     ctx.lineWidth = 3;
     ctx.beginPath();
 
-    data.datasets[0].data.forEach((value, index) => {
+    numericData.forEach((value, index) => {
       const x = padding + index * stepX;
       const y = height - padding - (value / maxValue) * chartHeight;
 
@@ -1706,6 +1920,1130 @@ class WidgetXFormer {
     }
 
     container.appendChild(progressContainer);
+  }
+
+  // New widget renderers from more-samples.html
+
+  private renderProfileCard(config: WidgetConfig, container: HTMLElement): void {
+    const profileData = config.data;
+    const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
+
+    const card = document.createElement('div');
+    card.className = 'fluent-profile-card';
+    card.style.cssText = `
+      background: ${theme.surfaceBackground || theme.background};
+      border: 1px solid ${theme.surfaceBorder || theme.border};
+      border-radius: ${fluentTokens.borderRadiusLarge.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      padding: ${fluentTokens.spacingVerticalXXL.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      text-align: center;
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      box-shadow: ${fluentTokens.shadow4.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      transition: all ${fluentTokens.durationNormal.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    // Avatar
+    if (profileData.avatar) {
+      const avatar = document.createElement('img');
+      avatar.src = profileData.avatar;
+      avatar.alt = profileData.name || 'Profile';
+      avatar.style.cssText = `
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        margin: 0 auto ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        border: 4px solid ${theme.surfaceBorder || theme.border};
+        box-shadow: ${fluentTokens.shadow4.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      `;
+      card.appendChild(avatar);
+    }
+
+    // Name
+    if (profileData.name) {
+      const name = document.createElement('h3');
+      name.textContent = profileData.name;
+      name.style.cssText = `
+        margin: 0 0 ${fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
+        color: ${theme.text};
+        font-size: ${fluentTokens.fontSizeBase500.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      `;
+      card.appendChild(name);
+    }
+
+    // Title/Role
+    if (profileData.title) {
+      const title = document.createElement('p');
+      title.textContent = profileData.title;
+      title.style.cssText = `
+        margin: 0 0 ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
+        color: ${theme.text};
+        opacity: 0.8;
+        font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      `;
+      card.appendChild(title);
+    }
+
+    // Social Icons
+    if (profileData.socialLinks && Array.isArray(profileData.socialLinks)) {
+      const socialContainer = document.createElement('div');
+      socialContainer.style.cssText = `
+        display: flex;
+        justify-content: center;
+        gap: ${fluentTokens.spacingHorizontalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        margin-top: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      `;
+
+      profileData.socialLinks.forEach((link: any) => {
+        const iconContainer = document.createElement('a');
+        iconContainer.href = link.url || '#';
+        iconContainer.target = '_blank';
+        iconContainer.style.cssText = `
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: ${theme.surfaceBorder || theme.border};
+          color: ${theme.text};
+          text-decoration: none;
+          transition: all ${fluentTokens.durationFast.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        `;
+        iconContainer.innerHTML = link.icon || '📧';
+        
+        iconContainer.addEventListener('mouseenter', () => {
+          iconContainer.style.background = theme.primary;
+          iconContainer.style.color = 'white';
+        });
+        iconContainer.addEventListener('mouseleave', () => {
+          iconContainer.style.background = theme.surfaceBorder || theme.border;
+          iconContainer.style.color = theme.text;
+        });
+
+        socialContainer.appendChild(iconContainer);
+      });
+
+      card.appendChild(socialContainer);
+    }
+
+    container.appendChild(card);
+  }
+
+  private renderStatsCard(config: WidgetConfig, container: HTMLElement): void {
+    const statsData = config.data;
+    const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
+
+    const card = document.createElement('div');
+    card.className = 'fluent-stats-card';
+    card.style.cssText = `
+      background: ${statsData.accentColor || theme.primary};
+      color: white;
+      border-radius: ${fluentTokens.borderRadiusLarge.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      padding: ${fluentTokens.spacingVerticalXL.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      box-shadow: ${fluentTokens.shadow4.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 150px;
+      transition: all ${fluentTokens.durationNormal.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      cursor: ${statsData.clickable ? 'pointer' : 'default'};
+    `;
+
+    // Header with title and icon
+    const header = document.createElement('div');
+    header.style.cssText = `
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    const title = document.createElement('h3');
+    title.textContent = statsData.title || 'Stat';
+    title.style.cssText = `
+      margin: 0;
+      font-size: ${fluentTokens.fontSizeBase400.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    const icon = document.createElement('div');
+    icon.innerHTML = statsData.icon || '📊';
+    icon.style.cssText = `
+      opacity: 0.7;
+      font-size: 24px;
+    `;
+
+    header.appendChild(title);
+    header.appendChild(icon);
+
+    // Value
+    const value = document.createElement('div');
+    value.textContent = statsData.value || '0';
+    value.style.cssText = `
+      font-size: ${fluentTokens.fontSizeHero1000.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-weight: ${fluentTokens.fontWeightBold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      line-height: 1;
+      margin-bottom: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    // Trend
+    const trend = document.createElement('div');
+    trend.textContent = statsData.trend || '';
+    trend.style.cssText = `
+      font-size: ${fluentTokens.fontSizeBase200.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      opacity: 0.8;
+    `;
+
+    card.appendChild(header);
+    card.appendChild(value);
+    card.appendChild(trend);
+
+    if (statsData.clickable && statsData.onClick) {
+      card.addEventListener('click', statsData.onClick);
+    }
+
+    container.appendChild(card);
+  }
+
+  private renderNotificationCard(config: WidgetConfig, container: HTMLElement): void {
+    const notificationData = config.data;
+    const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
+
+    const card = document.createElement('div');
+    card.className = 'fluent-notification-card';
+    card.style.cssText = `
+      background: ${theme.surfaceBackground || theme.background};
+      border: 1px solid ${theme.surfaceBorder || theme.border};
+      border-radius: ${fluentTokens.borderRadiusLarge.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      padding: ${fluentTokens.spacingVerticalXL.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      box-shadow: ${fluentTokens.shadow4.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      display: flex;
+      align-items: flex-start;
+      gap: ${fluentTokens.spacingHorizontalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    // Icon container
+    const iconContainer = document.createElement('div');
+    const iconColor = notificationData.type === 'success' ? '#10b981' : 
+                     notificationData.type === 'warning' ? '#f59e0b' :
+                     notificationData.type === 'error' ? '#ef4444' : theme.primary;
+    
+    iconContainer.style.cssText = `
+      background: ${iconColor}20;
+      padding: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    `;
+    iconContainer.innerHTML = notificationData.icon || '✓';
+
+    // Content container
+    const content = document.createElement('div');
+    content.style.cssText = `
+      flex: 1;
+    `;
+
+    // Title
+    const title = document.createElement('h4');
+    title.textContent = notificationData.title || 'Notification';
+    title.style.cssText = `
+      margin: 0 0 ${fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
+      color: ${theme.text};
+      font-size: ${fluentTokens.fontSizeBase400.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    // Message
+    const message = document.createElement('p');
+    message.textContent = notificationData.message || '';
+    message.style.cssText = `
+      margin: 0 0 ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
+      color: ${theme.text};
+      opacity: 0.8;
+      font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      line-height: 1.4;
+    `;
+
+    // Action button
+    if (notificationData.action) {
+      const actionButton = document.createElement('button');
+      actionButton.textContent = notificationData.action.text || 'View Details';
+      actionButton.style.cssText = `
+        background: none;
+        border: none;
+        color: ${theme.primary};
+        font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        cursor: pointer;
+        padding: 0;
+        text-decoration: underline;
+        transition: opacity ${fluentTokens.durationFast.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      `;
+
+      actionButton.addEventListener('mouseenter', () => {
+        actionButton.style.opacity = '0.8';
+      });
+      actionButton.addEventListener('mouseleave', () => {
+        actionButton.style.opacity = '1';
+      });
+
+      if (notificationData.action.onClick) {
+        actionButton.addEventListener('click', notificationData.action.onClick);
+      }
+
+      content.appendChild(actionButton);
+    }
+
+    content.appendChild(title);
+    content.appendChild(message);
+
+    card.appendChild(iconContainer);
+    card.appendChild(content);
+    container.appendChild(card);
+  }
+
+  private renderProgressBar(config: WidgetConfig, container: HTMLElement): void {
+    const progressData = config.data;
+    const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
+
+    const progressContainer = document.createElement('div');
+    progressContainer.className = 'fluent-progress-bar';
+    progressContainer.style.cssText = `
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      margin-bottom: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    // Label
+    if (progressData.label) {
+      const labelContainer = document.createElement('div');
+      labelContainer.style.cssText = `
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: ${fluentTokens.spacingVerticalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      `;
+
+      const label = document.createElement('span');
+      label.textContent = progressData.label;
+      label.style.cssText = `
+        font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        color: ${theme.text};
+      `;
+
+      const percentage = document.createElement('span');
+      percentage.textContent = `${progressData.value || 0}%`;
+      percentage.style.cssText = `
+        font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        color: ${theme.text};
+      `;
+
+      labelContainer.appendChild(label);
+      labelContainer.appendChild(percentage);
+      progressContainer.appendChild(labelContainer);
+    }
+
+    // Progress track
+    const progressTrack = document.createElement('div');
+    progressTrack.style.cssText = `
+      width: 100%;
+      height: ${progressData.height || '8px'};
+      background: ${theme.surfaceBorder || theme.border};
+      border-radius: ${fluentTokens.borderRadiusCircular.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      overflow: hidden;
+    `;
+
+    // Progress fill
+    const progressFill = document.createElement('div');
+    const value = Math.min(Math.max(progressData.value || 0, 0), 100);
+    progressFill.style.cssText = `
+      height: 100%;
+      background: ${progressData.color || theme.primary};
+      width: ${value}%;
+      border-radius: ${fluentTokens.borderRadiusCircular.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      transition: width ${fluentTokens.durationSlow.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    if (progressData.animated) {
+      progressFill.style.animation = 'progress-pulse 2s ease-in-out infinite';
+    }
+
+    progressTrack.appendChild(progressFill);
+    progressContainer.appendChild(progressTrack);
+
+    container.appendChild(progressContainer);
+  }
+
+  private renderKpiDonut(config: WidgetConfig, container: HTMLElement): void {
+    const kpiData = config.data;
+    const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
+
+    const kpiContainer = document.createElement('div');
+    kpiContainer.className = 'fluent-kpi-donut';
+    kpiContainer.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    // SVG Donut Chart
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '200');
+    svg.setAttribute('height', '200');
+    svg.setAttribute('viewBox', '0 0 200 200');
+
+    const radius = 80;
+    const strokeWidth = 16;
+    const centerX = 100;
+    const centerY = 100;
+    const circumference = 2 * Math.PI * radius;
+    const value = Math.min(Math.max(kpiData.value || 0, 0), 100);
+    const progress = (value / 100) * circumference;
+
+    // Background circle
+    const backgroundCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    backgroundCircle.setAttribute('cx', centerX.toString());
+    backgroundCircle.setAttribute('cy', centerY.toString());
+    backgroundCircle.setAttribute('r', radius.toString());
+    backgroundCircle.setAttribute('fill', 'none');
+    backgroundCircle.setAttribute('stroke', theme.surfaceBorder || theme.border);
+    backgroundCircle.setAttribute('stroke-width', strokeWidth.toString());
+
+    // Progress circle
+    const progressCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    progressCircle.setAttribute('cx', centerX.toString());
+    progressCircle.setAttribute('cy', centerY.toString());
+    progressCircle.setAttribute('r', radius.toString());
+    progressCircle.setAttribute('fill', 'none');
+    progressCircle.setAttribute('stroke', kpiData.color || theme.primary);
+    progressCircle.setAttribute('stroke-width', strokeWidth.toString());
+    progressCircle.setAttribute('stroke-linecap', 'round');
+    progressCircle.setAttribute('stroke-dasharray', circumference.toString());
+    progressCircle.setAttribute('stroke-dashoffset', (circumference - progress).toString());
+    progressCircle.setAttribute('transform', `rotate(-90 ${centerX} ${centerY})`);
+    progressCircle.style.transition = 'stroke-dashoffset 1s ease-in-out';
+
+    // Center text
+    const centerText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    centerText.setAttribute('x', centerX.toString());
+    centerText.setAttribute('y', centerY.toString());
+    centerText.setAttribute('text-anchor', 'middle');
+    centerText.setAttribute('dominant-baseline', 'middle');
+    centerText.setAttribute('font-size', '36');
+    centerText.setAttribute('font-weight', 'bold');
+    centerText.setAttribute('fill', theme.text);
+    centerText.textContent = `${value}%`;
+
+    svg.appendChild(backgroundCircle);
+    svg.appendChild(progressCircle);
+    svg.appendChild(centerText);
+
+    // Label
+    if (kpiData.label) {
+      const label = document.createElement('div');
+      label.textContent = kpiData.label;
+      label.style.cssText = `
+        margin-top: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-size: ${fluentTokens.fontSizeBase400.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        color: ${theme.text};
+        text-align: center;
+      `;
+      kpiContainer.appendChild(label);
+    }
+
+    kpiContainer.appendChild(svg);
+    container.appendChild(kpiContainer);
+  }
+
+  private renderFunnel(config: WidgetConfig, container: HTMLElement): void {
+    const funnelData = config.data;
+    const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
+
+    const funnelContainer = document.createElement('div');
+    funnelContainer.className = 'fluent-funnel';
+    funnelContainer.style.cssText = `
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: ${fluentTokens.spacingVerticalXS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    // Title
+    if (funnelData.title) {
+      const title = document.createElement('h3');
+      title.textContent = funnelData.title;
+      title.style.cssText = `
+        margin: 0 0 ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
+        color: ${theme.text};
+        font-size: ${fluentTokens.fontSizeBase400.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        text-align: center;
+      `;
+      funnelContainer.appendChild(title);
+    }
+
+    // Funnel stages
+    if (funnelData.stages && Array.isArray(funnelData.stages)) {
+      funnelData.stages.forEach((stage: any, index: number) => {
+        const stageElement = document.createElement('div');
+        const width = 100 - (index * 15); // Decreasing width for funnel effect
+        const colors = [theme.primary, theme.secondary, '#1e40af', '#1e3a8a'];
+        const stageColor = stage.color || colors[index % colors.length];
+        
+        stageElement.style.cssText = `
+          position: relative;
+          width: ${width}%;
+          background: ${stageColor};
+          color: white;
+          text-align: center;
+          padding: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.spacingHorizontalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          margin: 0 auto;
+          clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+          font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          font-weight: ${fluentTokens.fontWeightMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          min-height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        `;
+
+        const stageText = `${stage.label || `Stage ${index + 1}`} (${stage.value || '0'}${stage.unit || '%'})`;
+        stageElement.textContent = stageText;
+
+        funnelContainer.appendChild(stageElement);
+      });
+    }
+
+    container.appendChild(funnelContainer);
+  }
+
+  private renderScatterPlot(config: WidgetConfig, container: HTMLElement): void {
+    const scatterData = config.data as ChartData;
+    const theme = this.getTheme(config.style?.theme);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 400;
+    canvas.height = 300;
+    canvas.style.maxWidth = '100%';
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    this.drawScatterPlot(ctx, scatterData, canvas.width, canvas.height, theme);
+    container.appendChild(canvas);
+  }
+
+  private drawScatterPlot(ctx: CanvasRenderingContext2D, data: ChartData, width: number, height: number, theme: any): void {
+    const padding = 40;
+    const chartWidth = width - 2 * padding;
+    const chartHeight = height - 2 * padding;
+
+    // Check if datasets exist and are valid
+    if (!data.datasets || !Array.isArray(data.datasets) || data.datasets.length === 0) {
+      // Draw a message indicating no data
+      ctx.fillStyle = theme.text || '#323130';
+      ctx.font = '16px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText('No data available', width / 2, height / 2);
+      return;
+    }
+
+    // Find data ranges
+    let maxX = 0, maxY = 0;
+    data.datasets.forEach(dataset => {
+      if (dataset && dataset.data && Array.isArray(dataset.data)) {
+        dataset.data.forEach((point: any) => {
+          if (typeof point === 'object' && point.x !== undefined && point.y !== undefined) {
+            maxX = Math.max(maxX, point.x);
+            maxY = Math.max(maxY, point.y);
+          }
+        });
+      }
+    });
+
+    // Ensure we have valid ranges
+    if (maxX === 0 && maxY === 0) {
+      maxX = 100;
+      maxY = 100;
+    }
+
+    // Draw axes
+    ctx.strokeStyle = theme.border;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padding, padding);
+    ctx.lineTo(padding, height - padding);
+    ctx.lineTo(width - padding, height - padding);
+    ctx.stroke();
+
+    // Draw scatter points
+    data.datasets.forEach((dataset) => {
+      if (!dataset || !dataset.data || !Array.isArray(dataset.data)) {
+        return;
+      }
+
+      const color = Array.isArray(dataset.backgroundColor) 
+        ? dataset.backgroundColor[0] 
+        : dataset.backgroundColor || theme.primary;
+
+      ctx.fillStyle = color;
+      
+      dataset.data.forEach((point: any) => {
+        if (typeof point === 'object' && point.x !== undefined && point.y !== undefined) {
+          const x = padding + (point.x / maxX) * chartWidth;
+          const y = height - padding - (point.y / maxY) * chartHeight;
+          
+          ctx.beginPath();
+          ctx.arc(x, y, 4, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      });
+    });
+
+    // Draw legend
+    if (data.datasets.length > 1) {
+      this.drawLegend(ctx, data, width, height, 20);
+    }
+  }
+
+  private renderBubbleChart(config: WidgetConfig, container: HTMLElement): void {
+    const bubbleData = config.data;
+    const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
+
+    const bubbleContainer = document.createElement('div');
+    bubbleContainer.className = 'fluent-bubble-chart';
+    bubbleContainer.style.cssText = `
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    // Title
+    if (bubbleData.title) {
+      const title = document.createElement('h3');
+      title.textContent = bubbleData.title;
+      title.style.cssText = `
+        margin: 0 0 ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
+        color: ${theme.text};
+        font-size: ${fluentTokens.fontSizeBase400.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        text-align: center;
+      `;
+      bubbleContainer.appendChild(title);
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 400;
+    canvas.height = 300;
+    canvas.style.maxWidth = '100%';
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    this.drawBubbleChart(ctx, bubbleData, canvas.width, canvas.height, theme);
+    
+    bubbleContainer.appendChild(canvas);
+    container.appendChild(bubbleContainer);
+  }
+
+  private drawBubbleChart(ctx: CanvasRenderingContext2D, data: any, width: number, height: number, theme: any): void {
+    const padding = 60;
+    const chartWidth = width - 2 * padding;
+    const chartHeight = height - 2 * padding;
+
+    // Handle both direct data array and ChartData format
+    let bubblePoints: any[] = [];
+    if (data.datasets && Array.isArray(data.datasets)) {
+      // ChartData format
+      data.datasets.forEach((dataset: any) => {
+        if (Array.isArray(dataset.data)) {
+          bubblePoints.push(...dataset.data.map((point: any) => ({
+            ...point,
+            color: dataset.backgroundColor || theme.primary
+          })));
+        }
+      });
+    } else if (Array.isArray(data.data)) {
+      // Direct data array format
+      bubblePoints = data.data;
+    }
+
+    if (bubblePoints.length === 0) return;
+
+    // Find data ranges
+    const xValues = bubblePoints.map(p => p.x).filter(x => x !== undefined);
+    const yValues = bubblePoints.map(p => p.y).filter(y => y !== undefined);
+    const sizeValues = bubblePoints.map(p => p.size || p.r || 10).filter(s => s !== undefined);
+
+    const xMin = data.xAxis?.min ?? Math.min(...xValues);
+    const xMax = data.xAxis?.max ?? Math.max(...xValues);
+    const yMin = data.yAxis?.min ?? Math.min(...yValues);
+    const yMax = data.yAxis?.max ?? Math.max(...yValues);
+    const maxSize = Math.max(...sizeValues);
+
+    // Draw axes
+    ctx.strokeStyle = theme.border;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padding, padding);
+    ctx.lineTo(padding, height - padding);
+    ctx.lineTo(width - padding, height - padding);
+    ctx.stroke();
+
+    // Draw axis labels
+    ctx.fillStyle = theme.text;
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    
+    // X-axis label
+    if (data.xAxis?.label) {
+      ctx.fillText(data.xAxis.label, width / 2, height - 15);
+    }
+    
+    // Y-axis label
+    ctx.save();
+    ctx.translate(15, height / 2);
+    ctx.rotate(-Math.PI / 2);
+    if (data.yAxis?.label) {
+      ctx.fillText(data.yAxis.label, 0, 0);
+    }
+    ctx.restore();
+
+    // Draw bubbles
+    ctx.globalAlpha = 0.7;
+    
+    bubblePoints.forEach((point: any) => {
+      if (point.x !== undefined && point.y !== undefined) {
+        const x = padding + ((point.x - xMin) / (xMax - xMin)) * chartWidth;
+        const y = height - padding - ((point.y - yMin) / (yMax - yMin)) * chartHeight;
+        const radius = ((point.size || point.r || 10) / maxSize) * 20 + 5;
+        
+        ctx.fillStyle = point.color || theme.primary;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Draw label if provided
+        if (point.label) {
+          ctx.fillStyle = theme.text;
+          ctx.font = '10px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(point.label, x, y - radius - 5);
+        }
+      }
+    });
+
+    ctx.globalAlpha = 1;
+  }
+
+  private renderGauge(config: WidgetConfig, container: HTMLElement): void {
+    const gaugeData = config.data;
+    const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
+
+    const gaugeContainer = document.createElement('div');
+    gaugeContainer.className = 'fluent-gauge';
+    gaugeContainer.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    // Title
+    if (gaugeData.title) {
+      const title = document.createElement('h3');
+      title.textContent = gaugeData.title;
+      title.style.cssText = `
+        margin: 0 0 ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
+        color: ${theme.text};
+        font-size: ${fluentTokens.fontSizeBase400.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        text-align: center;
+      `;
+      gaugeContainer.appendChild(title);
+    }
+
+    // SVG Gauge
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '200');
+    svg.setAttribute('height', '120');
+    svg.setAttribute('viewBox', '0 0 200 120');
+
+    const centerX = 100;
+    const centerY = 100;
+    const radius = 80;
+    const startAngle = Math.PI;
+    const endAngle = 2 * Math.PI;
+    const value = Math.min(Math.max(gaugeData.value || 0, 0), 100);
+    const valueAngle = startAngle + (value / 100) * (endAngle - startAngle);
+
+    // Background arc
+    const backgroundPath = this.createArcPath(centerX, centerY, radius, startAngle, endAngle);
+    const backgroundArc = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    backgroundArc.setAttribute('d', backgroundPath);
+    backgroundArc.setAttribute('fill', 'none');
+    backgroundArc.setAttribute('stroke', theme.surfaceBorder || theme.border);
+    backgroundArc.setAttribute('stroke-width', '12');
+    backgroundArc.setAttribute('stroke-linecap', 'round');
+
+    // Value arc
+    const valuePath = this.createArcPath(centerX, centerY, radius, startAngle, valueAngle);
+    const valueArc = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    valueArc.setAttribute('d', valuePath);
+    valueArc.setAttribute('fill', 'none');
+    valueArc.setAttribute('stroke', gaugeData.color || theme.primary);
+    valueArc.setAttribute('stroke-width', '12');
+    valueArc.setAttribute('stroke-linecap', 'round');
+
+    // Needle
+    const needleX = centerX + Math.cos(valueAngle) * (radius - 10);
+    const needleY = centerY + Math.sin(valueAngle) * (radius - 10);
+    const needle = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    needle.setAttribute('x1', centerX.toString());
+    needle.setAttribute('y1', centerY.toString());
+    needle.setAttribute('x2', needleX.toString());
+    needle.setAttribute('y2', needleY.toString());
+    needle.setAttribute('stroke', theme.text);
+    needle.setAttribute('stroke-width', '3');
+    needle.setAttribute('stroke-linecap', 'round');
+
+    // Center dot
+    const centerDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    centerDot.setAttribute('cx', centerX.toString());
+    centerDot.setAttribute('cy', centerY.toString());
+    centerDot.setAttribute('r', '6');
+    centerDot.setAttribute('fill', theme.text);
+
+    svg.appendChild(backgroundArc);
+    svg.appendChild(valueArc);
+    svg.appendChild(needle);
+    svg.appendChild(centerDot);
+
+    // Value text
+    const valueText = document.createElement('div');
+    valueText.textContent = `${value}%`;
+    valueText.style.cssText = `
+      margin-top: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-size: ${fluentTokens.fontSizeBase600.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      font-weight: ${fluentTokens.fontWeightBold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      color: ${theme.text};
+      text-align: center;
+    `;
+
+    gaugeContainer.appendChild(svg);
+    gaugeContainer.appendChild(valueText);
+    container.appendChild(gaugeContainer);
+  }
+
+  private createArcPath(centerX: number, centerY: number, radius: number, startAngle: number, endAngle: number): string {
+    const startX = centerX + Math.cos(startAngle) * radius;
+    const startY = centerY + Math.sin(startAngle) * radius;
+    const endX = centerX + Math.cos(endAngle) * radius;
+    const endY = centerY + Math.sin(endAngle) * radius;
+    const largeArcFlag = endAngle - startAngle <= Math.PI ? '0' : '1';
+
+    return `M ${startX} ${startY} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endX} ${endY}`;
+  }
+
+  private renderHeatmap(config: WidgetConfig, container: HTMLElement): void {
+    const heatmapData = config.data;
+    const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
+
+    const heatmapContainer = document.createElement('div');
+    heatmapContainer.className = 'fluent-heatmap';
+    heatmapContainer.style.cssText = `
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    // Title
+    if (heatmapData.title) {
+      const title = document.createElement('h3');
+      title.textContent = heatmapData.title;
+      title.style.cssText = `
+        margin: 0 0 ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
+        color: ${theme.text};
+        font-size: ${fluentTokens.fontSizeBase400.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightSemibold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      `;
+      heatmapContainer.appendChild(title);
+    }
+
+    // Heatmap grid
+    const grid = document.createElement('div');
+    
+    // Handle 2D array data format
+    let flatData: number[];
+    let columns: number;
+    let rows: number;
+    
+    if (Array.isArray(heatmapData.data) && Array.isArray(heatmapData.data[0])) {
+      // 2D array format
+      rows = heatmapData.data.length;
+      columns = heatmapData.data[0].length;
+      flatData = heatmapData.data.flat();
+    } else if (Array.isArray(heatmapData.data)) {
+      // 1D array format
+      columns = heatmapData.columns || 7;
+      rows = Math.ceil(heatmapData.data.length / columns);
+      flatData = heatmapData.data;
+    } else {
+      // Generate default data
+      columns = heatmapData.columns || 7;
+      rows = heatmapData.rows || 13;
+      flatData = this.generateHeatmapData(rows, columns);
+    }
+    
+    grid.style.cssText = `
+      display: grid;
+      grid-template-columns: repeat(${columns}, 1fr);
+      gap: 4px;
+      max-width: ${columns * (heatmapData.cellSize || 30) + (columns - 1) * 4}px;
+    `;
+
+    // Find min/max values for normalization
+    const minValue = Math.min(...flatData);
+    const maxValue = Math.max(...flatData);
+    const range = maxValue - minValue;
+    
+    flatData.forEach((value: number) => {
+      const cell = document.createElement('div');
+      const normalizedValue = range > 0 ? (value - minValue) / range : 0;
+      
+      // Use color scale if provided
+      let backgroundColor = theme.primary;
+      let opacity = normalizedValue * 0.8 + 0.1;
+      
+      if (heatmapData.colorScale) {
+        const minColor = heatmapData.colorScale.min || '#e1f5fe';
+        const maxColor = heatmapData.colorScale.max || '#0277bd';
+        backgroundColor = this.interpolateColor(minColor, maxColor, normalizedValue);
+        opacity = 1; // Use full opacity when using color scale
+      }
+      
+      cell.style.cssText = `
+        aspect-ratio: 1;
+        width: ${heatmapData.cellSize || 30}px;
+        height: ${heatmapData.cellSize || 30}px;
+        border-radius: ${fluentTokens.borderRadiusSmall.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        background-color: ${backgroundColor};
+        opacity: ${opacity};
+        cursor: pointer;
+        transition: all ${fluentTokens.durationFast.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: ${normalizedValue > 0.5 ? '#ffffff' : theme.text};
+        font-weight: ${fluentTokens.fontWeightMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      `;
+
+      // Show values if requested
+      if (heatmapData.showValues) {
+        cell.textContent = value.toString();
+      }
+
+      cell.title = `Value: ${value}`;
+      
+      cell.addEventListener('mouseenter', () => {
+        cell.style.transform = 'scale(1.1)';
+        cell.style.zIndex = '10';
+      });
+      
+      cell.addEventListener('mouseleave', () => {
+        cell.style.transform = 'scale(1)';
+        cell.style.zIndex = '1';
+      });
+
+      grid.appendChild(cell);
+    });
+
+    heatmapContainer.appendChild(grid);
+    container.appendChild(heatmapContainer);
+  }
+
+  private generateHeatmapData(rows: number, columns: number): number[] {
+    const data: number[] = [];
+    for (let i = 0; i < rows * columns; i++) {
+      data.push(Math.random());
+    }
+    return data;
+  }
+
+  private interpolateColor(color1: string, color2: string, factor: number): string {
+    // Convert hex colors to RGB
+    const hex1 = color1.replace('#', '');
+    const hex2 = color2.replace('#', '');
+    
+    const r1 = parseInt(hex1.substring(0, 2), 16);
+    const g1 = parseInt(hex1.substring(2, 4), 16);
+    const b1 = parseInt(hex1.substring(4, 6), 16);
+    
+    const r2 = parseInt(hex2.substring(0, 2), 16);
+    const g2 = parseInt(hex2.substring(2, 4), 16);
+    const b2 = parseInt(hex2.substring(4, 6), 16);
+    
+    // Interpolate
+    const r = Math.round(r1 + (r2 - r1) * factor);
+    const g = Math.round(g1 + (g2 - g1) * factor);
+    const b = Math.round(b1 + (b2 - b1) * factor);
+    
+    // Convert back to hex
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  }
+
+  private renderSlider(config: WidgetConfig, container: HTMLElement): void {
+    const sliderData = config.data;
+    const theme = this.getTheme(config.style?.theme);
+    const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
+
+    const sliderContainer = document.createElement('div');
+    sliderContainer.className = 'fluent-slider';
+    sliderContainer.style.cssText = `
+      font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+    `;
+
+    // Label
+    if (sliderData.label) {
+      const labelContainer = document.createElement('div');
+      labelContainer.style.cssText = `
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+      `;
+
+      const label = document.createElement('label');
+      label.textContent = sliderData.label;
+      label.style.cssText = `
+        font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        color: ${theme.text};
+      `;
+
+      const valueDisplay = document.createElement('span');
+      const formatValue = (val: number) => {
+        const unit = sliderData.unit || '';
+        return unit === '$' ? `$${val.toLocaleString()}` : `${val}${unit}`;
+      };
+      
+      valueDisplay.textContent = formatValue(sliderData.value || sliderData.min || 0);
+      valueDisplay.style.cssText = `
+        font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightBold.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        color: ${theme.primary};
+      `;
+
+      labelContainer.appendChild(label);
+      labelContainer.appendChild(valueDisplay);
+      sliderContainer.appendChild(labelContainer);
+
+      // Slider input
+      const slider = document.createElement('input');
+      slider.type = 'range';
+      slider.min = (sliderData.min || 0).toString();
+      slider.max = (sliderData.max || 100).toString();
+      slider.step = (sliderData.step || 1).toString();
+      slider.value = (sliderData.value || sliderData.min || 0).toString();
+      
+      slider.style.cssText = `
+        width: 100%;
+        height: 8px;
+        border-radius: ${fluentTokens.borderRadiusCircular.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        background: ${theme.surfaceBorder || theme.border};
+        outline: none;
+        appearance: none;
+        cursor: pointer;
+      `;
+
+      // Add custom slider thumb styling
+      const style = document.createElement('style');
+      style.textContent = `
+        .fluent-slider input[type="range"]::-webkit-slider-thumb {
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: ${theme.primary};
+          cursor: pointer;
+          box-shadow: ${fluentTokens.shadow4.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        }
+        
+        .fluent-slider input[type="range"]::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: ${theme.primary};
+          cursor: pointer;
+          border: none;
+          box-shadow: ${fluentTokens.shadow4.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        }
+      `;
+      document.head.appendChild(style);
+
+      slider.addEventListener('input', (event) => {
+        const target = event.target as HTMLInputElement;
+        const value = parseInt(target.value);
+        valueDisplay.textContent = formatValue(value);
+        if (sliderData.onChange) {
+          sliderData.onChange(value);
+        }
+      });
+
+      sliderContainer.appendChild(slider);
+
+      // Show range if requested
+      if (sliderData.showRange) {
+        const rangeContainer = document.createElement('div');
+        rangeContainer.style.cssText = `
+          display: flex;
+          justify-content: space-between;
+          margin-top: ${fluentTokens.spacingVerticalXS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          font-size: ${fluentTokens.fontSizeBase200.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          color: ${theme.text};
+          opacity: 0.8;
+        `;
+
+        const minSpan = document.createElement('span');
+        minSpan.textContent = formatValue(sliderData.min || 0);
+        
+        const maxSpan = document.createElement('span');
+        maxSpan.textContent = formatValue(sliderData.max || 100);
+
+        rangeContainer.appendChild(minSpan);
+        rangeContainer.appendChild(maxSpan);
+        sliderContainer.appendChild(rangeContainer);
+      }
+    }
+
+    // Description
+    if (sliderData.description) {
+      const description = document.createElement('p');
+      description.textContent = sliderData.description;
+      description.style.cssText = `
+        margin: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0 0 0;
+        font-size: ${fluentTokens.fontSizeBase200.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        color: ${theme.text};
+        opacity: 0.8;
+        line-height: 1.4;
+      `;
+      sliderContainer.appendChild(description);
+    }
+
+    container.appendChild(sliderContainer);
   }
 
   // Helper method to parse JSON from HTML

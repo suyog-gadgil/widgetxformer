@@ -188,6 +188,62 @@
             <h2 class="widget-title">Development Roadmap - Grouped</h2>
             <div id="demo-timeline-grouped"></div>
         </div>
+
+        <!-- New Widgets from more-samples.html -->
+        <div class="widget-container">
+            <h2 class="widget-title">👤 Profile Card</h2>
+            <div id="demo-profile-card"></div>
+        </div>
+
+        <div class="widget-container">
+            <h2 class="widget-title">📊 Stats Card</h2>
+            <div id="demo-stats-card"></div>
+        </div>
+
+        <div class="widget-container">
+            <h2 class="widget-title">🔔 Notification Card</h2>
+            <div id="demo-notification-card"></div>
+        </div>
+
+        <div class="widget-container">
+            <h2 class="widget-title">📈 Progress Bar</h2>
+            <div id="demo-progress-bar"></div>
+        </div>
+
+        <div class="widget-container">
+            <h2 class="widget-title">🎯 KPI Donut</h2>
+            <div id="demo-kpi-donut"></div>
+        </div>
+
+        <div class="widget-container">
+            <h2 class="widget-title">⚡ Gauge</h2>
+            <div id="demo-gauge"></div>
+        </div>
+
+        <div class="widget-container full-width">
+            <h2 class="widget-title">🔽 Funnel Chart</h2>
+            <div id="demo-funnel"></div>
+        </div>
+
+        <div class="widget-container">
+            <h2 class="widget-title">📍 Scatter Plot</h2>
+            <div id="demo-scatter"></div>
+        </div>
+
+        <div class="widget-container">
+            <h2 class="widget-title">💭 Bubble Chart</h2>
+            <div id="demo-bubble"></div>
+        </div>
+
+        <div class="widget-container">
+            <h2 class="widget-title">🔥 Heatmap</h2>
+            <div id="demo-heatmap"></div>
+        </div>
+
+        <div class="widget-container">
+            <h2 class="widget-title">🎚️ Interactive Slider</h2>
+            <div id="demo-slider"></div>
+        </div>
     </div>
 
     <!-- Controls -->
@@ -591,6 +647,198 @@ widgetXFormer.render(chartConfig, 'my-chart-container');
             widgetXFormer.render(configs.timelineVertical, 'demo-timeline-vertical');
             widgetXFormer.render(configs.timelineHorizontal, 'demo-timeline-horizontal');
             widgetXFormer.render(configs.timelineGrouped, 'demo-timeline-grouped');
+            
+            // Render new widgets from more-samples.html
+            widgetXFormer.render({
+                type: 'profile-card',
+                data: {
+                    avatar: 'https://via.placeholder.com/80x80/0078d4/ffffff?text=JD',
+                    name: 'John Doe',
+                    title: 'Senior Software Engineer',
+                    department: 'Engineering',
+                    email: 'john.doe@company.com',
+                    phone: '+1 (555) 123-4567',
+                    location: 'San Francisco, CA',
+                    skills: ['JavaScript', 'TypeScript', 'React', 'Node.js'],
+                    bio: 'Passionate developer with 8+ years of experience building scalable web applications.'
+                },
+                style: { theme: currentTheme }
+            }, 'demo-profile-card');
+
+            widgetXFormer.render({
+                type: 'stats-card',
+                data: {
+                    title: 'Q4 Performance',
+                    stats: [
+                        { label: 'Revenue', value: '$2.4M', change: '+12%', trend: 'up' },
+                        { label: 'Users', value: '45.2K', change: '+8%', trend: 'up' },
+                        { label: 'Conversion', value: '3.2%', change: '-2%', trend: 'down' },
+                        { label: 'Satisfaction', value: '4.8/5', change: '+0.2', trend: 'up' }
+                    ]
+                },
+                style: { theme: currentTheme }
+            }, 'demo-stats-card');
+
+            widgetXFormer.render({
+                type: 'notification-card',
+                data: {
+                    type: 'info',
+                    title: 'System Update Available',
+                    message: 'A new version of the application is available. Update now to get the latest features and security improvements.',
+                    timestamp: '2024-01-15T10:30:00Z',
+                    actions: [
+                        { label: 'Update Now', type: 'primary' },
+                        { label: 'Remind Later', type: 'secondary' }
+                    ]
+                },
+                style: { theme: currentTheme }
+            }, 'demo-notification-card');
+
+            widgetXFormer.render({
+                type: 'progress-bar',
+                data: {
+                    label: 'Project Completion',
+                    value: 68,
+                    max: 100,
+                    showPercentage: true,
+                    showValue: true,
+                    color: '#107c10',
+                    backgroundColor: '#f3f2f1',
+                    height: 20,
+                    animated: true
+                },
+                style: { theme: currentTheme }
+            }, 'demo-progress-bar');
+
+            widgetXFormer.render({
+                type: 'kpi-donut',
+                data: {
+                    title: 'Sales Target',
+                    value: 75,
+                    target: 100,
+                    unit: '%',
+                    color: '#0078d4',
+                    backgroundColor: '#f3f2f1',
+                    size: 120,
+                    showTarget: true,
+                    showPercentage: true
+                },
+                style: { theme: currentTheme }
+            }, 'demo-kpi-donut');
+
+            widgetXFormer.render({
+                type: 'gauge',
+                data: {
+                    title: 'Server Performance',
+                    value: 78,
+                    min: 0,
+                    max: 100,
+                    unit: '%',
+                    color: '#107c10',
+                    dangerZone: 90,
+                    warningZone: 75,
+                    size: 150,
+                    showValue: true,
+                    animated: true
+                },
+                style: { theme: currentTheme }
+            }, 'demo-gauge');
+
+            widgetXFormer.render({
+                type: 'funnel',
+                data: {
+                    title: 'Sales Funnel 2024',
+                    stages: [
+                        { label: 'Visitors', value: 10000, color: '#0078d4' },
+                        { label: 'Leads', value: 2500, color: '#106ebe' },
+                        { label: 'Prospects', value: 750, color: '#005a9e' },
+                        { label: 'Customers', value: 150, color: '#004578' }
+                    ],
+                    showValues: true,
+                    showPercentages: true
+                },
+                style: { theme: currentTheme }
+            }, 'demo-funnel');
+
+            widgetXFormer.render({
+                type: 'scatter',
+                data: {
+                    title: 'Performance vs Experience',
+                    xAxis: { label: 'Years of Experience', min: 0, max: 15 },
+                    yAxis: { label: 'Performance Score', min: 0, max: 100 },
+                    data: [
+                        { x: 2, y: 65, label: 'Alice' },
+                        { x: 5, y: 78, label: 'Bob' },
+                        { x: 8, y: 85, label: 'Carol' },
+                        { x: 3, y: 70, label: 'David' },
+                        { x: 12, y: 92, label: 'Eve' },
+                        { x: 7, y: 82, label: 'Frank' },
+                        { x: 10, y: 88, label: 'Grace' }
+                    ],
+                    pointColor: '#0078d4',
+                    pointSize: 6
+                },
+                style: { theme: currentTheme }
+            }, 'demo-scatter');
+
+            widgetXFormer.render({
+                type: 'bubble',
+                data: {
+                    title: 'Market Analysis',
+                    xAxis: { label: 'Market Share (%)', min: 0, max: 50 },
+                    yAxis: { label: 'Growth Rate (%)', min: -10, max: 30 },
+                    data: [
+                        { x: 25, y: 15, size: 50, label: 'Product A', color: '#0078d4' },
+                        { x: 15, y: 20, size: 30, label: 'Product B', color: '#107c10' },
+                        { x: 35, y: 8, size: 40, label: 'Product C', color: '#d13438' },
+                        { x: 20, y: 25, size: 25, label: 'Product D', color: '#ca5010' },
+                        { x: 10, y: -5, size: 20, label: 'Product E', color: '#8764b8' }
+                    ]
+                },
+                style: { theme: currentTheme }
+            }, 'demo-bubble');
+
+            widgetXFormer.render({
+                type: 'heatmap',
+                data: {
+                    title: 'Website Activity Heatmap',
+                    data: [
+                        [1, 2, 3, 4, 3, 2, 1],
+                        [2, 4, 6, 8, 6, 4, 2],
+                        [3, 6, 9, 12, 9, 6, 3],
+                        [4, 8, 12, 16, 12, 8, 4],
+                        [3, 6, 9, 12, 9, 6, 3],
+                        [2, 4, 6, 8, 6, 4, 2],
+                        [1, 2, 3, 4, 3, 2, 1]
+                    ],
+                    xLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    yLabels: ['12 AM', '4 AM', '8 AM', '12 PM', '4 PM', '8 PM', '11 PM'],
+                    colorScale: {
+                        min: '#e1f5fe',
+                        max: '#0277bd'
+                    },
+                    cellSize: 30,
+                    showValues: true
+                },
+                style: { theme: currentTheme }
+            }, 'demo-heatmap');
+
+            widgetXFormer.render({
+                type: 'slider',
+                data: {
+                    label: 'Budget Allocation',
+                    value: 75000,
+                    min: 0,
+                    max: 200000,
+                    step: 5000,
+                    unit: '$',
+                    showValue: true,
+                    showRange: true,
+                    color: '#0078d4',
+                    onChange: (value) => console.log('Budget changed to:', value)
+                },
+                style: { theme: currentTheme }
+            }, 'demo-slider');
             
             // Render metrics
             widgetXFormer.render(configs.metrics.users, 'metric-users');

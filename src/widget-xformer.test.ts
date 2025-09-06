@@ -575,6 +575,547 @@ describe('WidgetXFormer', () => {
     })
   })
 
+  describe('New Widget Types from more-samples.html', () => {
+    describe('Profile Card Widget', () => {
+      it('should render profile card correctly', () => {
+        const config: WidgetConfig = {
+          type: 'profile-card',
+          data: {
+            name: 'Alex Vance',
+            title: 'Lead Developer',
+            avatar: 'https://example.com/avatar.jpg',
+            socialLinks: [
+              { icon: '📧', url: 'mailto:alex@example.com' },
+              { icon: '💼', url: 'https://linkedin.com/in/alex' }
+            ]
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const profileCard = container.querySelector('.fluent-profile-card')
+        expect(profileCard).toBeTruthy()
+
+        // Check avatar
+        const avatar = profileCard?.querySelector('img')
+        expect(avatar).toBeTruthy()
+        expect(avatar?.src).toBe('https://example.com/avatar.jpg')
+        expect(avatar?.alt).toBe('Alex Vance')
+
+        // Check name
+        const name = profileCard?.querySelector('h3')
+        expect(name?.textContent).toBe('Alex Vance')
+
+        // Check title
+        const title = profileCard?.querySelector('p')
+        expect(title?.textContent).toBe('Lead Developer')
+
+        // Check social links
+        const socialLinks = profileCard?.querySelectorAll('a')
+        expect(socialLinks).toHaveLength(2)
+        expect(socialLinks?.[0].innerHTML).toBe('📧')
+        expect(socialLinks?.[0].href).toBe('mailto:alex@example.com')
+      })
+
+      it('should render profile card without optional fields', () => {
+        const config: WidgetConfig = {
+          type: 'profile-card',
+          data: {
+            name: 'John Doe'
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const profileCard = container.querySelector('.fluent-profile-card')
+        expect(profileCard).toBeTruthy()
+
+        const name = profileCard?.querySelector('h3')
+        expect(name?.textContent).toBe('John Doe')
+
+        const avatar = profileCard?.querySelector('img')
+        expect(avatar).toBeFalsy()
+
+        const socialLinks = profileCard?.querySelectorAll('a')
+        expect(socialLinks).toHaveLength(0)
+      })
+    })
+
+    describe('Stats Card Widget', () => {
+      it('should render stats card correctly', () => {
+        const config: WidgetConfig = {
+          type: 'stats-card',
+          data: {
+            title: 'New Users',
+            value: '1,257',
+            trend: '+12% from last week',
+            icon: '👥',
+            accentColor: '#10b981'
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const statsCard = container.querySelector('.fluent-stats-card') as HTMLElement
+        expect(statsCard).toBeTruthy()
+        expect(statsCard?.style.background).toBe('rgb(16, 185, 129)')
+
+        // Check title and icon
+        const header = statsCard?.children[0]
+        const title = header?.children[0] as HTMLElement
+        const icon = header?.children[1] as HTMLElement
+        expect(title?.textContent).toBe('New Users')
+        expect(icon?.innerHTML).toBe('👥')
+
+        // Check value
+        const value = statsCard?.children[1] as HTMLElement
+        expect(value?.textContent).toBe('1,257')
+
+        // Check trend
+        const trend = statsCard?.children[2] as HTMLElement
+        expect(trend?.textContent).toBe('+12% from last week')
+      })
+
+      it('should handle clickable stats card', () => {
+        const clickHandler = vi.fn()
+        const config: WidgetConfig = {
+          type: 'stats-card',
+          data: {
+            title: 'Clickable Stats',
+            value: '100',
+            clickable: true,
+            onClick: clickHandler
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const statsCard = container.querySelector('.fluent-stats-card') as HTMLElement
+        expect(statsCard.style.cursor).toBe('pointer')
+
+        statsCard.click()
+        expect(clickHandler).toHaveBeenCalled()
+      })
+    })
+
+    describe('Notification Card Widget', () => {
+      it('should render notification card correctly', () => {
+        const config: WidgetConfig = {
+          type: 'notification-card',
+          data: {
+            title: 'Deployment Successful',
+            message: 'Your project has been deployed to production.',
+            type: 'success',
+            icon: '✅',
+            action: {
+              text: 'View Details',
+              onClick: vi.fn()
+            }
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const notificationCard = container.querySelector('.fluent-notification-card')
+        expect(notificationCard).toBeTruthy()
+
+        // Check icon container
+        const iconContainer = notificationCard?.children[0]
+        expect(iconContainer?.innerHTML).toBe('✅')
+
+        // Check content
+        const content = notificationCard?.children[1]
+        const title = content?.querySelector('h4')
+        const message = content?.querySelector('p')
+        const button = content?.querySelector('button')
+
+        expect(title?.textContent).toBe('Deployment Successful')
+        expect(message?.textContent).toBe('Your project has been deployed to production.')
+        expect(button?.textContent).toBe('View Details')
+      })
+
+      it('should handle action button click', () => {
+        const actionHandler = vi.fn()
+        const config: WidgetConfig = {
+          type: 'notification-card',
+          data: {
+            title: 'Test Notification',
+            message: 'Test message',
+            action: {
+              text: 'Click Me',
+              onClick: actionHandler
+            }
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const button = container.querySelector('button')
+        button?.click()
+        expect(actionHandler).toHaveBeenCalled()
+      })
+    })
+
+    describe('Progress Bar Widget', () => {
+      it('should render progress bar correctly', () => {
+        const config: WidgetConfig = {
+          type: 'progress-bar',
+          data: {
+            label: 'Task Completion',
+            value: 75,
+            color: '#3b82f6',
+            animated: true
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const progressContainer = container.querySelector('.fluent-progress-bar')
+        expect(progressContainer).toBeTruthy()
+
+        // Check label container
+        const labelContainer = progressContainer?.children[0]
+        const label = labelContainer?.children[0] as HTMLElement
+        const percentage = labelContainer?.children[1] as HTMLElement
+        expect(label?.textContent).toBe('Task Completion')
+        expect(percentage?.textContent).toBe('75%')
+
+        // Check progress track and fill
+        const progressTrack = progressContainer?.children[1]
+        const progressFill = progressTrack?.children[0] as HTMLElement
+        expect(progressFill?.style.width).toBe('75%')
+        expect(progressFill?.style.background).toBe('rgb(59, 130, 246)')
+      })
+
+      it('should handle progress bar without label', () => {
+        const config: WidgetConfig = {
+          type: 'progress-bar',
+          data: {
+            value: 50
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const progressContainer = container.querySelector('.fluent-progress-bar')
+        expect(progressContainer?.children).toHaveLength(1) // Only progress track, no label
+      })
+    })
+
+    describe('KPI Donut Widget', () => {
+      it('should render KPI donut correctly', () => {
+        const config: WidgetConfig = {
+          type: 'kpi-donut',
+          data: {
+            value: 82,
+            label: 'Project Completion',
+            color: '#10b981'
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const kpiContainer = container.querySelector('.fluent-kpi-donut')
+        expect(kpiContainer).toBeTruthy()
+
+        // Check SVG
+        const svg = kpiContainer?.querySelector('svg')
+        expect(svg).toBeTruthy()
+        expect(svg?.getAttribute('width')).toBe('200')
+        expect(svg?.getAttribute('height')).toBe('200')
+
+        // Check circles
+        const circles = svg?.querySelectorAll('circle')
+        expect(circles).toHaveLength(2) // Background and progress circles
+
+        // Check center text
+        const centerText = svg?.querySelector('text')
+        expect(centerText?.textContent).toBe('82%')
+
+        // Check label
+        const label = kpiContainer?.querySelector('div')
+        expect(label?.textContent).toBe('Project Completion')
+      })
+    })
+
+    describe('Funnel Widget', () => {
+      it('should render funnel chart correctly', () => {
+        const config: WidgetConfig = {
+          type: 'funnel',
+          data: {
+            title: 'Sales Funnel',
+            stages: [
+              { label: 'Visitors', value: 100, unit: '%' },
+              { label: 'Sign Ups', value: 45, unit: '%' },
+              { label: 'Purchases', value: 15, unit: '%' }
+            ]
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const funnelContainer = container.querySelector('.fluent-funnel')
+        expect(funnelContainer).toBeTruthy()
+
+        // Check title
+        const title = funnelContainer?.querySelector('h3')
+        expect(title?.textContent).toBe('Sales Funnel')
+
+        // Check stages (title + 3 stages = 4 children)
+        expect(funnelContainer?.children).toHaveLength(4)
+
+        // Check first stage
+        const firstStage = funnelContainer?.children[1] as HTMLElement
+        expect(firstStage?.textContent).toBe('Visitors (100%)')
+        expect(firstStage?.style.width).toBe('100%')
+
+        // Check second stage (should be narrower)
+        const secondStage = funnelContainer?.children[2] as HTMLElement
+        expect(secondStage?.textContent).toBe('Sign Ups (45%)')
+        expect(secondStage?.style.width).toBe('85%')
+      })
+    })
+
+    describe('Scatter Plot Widget', () => {
+      it('should render scatter plot correctly', () => {
+        const config: WidgetConfig = {
+          type: 'scatter',
+          data: {
+            labels: ['Campaign Performance'],
+            datasets: [{
+              label: 'Ad Spend vs Conversions',
+              data: [
+                { x: 20, y: 30 },
+                { x: 40, y: 15 },
+                { x: 60, y: 80 }
+              ],
+              backgroundColor: '#3b82f6'
+            }]
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const canvas = container.querySelector('canvas')
+        expect(canvas).toBeTruthy()
+        expect(canvas?.width).toBe(400)
+        expect(canvas?.height).toBe(300)
+      })
+    })
+
+    describe('Bubble Chart Widget', () => {
+      it('should render bubble chart correctly', () => {
+        const config: WidgetConfig = {
+          type: 'bubble',
+          data: {
+            labels: ['Market Analysis'],
+            datasets: [
+              {
+                label: 'Product A',
+                data: [{ x: 20, y: 30, r: 15 }],
+                backgroundColor: '#ff6384'
+              },
+              {
+                label: 'Product B',
+                data: [{ x: 40, y: 15, r: 25 }],
+                backgroundColor: '#36a2eb'
+              }
+            ]
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const canvas = container.querySelector('canvas')
+        expect(canvas).toBeTruthy()
+        expect(canvas?.width).toBe(400)
+        expect(canvas?.height).toBe(300)
+      })
+    })
+
+    describe('Gauge Widget', () => {
+      it('should render gauge correctly', () => {
+        const config: WidgetConfig = {
+          type: 'gauge',
+          data: {
+            title: 'System Load',
+            value: 65,
+            color: '#f59e0b'
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const gaugeContainer = container.querySelector('.fluent-gauge')
+        expect(gaugeContainer).toBeTruthy()
+
+        // Check title
+        const title = gaugeContainer?.querySelector('h3')
+        expect(title?.textContent).toBe('System Load')
+
+        // Check SVG
+        const svg = gaugeContainer?.querySelector('svg')
+        expect(svg).toBeTruthy()
+        expect(svg?.getAttribute('width')).toBe('200')
+        expect(svg?.getAttribute('height')).toBe('120')
+
+        // Check paths (background and value arcs)
+        const paths = svg?.querySelectorAll('path')
+        expect(paths).toHaveLength(2)
+
+        // Check needle
+        const needle = svg?.querySelector('line')
+        expect(needle).toBeTruthy()
+
+        // Check center dot
+        const centerDot = svg?.querySelector('circle')
+        expect(centerDot).toBeTruthy()
+
+        // Check value text
+        const valueText = gaugeContainer?.querySelector('div')
+        expect(valueText?.textContent).toBe('65%')
+      })
+    })
+
+    describe('Heatmap Widget', () => {
+      it('should render heatmap correctly', () => {
+        const config: WidgetConfig = {
+          type: 'heatmap',
+          data: {
+            title: 'Activity Heatmap',
+            columns: 7,
+            rows: 5
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const heatmapContainer = container.querySelector('.fluent-heatmap')
+        expect(heatmapContainer).toBeTruthy()
+
+        // Check title
+        const title = heatmapContainer?.querySelector('h3')
+        expect(title?.textContent).toBe('Activity Heatmap')
+
+        // Check grid
+        const grid = heatmapContainer?.children[1] as HTMLElement
+        expect(grid?.style.gridTemplateColumns).toBe('repeat(7, 1fr)')
+
+        // Check cells (7 columns * 5 rows = 35 cells)
+        const cells = grid?.children
+        expect(cells).toHaveLength(35)
+
+        // Check first cell has required styles
+        const firstCell = cells?.[0] as HTMLElement
+        expect(firstCell?.style.aspectRatio).toBe('1')
+        expect(firstCell?.style.cursor).toBe('pointer')
+      })
+
+      it('should use provided data', () => {
+        const testData = [0.1, 0.5, 0.9, 0.3]
+        const config: WidgetConfig = {
+          type: 'heatmap',
+          data: {
+            columns: 2,
+            rows: 2,
+            data: testData
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const heatmapContainer = container.querySelector('.fluent-heatmap')
+        expect(heatmapContainer).toBeTruthy()
+        
+        // Find the grid element (it should be the div after the title if there's a title, or the first div)
+        const grid = heatmapContainer?.querySelector('div[style*="grid-template-columns"]') as HTMLElement
+        expect(grid).toBeTruthy()
+        
+        const cells = grid?.children
+        expect(cells).toHaveLength(4)
+      })
+    })
+
+    describe('Slider Widget', () => {
+      it('should render slider correctly', () => {
+        const onChange = vi.fn()
+        const config: WidgetConfig = {
+          type: 'slider',
+          data: {
+            label: 'Adjust Threshold',
+            min: 0,
+            max: 100,
+            value: 50,
+            description: 'Controls sensitivity level',
+            onChange
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const sliderContainer = container.querySelector('.fluent-slider')
+        expect(sliderContainer).toBeTruthy()
+
+        // Check label container
+        const labelContainer = sliderContainer?.children[0]
+        const label = labelContainer?.children[0] as HTMLElement
+        const valueDisplay = labelContainer?.children[1] as HTMLElement
+        expect(label?.textContent).toBe('Adjust Threshold')
+        expect(valueDisplay?.textContent).toBe('50')
+
+        // Check slider input
+        const slider = sliderContainer?.children[1] as HTMLInputElement
+        expect(slider?.type).toBe('range')
+        expect(slider?.min).toBe('0')
+        expect(slider?.max).toBe('100')
+        expect(slider?.value).toBe('50')
+
+        // Check description
+        const description = sliderContainer?.children[2] as HTMLElement
+        expect(description?.textContent).toBe('Controls sensitivity level')
+      })
+
+      it('should handle slider value change', () => {
+        const onChange = vi.fn()
+        const config: WidgetConfig = {
+          type: 'slider',
+          data: {
+            label: 'Test Slider',
+            value: 30,
+            onChange
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const slider = container.querySelector('input[type="range"]') as HTMLInputElement
+        const valueDisplay = container.querySelector('.fluent-slider span:last-child') as HTMLElement
+
+        // Simulate input change
+        slider.value = '75'
+        slider.dispatchEvent(new Event('input'))
+
+        expect(valueDisplay?.textContent).toBe('75')
+        expect(onChange).toHaveBeenCalledWith(75)
+      })
+
+      it('should render slider without description', () => {
+        const config: WidgetConfig = {
+          type: 'slider',
+          data: {
+            label: 'Simple Slider',
+            value: 25
+          }
+        }
+
+        widgetXFormer.render(config, 'test-container')
+
+        const sliderContainer = container.querySelector('.fluent-slider')
+        expect(sliderContainer?.children).toHaveLength(2) // Label container + slider, no description
+      })
+    })
+  })
+
   describe('Theme System', () => {
     it('should apply default theme correctly', () => {
       const config: WidgetConfig = {

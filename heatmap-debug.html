@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heatmap Debug Test</title>
+    <link rel="stylesheet" href="./src/style.css">
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #f3f2f1; 
+            margin: 20px; 
+        }
+        .test-container { 
+            background: white; 
+            padding: 20px; 
+            margin: 20px 0; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            border: 2px solid #e1e1e1;
+        }
+        h1, h2 { color: #323130; }
+        .debug-info {
+            background: #f3f2f1;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Heatmap Debug Test</h1>
+    
+    <div class="test-container">
+        <h2>Test 1: Basic Heatmap (Auto-generated data)</h2>
+        <div class="debug-info" id="test1-info">Loading...</div>
+        <div id="heatmap-test1"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Test 2: Heatmap with 2D Array Data</h2>
+        <div class="debug-info" id="test2-info">Loading...</div>
+        <div id="heatmap-test2"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Test 3: Heatmap with 1D Array Data</h2>
+        <div class="debug-info" id="test3-info">Loading...</div>
+        <div id="heatmap-test3"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Test 4: Heatmap with Color Scale</h2>
+        <div class="debug-info" id="test4-info">Loading...</div>
+        <div id="heatmap-test4"></div>
+    </div>
+
+    <script type="module">
+        import WidgetXFormer from './src/widget-xformer.js';
+
+        const widgetXFormer = WidgetXFormer.getInstance();
+        const theme = 'light';
+
+        function updateDebugInfo(testId, info) {
+            document.getElementById(`${testId}-info`).textContent = info;
+        }
+
+        function testHeatmap(testId, config, description) {
+            console.log(`Testing ${testId}: ${description}`);
+            updateDebugInfo(testId, `Testing: ${description}`);
+            
+            try {
+                widgetXFormer.render(config, `heatmap-${testId}`);
+                updateDebugInfo(testId, `✅ SUCCESS: ${description}`);
+                console.log(`${testId} rendered successfully`);
+            } catch (error) {
+                updateDebugInfo(testId, `❌ ERROR: ${error.message}`);
+                console.error(`${testId} failed:`, error);
+            }
+        }
+
+        // Test 1: Basic heatmap with auto-generated data
+        testHeatmap('test1', {
+            type: 'heatmap',
+            data: {
+                title: 'Basic Heatmap (Auto-generated)',
+                columns: 7,
+                rows: 5,
+                cellSize: 30
+            },
+            style: { theme }
+        }, 'Auto-generated data');
+
+        // Test 2: Heatmap with 2D array
+        testHeatmap('test2', {
+            type: 'heatmap',
+            data: {
+                title: 'Heatmap with 2D Array',
+                data: [
+                    [1, 2, 3, 4, 3, 2, 1],
+                    [2, 4, 6, 8, 6, 4, 2],
+                    [3, 6, 9, 12, 9, 6, 3],
+                    [4, 8, 12, 16, 12, 8, 4],
+                    [3, 6, 9, 12, 9, 6, 3]
+                ],
+                cellSize: 25,
+                showValues: true
+            },
+            style: { theme }
+        }, '2D array data with values shown');
+
+        // Test 3: Heatmap with 1D array
+        testHeatmap('test3', {
+            type: 'heatmap',
+            data: {
+                title: 'Heatmap with 1D Array',
+                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+                columns: 7,
+                cellSize: 20
+            },
+            style: { theme }
+        }, '1D array data');
+
+        // Test 4: Heatmap with color scale
+        testHeatmap('test4', {
+            type: 'heatmap',
+            data: {
+                title: 'Heatmap with Color Scale',
+                columns: 7,
+                rows: 8,
+                cellSize: 22,
+                colorScale: {
+                    min: '#ebedf0',
+                    max: '#0078d4'
+                }
+            },
+            style: { theme }
+        }, 'Custom color scale');
+
+        console.log('All heatmap tests initiated');
+    </script>
+</body>
+</html>
