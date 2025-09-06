@@ -829,7 +829,7 @@ class WidgetXFormer {
     container.appendChild(canvas);
   }
 
-  private drawDoughnutChart(ctx: CanvasRenderingContext2D, data: ChartData, width: number, height: number, theme: any): void {
+  private drawDoughnutChart(ctx: CanvasRenderingContext2D, data: ChartData, width: number, height: number, _theme: any): void {
     const centerX = width / 2;
     const centerY = height / 2;
     const radius = Math.min(width, height) / 3;
@@ -842,7 +842,7 @@ class WidgetXFormer {
 
     const points: {x: number, y: number, value: number, label: string, startAngle: number, endAngle: number}[] = [];
 
-    numericData.forEach((value, index) => {
+  numericData.forEach((value, index) => {
       const sliceAngle = (value / total) * 2 * Math.PI;
       const color = Array.isArray(data.datasets[0].backgroundColor) 
         ? data.datasets[0].backgroundColor[index] 
@@ -1079,7 +1079,7 @@ class WidgetXFormer {
     ctx.stroke();
 
     // Draw points after the line
-    points.forEach((point, index) => {
+  points.forEach((point) => {
       ctx.fillStyle = data.datasets[0].backgroundColor || theme.primary;
       ctx.beginPath();
       ctx.arc(point.x, point.y, 4, 0, 2 * Math.PI);
