@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espresso Sample - Safe Runtime Demo</title>
+</head>
+<body>
+    <header>
+        <h1>Global Coffee Production Dashboard</h1>
+        <p>An interactive exploration of coffee production worldwide</p>
+    </header>
+
+    <main>
+        <!-- Tabs Widget -->
+        <section id="safe-tabs-overview" class="safe-tabs" data-config-ref="tabs-config">
+            <h2>Coffee Overview</h2>
+        </section>
+
+        <!-- Chart Widget for Coffee Types -->
+        <section id="safe-chart-types" class="safe-chart" data-config-ref="chart-types-config">
+            <h2>Coffee Bean Types Distribution</h2>
+        </section>
+
+        <!-- Chart Widget for Regional Production -->
+        <section id="safe-chart-regions" class="safe-chart" data-config-ref="chart-regions-config">
+            <h2>Production by Region</h2>
+        </section>
+
+        <!-- Accordion Widget for Producer Details -->
+        <section id="safe-accordion-producers" class="safe-accordion" data-config-ref="accordion-config">
+            <h2>Top Coffee Producers</h2>
+        </section>
+
+        <!-- Action Buttons -->
+        <div class="actions">
+            <button data-safe-action="toggleTab" data-safe-target="safe-tabs-overview" data-safe-params-ref="tab-action-1">
+                Show Overview
+            </button>
+            <button data-safe-action="updateChart" data-safe-target="safe-chart-types" data-safe-params-ref="chart-update-action">
+                Update Chart Data
+            </button>
+        </div>
+    </main>
+
+    <!-- JSON Configuration Islands -->
+    <script type="application/json" id="tabs-config" data-json='
+    {
+        "type": "tabs",
+        "data": {
+            "items": [
+                {
+                    "id": "overview",
+                    "label": "Overview",
+                    "content": "Coffee is one of the most traded commodities globally, with over 2 billion cups consumed daily."
+                },
+                {
+                    "id": "production",
+                    "label": "Production",
+                    "content": "The top coffee-producing countries include Brazil, Vietnam, Colombia, and Indonesia."
+                },
+                {
+                    "id": "consumption",
+                    "label": "Consumption",
+                    "content": "Nordic countries lead in per-capita coffee consumption, with Finland consuming over 12kg per person annually."
+                }
+            ]
+        },
+        "style": {
+            "theme": "default",
+            "density": "comfortable"
+        }
+    }'>
+    </script>
+
+    <script type="application/json" id="chart-types-config" data-json='
+    {
+        "type": "doughnut",
+        "data": {
+            "labels": ["Arabica", "Robusta", "Liberica", "Excelsa"],
+            "datasets": [{
+                "label": "Coffee Bean Types",
+                "data": [75, 24, 0.8, 0.2],
+                "backgroundColor": ["#8B4513", "#D2691E", "#CD853F", "#DEB887"]
+            }]
+        },
+        "style": {
+            "theme": "default",
+            "palette": "neutral"
+        }
+    }'>
+    </script>
+
+    <script type="application/json" id="chart-regions-config" data-json='
+    {
+        "type": "bar",
+        "data": {
+            "labels": ["South America", "Asia", "Africa", "Central America", "Oceania"],
+            "datasets": [{
+                "label": "Annual Production (Million bags)",
+                "data": [45.2, 32.8, 18.5, 15.3, 1.2],
+                "backgroundColor": ["#0078d4", "#106ebe", "#005a9e", "#004578", "#003966"]
+            }]
+        },
+        "style": {
+            "theme": "brand",
+            "density": "compact"
+        }
+    }'>
+    </script>
+
+    <script type="application/json" id="accordion-config" data-json='
+    {
+        "type": "accordion",
+        "data": {
+            "items": [
+                {
+                    "id": "brazil",
+                    "title": "Brazil - 37% of Global Production",
+                    "content": "Brazil produces approximately 2.6 million metric tons of coffee annually, primarily Arabica beans.",
+                    "expanded": true
+                },
+                {
+                    "id": "vietnam",
+                    "title": "Vietnam - 16% of Global Production",
+                    "content": "Vietnam is the largest producer of Robusta beans, contributing significantly to instant coffee production.",
+                    "expanded": false
+                },
+                {
+                    "id": "colombia",
+                    "title": "Colombia - 8% of Global Production",
+                    "content": "Colombian coffee is renowned for its quality, with strict geographic and quality certifications.",
+                    "expanded": false
+                }
+            ]
+        }
+    }'>
+    </script>
+
+    <!-- Action Parameters -->
+    <script type="application/json" id="tab-action-1" data-json='
+    {
+        "tabId": "overview"
+    }'>
+    </script>
+
+    <script type="application/json" id="chart-update-action" data-json='
+    {
+        "data": {
+            "labels": ["Arabica", "Robusta"],
+            "datasets": [{
+                "label": "Simplified Distribution",
+                "data": [75, 25],
+                "backgroundColor": ["#8B4513", "#D2691E"]
+            }]
+        }
+    }'>
+    </script>
+
+    <!-- Safe Styles -->
+    <safe-style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #323130;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #8B4513;
+            margin: 0 0 0.5rem 0;
+        }
+
+        section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .actions button {
+            padding: 0.75rem 1.5rem;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .actions button:hover {
+            background: #106ebe;
+        }
+    </safe-style>
+</body>
+</html>

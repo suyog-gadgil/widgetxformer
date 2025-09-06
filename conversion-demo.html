@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WidgetXFormer - Espresso Sample Conversion</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #323130;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2.5rem;
+        }
+
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .comparison-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .comparison-card h3 {
+            margin-top: 0;
+            color: #323130;
+        }
+
+        .before {
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .after {
+            border-left: 4px solid #51cf66;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .benefits {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .benefits ul {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits li {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid #0078d4;
+        }
+
+        .controls {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .controls button {
+            padding: 0.75rem 1.5rem;
+            margin: 0.5rem;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .controls button:hover {
+            background: #106ebe;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+        }
+
+        .widget-showcase {
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>WidgetXFormer</h1>
+        <p>Converting Espresso Sample to Modern Widget Library</p>
+        <p><em>Transform complex JavaScript widgets into simple JSON configurations</em></p>
+    </div>
+
+    <div class="comparison-section">
+        <div class="comparison-card before">
+            <h3>❌ Before: Original Espresso Sample</h3>
+            <p>Complex HTML structure with embedded JSON and custom JavaScript for each widget type.</p>
+            
+            <div class="code-block">
+&lt;!-- Complex HTML structure --&gt;
+&lt;section id="safe-tabs-overview" class="safe-tabs" 
+         data-config-ref="tabs-config"&gt;
+    &lt;h2&gt;Coffee Overview&lt;/h2&gt;
+&lt;/section&gt;
+
+&lt;!-- Separate JSON islands --&gt;
+&lt;script type="application/json" id="tabs-config" 
+        data-json='{"type": "tabs", ...}'&gt;
+&lt;/script&gt;
+
+&lt;!-- Custom JavaScript for each widget --&gt;
+&lt;script&gt;
+    // Custom implementation needed for:
+    // - Tab switching logic
+    // - Chart rendering
+    // - Accordion behavior
+    // - Theme management
+&lt;/script&gt;
+            </div>
+        </div>
+
+        <div class="comparison-card after">
+            <h3>✅ After: WidgetXFormer Library</h3>
+            <p>Clean, consistent API with JSON-driven configuration and built-in theming.</p>
+            
+            <div class="code-block">
+// Single library import
+import WidgetXFormer from './widget-xformer';
+const widget = WidgetXFormer.getInstance();
+
+// Simple JSON configuration
+const tabConfig = {
+    type: 'tabs',
+    data: {
+        items: [
+            { id: 'overview', label: 'Overview', content: '...' },
+            { id: 'production', label: 'Production', content: '...' }
+        ]
+    },
+    style: { theme: 'default' }
+};
+
+// One line to render any widget
+widget.render(tabConfig, 'container-id');
+
+// Built-in theme switching
+widget.render({...config, style: {theme: 'dark'}}, 'id');
+            </div>
+        </div>
+    </div>
+
+    <div class="benefits">
+        <h2>🚀 Benefits of WidgetXFormer</h2>
+        <ul>
+            <li>
+                <strong>🔧 Reduced Complexity</strong><br>
+                Replace hundreds of lines of custom JavaScript with simple JSON configurations
+            </li>
+            <li>
+                <strong>🎨 Built-in Theming</strong><br>
+                Switch between light, dark, and brand themes with a single property change
+            </li>
+            <li>
+                <strong>⚡ TypeScript Support</strong><br>
+                Full type safety and IntelliSense support for better developer experience
+            </li>
+            <li>
+                <strong>📱 Responsive Design</strong><br>
+                All widgets are mobile-friendly and responsive out of the box
+            </li>
+            <li>
+                <strong>🔄 Consistent API</strong><br>
+                Same render method works for all widget types - charts, tabs, accordions, tables
+            </li>
+            <li>
+                <strong>🎯 Easy Maintenance</strong><br>
+                Update widget behavior by changing JSON data, not JavaScript code
+            </li>
+        </ul>
+    </div>
+
+    <div class="controls">
+        <h2>🎮 Try the Conversion</h2>
+        <p>See how the original Espresso Sample widgets are converted to WidgetXFormer format</p>
+        <button onclick="runConversion()">🔄 Convert Original Widgets</button>
+        <button onclick="showCodeComparison()">📋 Show Code Comparison</button>
+        <button onclick="window.open('./demo.html', '_blank')">🚀 View Full Demo</button>
+        <button onclick="window.open('./examples/espresso-sample.html', '_blank')">📄 View Original Sample</button>
+    </div>
+
+    <div id="conversion-results" class="widget-showcase">
+        <!-- Converted widgets will appear here -->
+    </div>
+
+    <div id="code-comparison" style="display: none;" class="benefits">
+        <h2>📊 Detailed Code Comparison</h2>
+        <div class="comparison-section">
+            <div class="comparison-card before">
+                <h4>Original Approach Problems:</h4>
+                <ul style="text-align: left;">
+                    <li>Scattered configuration across HTML</li>
+                    <li>Custom JavaScript for each widget type</li>
+                    <li>No consistent theming system</li>
+                    <li>Difficult to maintain and extend</li>
+                    <li>Poor type safety</li>
+                </ul>
+            </div>
+            <div class="comparison-card after">
+                <h4>WidgetXFormer Solutions:</h4>
+                <ul style="text-align: left;">
+                    <li>Centralized JSON configuration</li>
+                    <li>Single library handles all widget types</li>
+                    <li>Built-in theme system</li>
+                    <li>Easy to extend and maintain</li>
+                    <li>Full TypeScript support</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import EspressoConverter from './src/espresso-converter.js';
+
+        window.runConversion = async function() {
+            const resultsDiv = document.getElementById('conversion-results');
+            resultsDiv.innerHTML = '<div style="text-align: center; padding: 2rem;"><h3>🔄 Converting widgets...</h3></div>';
+            
+            try {
+                await EspressoConverter.demonstrateConversion();
+                resultsDiv.scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Conversion failed:', error);
+                resultsDiv.innerHTML = '<div style="text-align: center; padding: 2rem; color: red;"><h3>❌ Conversion failed. Check console for details.</h3></div>';
+            }
+        };
+
+        window.showCodeComparison = function() {
+            const comparisonDiv = document.getElementById('code-comparison');
+            comparisonDiv.style.display = comparisonDiv.style.display === 'none' ? 'block' : 'none';
+            
+            if (comparisonDiv.style.display === 'block') {
+                comparisonDiv.scrollIntoView({ behavior: 'smooth' });
+                EspressoConverter.showCodeComparison();
+            }
+        };
+
+        // Show initial message
+        console.log('🎯 WidgetXFormer Conversion Demo Ready!');
+        console.log('📋 Click "Convert Original Widgets" to see the transformation in action');
+        console.log('💡 Check the browser console for detailed conversion logs');
+    </script>
+</body>
+</html>

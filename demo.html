@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WidgetXFormer Demo - Interactive Dashboard</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #323130;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2.5rem;
+        }
+
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .widget-container {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .widget-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .widget-title {
+            margin: 0 0 1rem 0;
+            color: #323130;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .controls button {
+            padding: 0.75rem 1.5rem;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .controls button:hover {
+            background: #106ebe;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .code-example {
+            background: #2d2d2d;
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>WidgetXFormer Demo</h1>
+        <p>Transform JSON data into beautiful, interactive widgets</p>
+    </div>
+
+    <!-- Metrics Row -->
+    <div class="metrics-row">
+        <div class="widget-container">
+            <div id="metric-users"></div>
+        </div>
+        <div class="widget-container">
+            <div id="metric-revenue"></div>
+        </div>
+        <div class="widget-container">
+            <div id="metric-conversion"></div>
+        </div>
+    </div>
+
+    <!-- Main Widget Grid -->
+    <div class="widget-grid">
+        <!-- Tabs Widget -->
+        <div class="widget-container">
+            <h2 class="widget-title">Interactive Tabs</h2>
+            <div id="demo-tabs"></div>
+        </div>
+
+        <!-- Doughnut Chart -->
+        <div class="widget-container">
+            <h2 class="widget-title">Coffee Bean Distribution</h2>
+            <div id="demo-doughnut"></div>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="widget-container">
+            <h2 class="widget-title">Regional Production</h2>
+            <div id="demo-bar"></div>
+        </div>
+
+        <!-- Line Chart -->
+        <div class="widget-container">
+            <h2 class="widget-title">Growth Trend</h2>
+            <div id="demo-line"></div>
+        </div>
+
+        <!-- Accordion -->
+        <div class="widget-container full-width">
+            <h2 class="widget-title">Coffee Producer Details</h2>
+            <div id="demo-accordion"></div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="widget-container full-width">
+            <h2 class="widget-title">Production Statistics</h2>
+            <div id="demo-table"></div>
+        </div>
+
+        <!-- Card Widget -->
+        <div class="widget-container">
+            <div id="demo-card"></div>
+        </div>
+
+        <!-- World Map Placeholder -->
+        <div class="widget-container">
+            <h2 class="widget-title">Global Distribution</h2>
+            <div id="demo-worldmap"></div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button onclick="updateChartData()">Update Chart Data</button>
+        <button onclick="changeTheme()">Toggle Theme</button>
+        <button onclick="addNewWidget()">Add Widget</button>
+        <button onclick="showCode()">Show Code Example</button>
+    </div>
+
+    <!-- Code Example (hidden by default) -->
+    <div id="code-example" style="display: none;">
+        <h3>Code Example:</h3>
+        <div class="code-example">
+const widgetXFormer = WidgetXFormer.getInstance();
+
+// Render a chart with JSON data
+const chartConfig = {
+    type: 'doughnut',
+    data: {
+        labels: ['Arabica', 'Robusta', 'Liberica'],
+        datasets: [{
+            data: [75, 24, 1],
+            backgroundColor: ['#8B4513', '#D2691E', '#CD853F']
+        }]
+    },
+    style: { theme: 'default' }
+};
+
+widgetXFormer.render(chartConfig, 'my-chart-container');
+        </div>
+    </div>
+
+    <script type="module">
+        import WidgetXFormer from './src/widget-xformer.js';
+
+        const widgetXFormer = WidgetXFormer.getInstance();
+        let currentTheme = 'default';
+
+        // Sample data configurations
+        const configs = {
+            tabs: {
+                type: 'tabs',
+                data: {
+                    items: [
+                        {
+                            id: 'overview',
+                            label: 'Overview',
+                            content: 'Coffee is one of the most traded commodities globally, with over 2 billion cups consumed daily worldwide.'
+                        },
+                        {
+                            id: 'production',
+                            label: 'Production',
+                            content: 'The top coffee-producing countries include Brazil, Vietnam, Colombia, and Indonesia, accounting for over 60% of global production.'
+                        },
+                        {
+                            id: 'sustainability',
+                            label: 'Sustainability',
+                            content: 'Sustainable coffee farming practices are crucial for environmental conservation and farmer livelihoods.'
+                        }
+                    ]
+                },
+                style: { theme: currentTheme }
+            },
+
+            doughnut: {
+                type: 'doughnut',
+                data: {
+                    labels: ['Arabica', 'Robusta', 'Liberica', 'Excelsa'],
+                    datasets: [{
+                        label: 'Coffee Bean Types',
+                        data: [75, 24, 0.8, 0.2],
+                        backgroundColor: ['#8B4513', '#D2691E', '#CD853F', '#DEB887']
+                    }]
+                },
+                style: { theme: currentTheme }
+            },
+
+            bar: {
+                type: 'bar',
+                data: {
+                    labels: ['South America', 'Asia', 'Africa', 'Central America', 'Oceania'],
+                    datasets: [{
+                        label: 'Annual Production (Million bags)',
+                        data: [45.2, 32.8, 18.5, 15.3, 1.2],
+                        backgroundColor: ['#0078d4', '#106ebe', '#005a9e', '#004578', '#003966']
+                    }]
+                },
+                style: { theme: currentTheme }
+            },
+
+            line: {
+                type: 'line',
+                data: {
+                    labels: ['2019', '2020', '2021', '2022', '2023'],
+                    datasets: [{
+                        label: 'Global Coffee Consumption (Million bags)',
+                        data: [165, 167, 166, 170, 174],
+                        backgroundColor: '#0078d4',
+                        borderColor: '#0078d4'
+                    }]
+                },
+                style: { theme: currentTheme }
+            },
+
+            accordion: {
+                type: 'accordion',
+                data: {
+                    items: [
+                        {
+                            id: 'brazil',
+                            title: 'Brazil - 37% of Global Production',
+                            content: 'Brazil produces approximately 2.6 million metric tons of coffee annually, primarily high-quality Arabica beans from regions like Minas Gerais and São Paulo.',
+                            expanded: true
+                        },
+                        {
+                            id: 'vietnam',
+                            title: 'Vietnam - 16% of Global Production',
+                            content: 'Vietnam specializes in Robusta beans and has become the world\'s second-largest coffee producer, with production concentrated in the Central Highlands.',
+                            expanded: false
+                        },
+                        {
+                            id: 'colombia',
+                            title: 'Colombia - 8% of Global Production',
+                            content: 'Colombian coffee is world-renowned for its quality, benefiting from ideal growing conditions in the Andes mountains and strict quality certifications.',
+                            expanded: false
+                        }
+                    ]
+                },
+                style: { theme: currentTheme }
+            },
+
+            table: {
+                type: 'table',
+                data: {
+                    headers: ['Country', 'Production (Million bags)', 'Market Share', 'Primary Bean Type'],
+                    rows: [
+                        ['Brazil', '45.2', '37%', 'Arabica'],
+                        ['Vietnam', '29.5', '24%', 'Robusta'],
+                        ['Colombia', '13.5', '11%', 'Arabica'],
+                        ['Indonesia', '11.0', '9%', 'Robusta'],
+                        ['Ethiopia', '7.5', '6%', 'Arabica']
+                    ]
+                },
+                style: { theme: currentTheme }
+            },
+
+            card: {
+                type: 'card',
+                data: {
+                    title: 'Did You Know?',
+                    content: 'Coffee is the second most traded commodity in the world after oil, and it takes approximately 70 coffee beans to make a single cup of coffee!'
+                },
+                style: { theme: currentTheme }
+            },
+
+            worldmap: {
+                type: 'worldmap',
+                data: {
+                    regions: [
+                        { country: 'Brazil', value: 45.2 },
+                        { country: 'Vietnam', value: 29.5 },
+                        { country: 'Colombia', value: 13.5 }
+                    ]
+                },
+                style: { theme: currentTheme }
+            },
+
+            metrics: {
+                users: {
+                    type: 'metric',
+                    data: { value: '2.4M', label: 'Daily Coffee Drinkers' },
+                    style: { theme: currentTheme }
+                },
+                revenue: {
+                    type: 'metric',
+                    data: { value: '$24B', label: 'Global Market Value' },
+                    style: { theme: currentTheme }
+                },
+                conversion: {
+                    type: 'metric',
+                    data: { value: '12.2kg', label: 'Per Capita Consumption' },
+                    style: { theme: currentTheme }
+                }
+            }
+        };
+
+        // Initialize all widgets
+        function initializeWidgets() {
+            widgetXFormer.render(configs.tabs, 'demo-tabs');
+            widgetXFormer.render(configs.doughnut, 'demo-doughnut');
+            widgetXFormer.render(configs.bar, 'demo-bar');
+            widgetXFormer.render(configs.line, 'demo-line');
+            widgetXFormer.render(configs.accordion, 'demo-accordion');
+            widgetXFormer.render(configs.table, 'demo-table');
+            widgetXFormer.render(configs.card, 'demo-card');
+            widgetXFormer.render(configs.worldmap, 'demo-worldmap');
+            
+            // Render metrics
+            widgetXFormer.render(configs.metrics.users, 'metric-users');
+            widgetXFormer.render(configs.metrics.revenue, 'metric-revenue');
+            widgetXFormer.render(configs.metrics.conversion, 'metric-conversion');
+        }
+
+        // Global functions for buttons
+        window.updateChartData = function() {
+            const newBarConfig = {
+                ...configs.bar,
+                data: {
+                    labels: ['Brazil', 'Vietnam', 'Colombia'],
+                    datasets: [{
+                        label: 'Top 3 Producers (Million bags)',
+                        data: [45.2, 29.5, 13.5],
+                        backgroundColor: ['#228B22', '#FF6347', '#FFD700']
+                    }]
+                }
+            };
+            widgetXFormer.render(newBarConfig, 'demo-bar');
+        };
+
+        window.changeTheme = function() {
+            currentTheme = currentTheme === 'default' ? 'dark' : 'default';
+            
+            // Update all configs with new theme
+            Object.keys(configs).forEach(key => {
+                if (key === 'metrics') {
+                    Object.keys(configs.metrics).forEach(metricKey => {
+                        configs.metrics[metricKey].style.theme = currentTheme;
+                    });
+                } else {
+                    configs[key].style.theme = currentTheme;
+                }
+            });
+            
+            // Re-render all widgets
+            initializeWidgets();
+            
+            // Update body background
+            document.body.style.backgroundColor = currentTheme === 'dark' ? '#2d2d2d' : '#f8f9fa';
+            document.body.style.color = currentTheme === 'dark' ? '#ffffff' : '#323130';
+        };
+
+        window.addNewWidget = function() {
+            const newMetric = {
+                type: 'metric',
+                data: { 
+                    value: Math.floor(Math.random() * 100) + 'K', 
+                    label: 'Random Metric' 
+                },
+                style: { theme: currentTheme }
+            };
+            
+            // Create new container
+            const newContainer = document.createElement('div');
+            newContainer.className = 'widget-container';
+            newContainer.innerHTML = '<div id="new-metric-' + Date.now() + '"></div>';
+            document.querySelector('.metrics-row').appendChild(newContainer);
+            
+            // Render widget
+            widgetXFormer.render(newMetric, newContainer.firstElementChild.id);
+        };
+
+        window.showCode = function() {
+            const codeExample = document.getElementById('code-example');
+            codeExample.style.display = codeExample.style.display === 'none' ? 'block' : 'none';
+        };
+
+        // Initialize on page load
+        initializeWidgets();
+    </script>
+</body>
+</html>
