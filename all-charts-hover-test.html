@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Charts Hover Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #323130;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            background: #fafafa;
+            border: 1px solid #e1dfdd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #323130;
+            text-align: center;
+        }
+        .widget {
+            background: white;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .debug-info {
+            background: #f3f2f1;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #605e5c;
+            margin-top: 10px;
+        }
+        .hover-status {
+            background: #fff4ce;
+            border: 1px solid #f1c21b;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .hover-active {
+            background: #d1f7c4;
+            border-color: #24a148;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 All Chart Types Hover Behavior Test</h1>
+        
+        <div class="chart-grid">
+            <div class="chart-container">
+                <div class="chart-title">📊 Bar Chart</div>
+                <div id="bar-chart-widget" class="widget"></div>
+                <div class="hover-status" id="bar-status">Hover over bars to see values</div>
+                <div class="debug-info">
+                    Expected: Rectangle hover detection<br>
+                    Should show: Label and value when hovering over bars
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📈 Line Chart</div>
+                <div id="line-chart-widget" class="widget"></div>
+                <div class="hover-status" id="line-status">Hover over points to see values</div>
+                <div class="debug-info">
+                    Expected: Point distance detection<br>
+                    Should show: Label and value when hovering near points
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">🎯 Scatter Plot</div>
+                <div id="scatter-chart-widget" class="widget"></div>
+                <div class="hover-status" id="scatter-status">Hover over points to see values</div>
+                <div class="debug-info">
+                    Expected: Point distance detection<br>
+                    Should show: Label and value when hovering near points
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">🫧 Bubble Chart</div>
+                <div id="bubble-chart-widget" class="widget"></div>
+                <div class="hover-status" id="bubble-status">Hover over bubbles to see values</div>
+                <div class="debug-info">
+                    Expected: Circular radius detection<br>
+                    Should show: Label and coordinates when hovering inside bubbles
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">🍩 Doughnut Chart</div>
+                <div id="doughnut-chart-widget" class="widget"></div>
+                <div class="hover-status" id="doughnut-status">Hover over segments to see values</div>
+                <div class="debug-info">
+                    Expected: Angular slice detection<br>
+                    Should show: Label and value when hovering over slices
+                </div>
+            </div>
+        </div>
+
+        <div style="background: #f3f2f1; padding: 15px; border-radius: 8px; margin-top: 20px;">
+            <h3>🔍 Hover Detection Test Results</h3>
+            <p><strong>Instructions:</strong> Hover over each chart to test tooltip behavior. Each chart type should display values when you hover over data points/segments.</p>
+            <ul>
+                <li><strong>Bar Chart:</strong> Hover anywhere inside a bar rectangle</li>
+                <li><strong>Line Chart:</strong> Hover near the circle points (20px detection radius)</li>
+                <li><strong>Scatter Plot:</strong> Hover near the scatter points (20px detection radius)</li>
+                <li><strong>Bubble Chart:</strong> Hover anywhere inside a bubble circle</li>
+                <li><strong>Doughnut Chart:</strong> Hover over any slice segment</li>
+            </ul>
+        </div>
+    </div>
+
+    <script type="module">
+        import { WidgetXFormer } from './src/widget-xformer.js';
+
+        const transformer = WidgetXFormer.getInstance();
+
+        // Test data for different chart types
+        const testData = {
+            barChart: {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                    datasets: [{
+                        data: [65, 59, 80, 81, 56],
+                        backgroundColor: ['#0078d4', '#107c10', '#ff8c00', '#d13438', '#881798']
+                    }]
+                },
+                options: {
+                    xAxis: { title: 'Months' },
+                    yAxis: { title: 'Sales ($K)' }
+                },
+                style: { theme: 'fluent-light' }
+            },
+
+            lineChart: {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+                    datasets: [{
+                        data: [12, 19, 3, 5, 2],
+                        backgroundColor: '#0078d4'
+                    }]
+                },
+                options: {
+                    xAxis: { title: 'Time Period' },
+                    yAxis: { title: 'Performance' }
+                },
+                style: { theme: 'fluent-light' }
+            },
+
+            scatterChart: {
+                type: 'scatter',
+                data: {
+                    labels: ['A', 'B', 'C', 'D', 'E'],
+                    datasets: [{
+                        data: [
+                            { x: 10, y: 20 },
+                            { x: 15, y: 10 },
+                            { x: 25, y: 15 },
+                            { x: 30, y: 25 },
+                            { x: 35, y: 30 }
+                        ],
+                        backgroundColor: '#107c10'
+                    }]
+                },
+                options: {
+                    xAxis: { title: 'X Values', min: 0, max: 40 },
+                    yAxis: { title: 'Y Values', min: 0, max: 35 }
+                },
+                style: { theme: 'fluent-light' }
+            },
+
+            bubbleChart: {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        data: [
+                            { x: 20, y: 30, size: 15, label: 'Product A' },
+                            { x: 40, y: 10, size: 10, label: 'Product B' },
+                            { x: 60, y: 50, size: 25, label: 'Product C' },
+                            { x: 80, y: 20, size: 20, label: 'Product D' }
+                        ],
+                        backgroundColor: '#ff8c00'
+                    }],
+                    xAxis: { label: 'Market Share (%)', min: 0, max: 100 },
+                    yAxis: { label: 'Growth Rate (%)', min: 0, max: 60 }
+                },
+                style: { theme: 'fluent-light' }
+            },
+
+            doughnutChart: {
+                type: 'doughnut',
+                data: {
+                    labels: ['Desktop', 'Mobile', 'Tablet', 'Other'],
+                    datasets: [{
+                        data: [45, 35, 15, 5],
+                        backgroundColor: ['#0078d4', '#107c10', '#ff8c00', '#d13438']
+                    }]
+                },
+                style: { theme: 'fluent-light' }
+            }
+        };
+
+        // Render all charts
+        function renderCharts() {
+            // Bar Chart
+            transformer.render(testData.barChart, document.getElementById('bar-chart-widget'));
+            
+            // Line Chart
+            transformer.render(testData.lineChart, document.getElementById('line-chart-widget'));
+            
+            // Scatter Chart
+            transformer.render(testData.scatterChart, document.getElementById('scatter-chart-widget'));
+            
+            // Bubble Chart
+            transformer.render(testData.bubbleChart, document.getElementById('bubble-chart-widget'));
+            
+            // Doughnut Chart
+            transformer.render(testData.doughnutChart, document.getElementById('doughnut-chart-widget'));
+        }
+
+        // Add hover event listeners to track hover status
+        function addHoverTracking() {
+            const statusElements = {
+                'bar': document.getElementById('bar-status'),
+                'line': document.getElementById('line-status'),
+                'scatter': document.getElementById('scatter-status'),
+                'bubble': document.getElementById('bubble-status'),
+                'doughnut': document.getElementById('doughnut-status')
+            };
+
+            // Monitor all canvases for tooltip activity
+            setInterval(() => {
+                document.querySelectorAll('canvas').forEach(canvas => {
+                    const tooltip = canvas._tooltip;
+                    const container = canvas.closest('.chart-container');
+                    if (!container) return;
+
+                    const chartType = container.querySelector('.chart-title').textContent.toLowerCase();
+                    let statusKey = '';
+                    if (chartType.includes('bar')) statusKey = 'bar';
+                    else if (chartType.includes('line')) statusKey = 'line';
+                    else if (chartType.includes('scatter')) statusKey = 'scatter';
+                    else if (chartType.includes('bubble')) statusKey = 'bubble';
+                    else if (chartType.includes('doughnut')) statusKey = 'doughnut';
+
+                    const statusEl = statusElements[statusKey];
+                    if (statusEl && tooltip) {
+                        if (tooltip.style.opacity === '1') {
+                            statusEl.textContent = `✅ Hovering: ${tooltip.innerHTML}`;
+                            statusEl.className = 'hover-status hover-active';
+                        } else {
+                            statusEl.textContent = `Hover over ${statusKey} to see values`;
+                            statusEl.className = 'hover-status';
+                        }
+                    }
+                });
+            }, 100);
+        }
+
+        // Initialize
+        renderCharts();
+        setTimeout(addHoverTracking, 500); // Give charts time to render
+
+        console.log('All charts hover test loaded. Hover over different chart elements to test behavior.');
+    </script>
+</body>
+</html>

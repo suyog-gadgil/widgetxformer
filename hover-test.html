@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hover Test - WidgetXFormer</title>
+    <link rel="stylesheet" href="./src/style.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f3f2f1;
+            margin: 0;
+            padding: 20px;
+        }
+        .test-container {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.14);
+        }
+        .test-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #323130;
+            margin-bottom: 16px;
+        }
+        .debug-info {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hover Behavior Test</h1>
+    
+    <div class="test-container">
+        <h2 class="test-title">Line Chart Hover Test</h2>
+        <div id="line-chart-test"></div>
+        <div class="debug-info" id="line-debug">Debug info will appear here...</div>
+    </div>
+    
+    <div class="test-container">
+        <h2 class="test-title">Scatter Plot Hover Test</h2>
+        <div id="scatter-chart-test"></div>
+        <div class="debug-info" id="scatter-debug">Debug info will appear here...</div>
+    </div>
+
+    <script type="module">
+        import WidgetXFormer from './src/widget-xformer.js';
+
+        const widgetXFormer = WidgetXFormer.getInstance();
+        
+        // Debug function
+        function addDebugListeners(containerId, debugId) {
+            const container = document.getElementById(containerId);
+            const debugDiv = document.getElementById(debugId);
+            const canvas = container.querySelector('canvas');
+            
+            if (canvas) {
+                console.log(`Setting up debug for ${containerId}`, canvas);
+                
+                canvas.addEventListener('mousemove', (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const points = canvas._chartPoints;
+                    
+                    debugDiv.innerHTML = `
+                        Mouse: (${Math.round(x)}, ${Math.round(y)})<br>
+                        Points stored: ${points ? points.length : 'none'}<br>
+                        Canvas size: ${canvas.width} x ${canvas.height}<br>
+                        Points: ${points ? JSON.stringify(points.slice(0, 2), null, 2) : 'N/A'}
+                    `;
+                });
+                
+                canvas.addEventListener('mouseleave', () => {
+                    debugDiv.innerHTML = 'Mouse left canvas';
+                });
+            } else {
+                debugDiv.innerHTML = 'Canvas not found!';
+            }
+        }
+
+        try {
+            // Line Chart Test
+            console.log('Rendering line chart test...');
+            widgetXFormer.render({
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                    datasets: [{
+                        label: 'Test Data',
+                        data: [10, 20, 15, 25, 18],
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: 'rgb(59, 130, 246)',
+                    }]
+                },
+                options: {
+                    xAxis: { title: 'Month' },
+                    yAxis: { title: 'Value' }
+                },
+                style: { theme: 'light' }
+            }, 'line-chart-test');
+
+            // Scatter Plot Test
+            console.log('Rendering scatter plot test...');
+            widgetXFormer.render({
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Test Points',
+                        data: [
+                            {x: 20, y: 30},
+                            {x: 40, y: 60},
+                            {x: 60, y: 40},
+                            {x: 80, y: 70}
+                        ],
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                    }]
+                },
+                options: {
+                    xAxis: { title: 'X Axis', min: 0, max: 100 },
+                    yAxis: { title: 'Y Axis', min: 0, max: 100 }
+                },
+                style: { theme: 'light' }
+            }, 'scatter-chart-test');
+
+            // Add debug listeners after a short delay to ensure charts are rendered
+            setTimeout(() => {
+                addDebugListeners('line-chart-test', 'line-debug');
+                addDebugListeners('scatter-chart-test', 'scatter-debug');
+            }, 100);
+
+        } catch (error) {
+            console.error('Error rendering charts:', error);
+        }
+    </script>
+</body>
+</html>

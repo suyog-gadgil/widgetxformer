@@ -257,15 +257,15 @@
             widgetXFormer.render({
                 type: 'profile-card',
                 data: {
-                    avatar: 'https://via.placeholder.com/80x80/0078d4/ffffff?text=JD',
-                    name: 'John Doe',
-                    title: 'Senior Software Engineer',
+                    avatar: 'https://placehold.co/100x100/60a5fa/ffffff?text=AV',
+                    name: 'Alex Vance',
+                    title: 'Lead Developer',
                     department: 'Engineering Team',
-                    email: 'john.doe@company.com',
+                    email: 'alex.vance@company.com',
                     phone: '+1 (555) 123-4567',
                     location: 'San Francisco, CA',
-                    skills: ['React', 'TypeScript', 'Node.js', 'Azure'],
-                    bio: 'Passionate about building scalable web applications and mentoring junior developers.'
+                    skills: ['JavaScript', 'React', 'Node.js', 'Leadership'],
+                    bio: 'Experienced lead developer with expertise in full-stack development and team leadership.'
                 },
                 style: { theme }
             }, 'profile-card-demo');
@@ -275,13 +275,12 @@
             widgetXFormer.render({
                 type: 'stats-card',
                 data: {
-                    title: 'Q4 Performance Metrics',
-                    stats: [
-                        { label: 'Total Revenue', value: '$2.4M', change: '+12%', trend: 'up' },
-                        { label: 'Active Users', value: '45.2K', change: '+8%', trend: 'up' },
-                        { label: 'Conversion Rate', value: '3.2%', change: '-2%', trend: 'down' },
-                        { label: 'Customer Satisfaction', value: '4.8/5', change: '+0.2', trend: 'up' }
-                    ]
+                    title: 'New Users',
+                    value: '1,257',
+                    subtitle: '+12% from last week',
+                    icon: 'users',
+                    color: '#3b82f6',
+                    backgroundColor: '#3b82f6'
                 },
                 style: { theme }
             }, 'stats-card-demo');
@@ -291,13 +290,12 @@
             widgetXFormer.render({
                 type: 'notification-card',
                 data: {
-                    type: 'info',
-                    title: 'System Update Available',
-                    message: 'A new version of the application is available with enhanced security features and performance improvements.',
+                    type: 'success',
+                    title: 'Deployment Successful',
+                    message: 'Your project has been successfully deployed to production.',
                     timestamp: '2024-01-15T10:30:00Z',
                     actions: [
-                        { label: 'Update Now', type: 'primary' },
-                        { label: 'Remind Later', type: 'secondary' }
+                        { label: 'View Details', type: 'primary' }
                     ]
                 },
                 style: { theme }
@@ -308,14 +306,14 @@
             widgetXFormer.render({
                 type: 'progress-bar',
                 data: {
-                    label: 'Project Completion',
+                    label: 'Task Completion',
                     value: 75,
                     max: 100,
                     showPercentage: true,
                     showValue: true,
-                    color: '#107c10',
-                    backgroundColor: '#f3f2f1',
-                    height: 24,
+                    color: '#2563eb',
+                    backgroundColor: '#e5e7eb',
+                    height: 10,
                     animated: true
                 },
                 style: { theme }
@@ -366,10 +364,16 @@
                 data: {
                     labels: ['Q1', 'Q2', 'Q3', 'Q4'],
                     datasets: [{
-                        label: 'Revenue ($M)',
-                        data: [1.2, 1.8, 2.1, 2.4],
-                        backgroundColor: ['#0078d4', '#106ebe', '#005a9e', '#004578']
+                        label: 'Revenue in USD (Millions)',
+                        data: [12, 19, 9, 15],
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
                     }]
+                },
+                options: {
+                    xAxis: { title: 'Quarter' },
+                    yAxis: { title: 'Revenue ($ Millions)' }
                 },
                 style: { theme }
             }, 'bar-chart-demo');
@@ -379,12 +383,16 @@
             widgetXFormer.render({
                 type: 'doughnut',
                 data: {
-                    labels: ['Organic Search', 'Social Media', 'Direct', 'Email', 'Paid Ads'],
+                    labels: ['Organic Search', 'Direct', 'Referral', 'Social Media'],
                     datasets: [{
                         label: 'Traffic Sources',
-                        data: [35, 25, 20, 12, 8],
-                        backgroundColor: ['#0078d4', '#106ebe', '#005a9e', '#004578', '#003d65']
+                        data: [55, 25, 15, 5],
+                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#6366F1'],
+                        hoverOffset: 4
                     }]
+                },
+                options: {
+                    title: 'Website Traffic Sources Distribution'
                 },
                 style: { theme }
             }, 'pie-chart-demo');
@@ -394,14 +402,19 @@
             widgetXFormer.render({
                 type: 'line',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
                     datasets: [{
-                        label: 'User Signups',
-                        data: [120, 190, 300, 500, 450, 620],
-                        borderColor: '#0078d4',
-                        backgroundColor: 'rgba(0, 120, 212, 0.1)',
-                        fill: true
+                        label: 'New Users',
+                        data: [65, 59, 80, 81, 56, 55, 90],
+                        fill: true,
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: 'rgb(59, 130, 246)',
+                        tension: 0.3
                     }]
+                },
+                options: {
+                    xAxis: { title: 'Month' },
+                    yAxis: { title: 'Number of Users' }
                 },
                 style: { theme }
             }, 'line-chart-demo');
@@ -410,22 +423,20 @@
             console.log('Rendering scatter plot...');
             widgetXFormer.render({
                 type: 'scatter',
+                title: 'Ad Spend vs. Conversions',
                 data: {
-                    labels: [], // Not used for scatter plots
                     datasets: [{
-                        label: 'Ad Spend vs. Conversions',
-                        data: [
-                            { x: 1000, y: 25 },
-                            { x: 1500, y: 35 },
-                            { x: 2000, y: 45 },
-                            { x: 2500, y: 55 },
-                            { x: 3000, y: 70 },
-                            { x: 3500, y: 75 },
-                            { x: 4000, y: 85 },
-                            { x: 4500, y: 90 }
-                        ],
-                        backgroundColor: '#0078d4'
+                        label: 'Campaign Performance',
+                        data: Array.from({length: 20}, () => ({
+                            x: Math.random() * 100,
+                            y: Math.random() * 100
+                        })),
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)'
                     }]
+                },
+                options: {
+                    xAxis: { title: 'Ad Spend ($)', min: 0, max: 100 },
+                    yAxis: { title: 'Conversions', min: 0, max: 100 }
                 },
                 style: { theme }
             }, 'scatter-plot-demo');
@@ -435,17 +446,28 @@
             widgetXFormer.render({
                 type: 'bubble',
                 data: {
-                    labels: [], // Not used for bubble charts
+                    xAxis: {
+                        label: 'Market Share (%)',
+                        min: 0,
+                        max: 50
+                    },
+                    yAxis: {
+                        label: 'Revenue Growth (%)',
+                        min: 0,
+                        max: 40
+                    },
                     datasets: [{
-                        label: 'Market Analysis',
-                        data: [
-                            { x: 25, y: 15, r: 15 },
-                            { x: 15, y: 20, r: 10 },
-                            { x: 35, y: 8, r: 12 },
-                            { x: 20, y: 25, r: 8 },
-                            { x: 10, y: -5, r: 6 }
-                        ],
-                        backgroundColor: '#0078d4'
+                        label: 'Product A',
+                        data: [{x: 20, y: 30, r: 15, label: 'Product A'}],
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                    }, {
+                        label: 'Product B',
+                        data: [{x: 40, y: 15, r: 25, label: 'Product B'}],
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    }, {
+                        label: 'Product C',
+                        data: [{x: 30, y: 25, r: 10, label: 'Product C'}],
+                        backgroundColor: 'rgba(255, 206, 86, 0.6)'
                     }]
                 },
                 style: { theme }
@@ -498,13 +520,11 @@
             widgetXFormer.render({
                 type: 'funnel',
                 data: {
-                    title: 'Sales Conversion Funnel',
+                    title: 'Sales Funnel',
                     stages: [
-                        { label: 'Website Visitors', value: 10000, color: '#0078d4' },
-                        { label: 'Product Views', value: 5000, color: '#106ebe' },
-                        { label: 'Add to Cart', value: 1500, color: '#005a9e' },
-                        { label: 'Checkout Started', value: 800, color: '#004578' },
-                        { label: 'Purchase Completed', value: 450, color: '#003d65' }
+                        { label: 'Visitors', value: 100, color: '#60a5fa', percentage: '100%' },
+                        { label: 'Sign Ups', value: 45, color: '#3b82f6', percentage: '45%' },
+                        { label: 'Purchases', value: 15, color: '#2563eb', percentage: '15%' }
                     ],
                     showValues: true,
                     showPercentages: true
@@ -517,16 +537,18 @@
             widgetXFormer.render({
                 type: 'table',
                 data: {
-                    headers: ['Project', 'Status', 'Progress', 'Deadline', 'Team'],
+                    headers: ['Project Name', 'Status', 'Team Lead', 'Due Date'],
                     rows: [
-                        ['Mobile App Redesign', 'In Progress', '75%', '2024-03-15', 'UI/UX Team'],
-                        ['API Integration', 'Completed', '100%', '2024-02-28', 'Backend Team'],
-                        ['Performance Optimization', 'Planning', '10%', '2024-04-01', 'DevOps Team'],
-                        ['User Authentication', 'In Progress', '60%', '2024-03-10', 'Security Team'],
-                        ['Database Migration', 'Testing', '90%', '2024-03-05', 'Data Team']
+                        ['Project Alpha', 'Completed', 'Jane Doe', '2024-08-15'],
+                        ['Project Beta', 'In Progress', 'John Smith', '2024-09-30'],
+                        ['Project Gamma', 'On Hold', 'Alex Johnson', '2024-10-10'],
+                        ['Data Migration', 'Overdue', 'Maria Garcia', '2024-07-01']
                     ]
                 },
-                style: { theme }
+                options: {
+                    filterable: true
+                },
+                style: { theme, fluentDesign: true }
             }, 'table-demo');
 
             // Vertical Timeline
@@ -536,48 +558,39 @@
                     events: [
                         {
                             id: '1',
-                            date: '2024-01-15',
-                            title: 'Project Kickoff',
-                            description: 'Initial project planning and team assembly. Set up development environment and defined project scope.',
-                            icon: '🚀',
+                            date: '2024-06-01',
+                            title: 'Phase 1: Planning',
+                            description: 'Initial requirements gathering and project kickoff.',
+                            icon: '�',
                             status: 'completed',
-                            category: 'Milestone'
+                            category: 'Planning'
                         },
                         {
                             id: '2',
-                            date: '2024-02-01',
-                            title: 'Design Phase Complete',
-                            description: 'Finished UI/UX design mockups and user journey mapping. Stakeholder approval received.',
-                            icon: '🎨',
+                            date: '2024-07-15',
+                            title: 'Phase 2: Design',
+                            description: 'UI/UX mockups completed and prototype delivered.',
+                            icon: '📐',
                             status: 'completed',
                             category: 'Design'
                         },
                         {
                             id: '3',
-                            date: '2024-02-15',
-                            title: 'Development Sprint 1',
-                            description: 'Core functionality implementation in progress. Setting up CI/CD pipeline.',
-                            icon: '⚡',
+                            date: '2024-09-30',
+                            title: 'Phase 3: Development',
+                            description: 'Core features implemented and alpha build deployed.',
+                            icon: '💻',
                             status: 'current',
                             category: 'Development'
                         },
                         {
                             id: '4',
-                            date: '2024-03-01',
-                            title: 'Beta Testing',
-                            description: 'Internal testing phase with selected user groups. Gathering feedback and bug reports.',
-                            icon: '🧪',
+                            date: '2024-11-01',
+                            title: 'Phase 4: Launch',
+                            description: 'Final testing complete and product launched.',
+                            icon: '🚀',
                             status: 'upcoming',
-                            category: 'Testing'
-                        },
-                        {
-                            id: '5',
-                            date: '2024-03-15',
-                            title: 'Production Release',
-                            description: 'Final deployment to production with full feature rollout and monitoring.',
-                            icon: '🎯',
-                            status: 'upcoming',
-                            category: 'Release'
+                            category: 'Launch'
                         }
                     ],
                     config: {
@@ -599,37 +612,30 @@
                     events: [
                         {
                             id: '1',
-                            date: '2020-01-01',
-                            title: 'Company Founded',
-                            description: 'Started as a small tech startup',
+                            date: 'Q1',
+                            title: 'Kickoff',
+                            description: 'Project Start',
                             status: 'completed'
                         },
                         {
                             id: '2',
-                            date: '2021-06-15',
-                            title: 'First Product Launch',
-                            description: 'Released flagship product',
+                            date: 'Q2',
+                            title: 'Alpha',
+                            description: 'Internal Release',
                             status: 'completed'
                         },
                         {
                             id: '3',
-                            date: '2022-03-10',
-                            title: 'Series A Funding',
-                            description: 'Raised $5M funding round',
-                            status: 'completed'
+                            date: 'Q3',
+                            title: 'Beta',
+                            description: 'User Testing',
+                            status: 'current'
                         },
                         {
                             id: '4',
-                            date: '2023-09-01',
-                            title: 'International Expansion',
-                            description: 'Opened offices in Europe',
-                            status: 'completed'
-                        },
-                        {
-                            id: '5',
-                            date: '2024-12-01',
-                            title: 'IPO Planning',
-                            description: 'Preparing for public offering',
+                            date: 'Q4',
+                            title: 'Launch',
+                            description: 'Public Release',
                             status: 'upcoming'
                         }
                     ],
@@ -649,31 +655,31 @@
                     events: [
                         {
                             id: '1',
-                            date: '2024-01-01',
-                            title: 'Q1 Planning',
-                            description: 'Strategic planning for the year ahead with focus on growth initiatives.',
+                            date: '2021',
+                            title: 'Foundation',
+                            description: 'Company founded and initial seed funding secured.',
                             status: 'completed'
                         },
                         {
                             id: '2',
-                            date: '2024-04-01',
-                            title: 'Q2 Execution',
-                            description: 'Implementation of key projects and product development milestones.',
+                            date: '2022',
+                            title: 'Growth',
+                            description: 'Launched MVP, onboarded first 1,000 users.',
                             status: 'completed'
                         },
                         {
                             id: '3',
-                            date: '2024-07-01',
-                            title: 'Q3 Optimization',
-                            description: 'Performance optimization and user experience improvements.',
-                            status: 'current'
+                            date: '2023',
+                            title: 'Expansion',
+                            description: 'Secured Series A funding and expanded team.',
+                            status: 'completed'
                         },
                         {
                             id: '4',
-                            date: '2024-10-01',
-                            title: 'Q4 Scale',
-                            description: 'Scaling operations and preparing for market expansion.',
-                            status: 'upcoming'
+                            date: '2024',
+                            title: 'Scale',
+                            description: 'Reached 100,000 active users and international launch.',
+                            status: 'current'
                         }
                     ],
                     config: {

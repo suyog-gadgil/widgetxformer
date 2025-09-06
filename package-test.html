@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WidgetXFormer NPM Package Test</title>
+    <link rel="stylesheet" href="./dist/widgetxformer.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .widget-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #323130;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WidgetXFormer NPM Package Test</h1>
+        
+        <div class="widget-container">
+            <h2>Chart Widget</h2>
+            <div id="chart-widget"></div>
+        </div>
+        
+        <div class="widget-container">
+            <h2>Fluent Card Widget</h2>
+            <div id="card-widget"></div>
+        </div>
+        
+        <div class="widget-container">
+            <h2>Timeline Widget</h2>
+            <div id="timeline-widget"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the library from the built package
+        import WidgetXFormer from './dist/index.js';
+        
+        // Initialize the widget transformer
+        const transformer = new WidgetXFormer();
+        
+        // Test Chart Widget
+        const chartConfig = {
+            type: 'bar',
+            title: 'Sample Chart',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+                datasets: [{
+                    label: 'Sales',
+                    data: [10, 20, 30, 40],
+                    backgroundColor: '#0078d4'
+                }]
+            }
+        };
+        transformer.render('chart-widget', chartConfig);
+        
+        // Test Fluent Card Widget
+        const cardConfig = {
+            type: 'fluent-card',
+            title: 'NPM Package Test',
+            content: 'This card is rendered using the WidgetXFormer NPM package!',
+            theme: 'fluent'
+        };
+        transformer.render('card-widget', cardConfig);
+        
+        // Test Timeline Widget
+        const timelineConfig = {
+            type: 'timeline',
+            title: 'Package Development Timeline',
+            data: {
+                events: [
+                    {
+                        date: '2024-01-01',
+                        title: 'Project Started',
+                        description: 'Initial WidgetXFormer development'
+                    },
+                    {
+                        date: '2024-01-15',
+                        title: 'Core Features Added',
+                        description: 'Implemented widget rendering system'
+                    },
+                    {
+                        date: '2024-01-30',
+                        title: 'NPM Package Created',
+                        description: 'Built and packaged for npm distribution'
+                    }
+                ]
+            }
+        };
+        transformer.render('timeline-widget', timelineConfig);
+        
+        console.log('WidgetXFormer NPM package test completed successfully!');
+    </script>
+</body>
+</html>

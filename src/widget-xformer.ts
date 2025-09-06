@@ -79,6 +79,11 @@
  *   borderColor?: string | string[],
  *   borderWidth?: number
  * }
+ * options: {
+ *   xAxis?: { title?: string, min?: number, max?: number },
+ *   yAxis?: { title?: string, min?: number, max?: number }
+ * }
+ * Note: All charts support hover tooltips and axis labels
  * 
  * ACCORDION:
  * data: { items: AccordionItem[] }
@@ -108,6 +113,10 @@
  *   headers?: string[],
  *   rows?: string[][]
  * }
+ * options: {
+ *   filterable?: boolean  // Adds search input for filtering rows
+ * }
+ * Note: Supports automatic status badge styling for status columns
  * 
  * TIMELINE:
  * data: {
@@ -230,6 +239,10 @@
  * 
  * SCATTER:
  * data: ChartData with point format: { x: number, y: number }
+ * options: {
+ *   xAxis?: { title?: string, min?: number, max?: number },
+ *   yAxis?: { title?: string, min?: number, max?: number }
+ * }
  * 
  * BUBBLE:
  * data: ChartData with point format: { x: number, y: number, r: number }
@@ -460,6 +473,12 @@ import { getFluentTokens, applyFluentTokens, type FluentTheme } from './fluent-t
 export interface WidgetConfig {
   type: string;
   data: any;
+  options?: {
+    xAxis?: { title?: string; min?: number; max?: number };
+    yAxis?: { title?: string; min?: number; max?: number };
+    filterable?: boolean;
+    [key: string]: any;
+  };
   style?: {
     theme?: string | FluentTheme;
     palette?: string;
@@ -797,17 +816,20 @@ class WidgetXFormer {
 
     // Simple chart rendering (you would replace this with Chart.js or similar library)
     if (chartType === 'doughnut') {
-      this.drawDoughnutChart(ctx, chartData, canvas.width, canvas.height);
+      this.drawDoughnutChart(ctx, chartData, canvas.width, canvas.height, theme);
+      this.addChartHoverBehavior(canvas);
     } else if (chartType === 'bar') {
-      this.drawBarChart(ctx, chartData, canvas.width, canvas.height, theme);
+      this.drawBarChart(ctx, chartData, canvas.width, canvas.height, theme, config.options);
+      this.addChartHoverBehavior(canvas);
     } else if (chartType === 'line') {
-      this.drawLineChart(ctx, chartData, canvas.width, canvas.height, theme);
+      this.drawLineChart(ctx, chartData, canvas.width, canvas.height, theme, config.options);
+      this.addChartHoverBehavior(canvas);
     }
 
     container.appendChild(canvas);
   }
 
-  private drawDoughnutChart(ctx: CanvasRenderingContext2D, data: ChartData, width: number, height: number): void {
+  private drawDoughnutChart(ctx: CanvasRenderingContext2D, data: ChartData, width: number, height: number, theme: any): void {
     const centerX = width / 2;
     const centerY = height / 2;
     const radius = Math.min(width, height) / 3;
@@ -817,6 +839,8 @@ class WidgetXFormer {
     const numericData = data.datasets[0].data as number[];
     const total = numericData.reduce((sum, value) => sum + value, 0);
     let currentAngle = -Math.PI / 2;
+
+    const points: {x: number, y: number, value: number, label: string, startAngle: number, endAngle: number}[] = [];
 
     numericData.forEach((value, index) => {
       const sliceAngle = (value / total) * 2 * Math.PI;
@@ -831,21 +855,41 @@ class WidgetXFormer {
       ctx.fillStyle = color;
       ctx.fill();
 
+      // Store slice info for hover detection
+      const midAngle = currentAngle + sliceAngle / 2;
+      const midRadius = (radius + innerRadius) / 2;
+      const x = centerX + Math.cos(midAngle) * midRadius;
+      const y = centerY + Math.sin(midAngle) * midRadius;
+      
+      points.push({
+        x, y, value, 
+        label: data.labels[index], 
+        startAngle: currentAngle, 
+        endAngle: currentAngle + sliceAngle
+      });
+
       currentAngle += sliceAngle;
     });
+
+    // Store points for hover detection
+    (ctx.canvas as any)._chartPoints = points;
+    (ctx.canvas as any)._chartCenter = {x: centerX, y: centerY};
+    (ctx.canvas as any)._chartRadius = {inner: innerRadius, outer: radius};
 
     // Draw legend
     this.drawLegend(ctx, data, width, height, 20);
   }
 
-  private drawBarChart(ctx: CanvasRenderingContext2D, data: ChartData, width: number, height: number, theme: any): void {
-    const padding = 40;
+  private drawBarChart(ctx: CanvasRenderingContext2D, data: ChartData, width: number, height: number, theme: any, options?: any): void {
+    const padding = 70; // Increased for axis labels
     const chartWidth = width - 2 * padding;
     const chartHeight = height - 2 * padding;
     
     // Ensure we're working with numeric data for bar chart
     const numericData = data.datasets[0].data as number[];
     const maxValue = Math.max(...numericData);
+    const minValue = Math.min(...numericData);
+    const valueRange = maxValue - minValue;
     const barWidth = chartWidth / data.labels.length * 0.8;
     const barSpacing = chartWidth / data.labels.length * 0.2;
 
@@ -858,7 +902,51 @@ class WidgetXFormer {
     ctx.lineTo(width - padding, height - padding);
     ctx.stroke();
 
-    // Draw bars
+    // Draw axis labels if provided
+    ctx.fillStyle = theme.text;
+    ctx.font = '12px system-ui';
+    ctx.textAlign = 'center';
+    
+    // Y-axis title
+    if (options?.yAxis?.title) {
+      ctx.save();
+      ctx.translate(15, height / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = 'center';
+      ctx.font = '14px system-ui';
+      ctx.fillText(options.yAxis.title, 0, 0);
+      ctx.restore();
+    }
+    
+    // X-axis title
+    if (options?.xAxis?.title) {
+      ctx.textAlign = 'center';
+      ctx.font = '14px system-ui';
+      ctx.fillText(options.xAxis.title, width / 2, height - 10);
+    }
+
+    // Draw grid lines
+    ctx.strokeStyle = theme.border + '40'; // Lighter grid lines
+    ctx.lineWidth = 1;
+    
+    // Horizontal grid lines and Y-axis labels
+    for (let i = 0; i <= 5; i++) {
+      const y = padding + (i / 5) * chartHeight;
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(width - padding, y);
+      ctx.stroke();
+      
+      // Y-axis labels
+      const value = maxValue - (i / 5) * valueRange;
+      ctx.fillStyle = theme.text;
+      ctx.textAlign = 'right';
+      ctx.font = '10px system-ui';
+      ctx.fillText(Math.round(value).toString(), padding - 10, y + 3);
+    }
+
+    // Draw bars and store points for hover
+    const points: {x: number, y: number, width: number, height: number, value: number, label: string}[] = [];
     numericData.forEach((value, index) => {
       const barHeight = (value / maxValue) * chartHeight;
       const x = padding + index * (barWidth + barSpacing) + barSpacing / 2;
@@ -870,23 +958,34 @@ class WidgetXFormer {
 
       ctx.fillStyle = color;
       ctx.fillRect(x, y, barWidth, barHeight);
+      
+      // Store bar info for hover detection
+      points.push({x, y, width: barWidth, height: barHeight, value, label: data.labels[index]});
 
-      // Draw label
+      // Draw X-axis label
       ctx.fillStyle = theme.text;
       ctx.font = '12px system-ui';
       ctx.textAlign = 'center';
       ctx.fillText(data.labels[index], x + barWidth / 2, height - padding + 20);
     });
+    
+    // Store points for hover detection
+    (ctx.canvas as any)._chartPoints = points;
+    
+    // Draw legend
+    this.drawLegend(ctx, data, width, height, 20);
   }
 
-  private drawLineChart(ctx: CanvasRenderingContext2D, data: ChartData, width: number, height: number, theme: any): void {
-    const padding = 40;
+  private drawLineChart(ctx: CanvasRenderingContext2D, data: ChartData, width: number, height: number, theme: any, options?: any): void {
+    const padding = 70; // Increased for axis labels
     const chartWidth = width - 2 * padding;
     const chartHeight = height - 2 * padding;
     
     // Ensure we're working with numeric data for line chart
     const numericData = data.datasets[0].data as number[];
     const maxValue = Math.max(...numericData);
+    const minValue = Math.min(...numericData);
+    const valueRange = maxValue - minValue;
     const stepX = chartWidth / (data.labels.length - 1);
 
     // Draw axes
@@ -898,39 +997,136 @@ class WidgetXFormer {
     ctx.lineTo(width - padding, height - padding);
     ctx.stroke();
 
+    // Draw axis labels if provided
+    ctx.fillStyle = theme.text;
+    ctx.font = '12px system-ui';
+    ctx.textAlign = 'center';
+    
+    // X-axis labels
+    data.labels.forEach((label, index) => {
+      const x = padding + index * stepX;
+      ctx.fillText(label, x, height - padding + 20);
+    });
+    
+    // Y-axis title
+    if (options?.yAxis?.title) {
+      ctx.save();
+      ctx.translate(15, height / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = 'center';
+      ctx.font = '14px system-ui';
+      ctx.fillText(options.yAxis.title, 0, 0);
+      ctx.restore();
+    }
+    
+    // X-axis title
+    if (options?.xAxis?.title) {
+      ctx.textAlign = 'center';
+      ctx.font = '14px system-ui';
+      ctx.fillText(options.xAxis.title, width / 2, height - 10);
+    }
+
+    // Draw grid lines
+    ctx.strokeStyle = theme.border + '40'; // Lighter grid lines
+    ctx.lineWidth = 1;
+    
+    // Vertical grid lines
+    data.labels.forEach((_, index) => {
+      const x = padding + index * stepX;
+      ctx.beginPath();
+      ctx.moveTo(x, padding);
+      ctx.lineTo(x, height - padding);
+      ctx.stroke();
+    });
+    
+    // Horizontal grid lines
+    for (let i = 0; i <= 5; i++) {
+      const y = padding + (i / 5) * chartHeight;
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(width - padding, y);
+      ctx.stroke();
+      
+      // Y-axis labels
+      const value = maxValue - (i / 5) * valueRange;
+      ctx.fillStyle = theme.text;
+      ctx.textAlign = 'right';
+      ctx.font = '10px system-ui';
+      ctx.fillText(Math.round(value).toString(), padding - 10, y + 3);
+    }
+
     // Draw line
     ctx.strokeStyle = data.datasets[0].borderColor || theme.primary;
     ctx.lineWidth = 3;
     ctx.beginPath();
 
+    const points: {x: number, y: number, value: number, label: string}[] = [];
+    
+    // First, plot all points and store them
     numericData.forEach((value, index) => {
       const x = padding + index * stepX;
-      const y = height - padding - (value / maxValue) * chartHeight;
-
-      if (index === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
-      }
-
-      // Draw point
-      ctx.fillStyle = data.datasets[0].backgroundColor || theme.primary;
-      ctx.beginPath();
-      ctx.arc(x, y, 4, 0, 2 * Math.PI);
-      ctx.fill();
+      const y = height - padding - ((value - minValue) / valueRange) * chartHeight;
+      points.push({x, y, value, label: data.labels[index]});
     });
 
+    // Draw the line connecting all points
+    if (points.length > 0) {
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
+      }
+    }
     ctx.stroke();
+
+    // Draw points after the line
+    points.forEach((point, index) => {
+      ctx.fillStyle = data.datasets[0].backgroundColor || theme.primary;
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, 4, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+    
+    // Store points for hover detection
+    (ctx.canvas as any)._chartPoints = points;
+    console.log('Line chart points stored:', points);
+    
+    // Draw legend
+    this.drawLegend(ctx, data, width, height, 20);
   }
 
   private drawLegend(ctx: CanvasRenderingContext2D, data: ChartData, width: number, _height: number, startY: number): void {
     ctx.font = '12px system-ui';
     ctx.textAlign = 'left';
 
-    data.labels.forEach((label, index) => {
-      const color = Array.isArray(data.datasets[0].backgroundColor) 
-        ? data.datasets[0].backgroundColor[index] 
-        : data.datasets[0].backgroundColor || '#0078d4';
+    // Build labels and colors defensively
+    let labels: string[] = [];
+    let colors: string[] = [];
+
+    if (data && Array.isArray(data.labels) && data.labels.length > 0) {
+      labels = data.labels.slice();
+      // try to get colors from datasets[0] if present
+      if (data.datasets && data.datasets[0]) {
+        const bg = (data.datasets[0] as any).backgroundColor;
+        if (Array.isArray(bg)) colors = bg.slice();
+        else if (typeof bg === 'string') colors = [bg];
+      }
+    } else if (data && Array.isArray(data.datasets) && data.datasets.length > 0) {
+      // Use dataset labels as legend entries
+      labels = data.datasets.map((ds: any, i: number) => ds.label || `Series ${i + 1}`);
+      colors = data.datasets.map((ds: any) => {
+        const bg = ds.backgroundColor;
+        if (Array.isArray(bg)) return bg[0];
+        return bg || '#0078d4';
+      });
+    } else {
+      // Nothing to draw
+      return;
+    }
+
+    labels.forEach((label, index) => {
+      const color = colors[index] || (data?.datasets && data.datasets[0] ? (
+        Array.isArray((data.datasets[0] as any).backgroundColor) ? (data.datasets[0] as any).backgroundColor[index] : (data.datasets[0] as any).backgroundColor
+      ) : '#0078d4') || '#0078d4';
 
       const y = startY + index * 20;
       
@@ -942,6 +1138,143 @@ class WidgetXFormer {
       ctx.fillStyle = '#323130';
       ctx.fillText(label, width - 130, y);
     });
+  }
+
+  private addChartHoverBehavior(canvas: HTMLCanvasElement): void {
+    // Remove any existing tooltip for this canvas
+    const existingTooltip = (canvas as any)._tooltip;
+    if (existingTooltip) {
+      document.body.removeChild(existingTooltip);
+    }
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'chart-tooltip';
+    tooltip.style.cssText = `
+      position: fixed;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: system-ui, -apple-system, sans-serif;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 10000;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    `;
+    document.body.appendChild(tooltip);
+    
+    // Store reference to tooltip on canvas
+    (canvas as any)._tooltip = tooltip;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const points = (canvas as any)._chartPoints;
+      if (!points || !Array.isArray(points)) {
+        console.log('No chart points found for hover detection');
+        return;
+      }
+      
+      let nearestPoint: any = null;
+      let minDistance = Infinity;
+      
+      // Check if this is a doughnut chart
+      const center = (canvas as any)._chartCenter;
+      const radius = (canvas as any)._chartRadius;
+      
+      if (center && radius) {
+        // Doughnut chart hover detection
+        const dx = x - center.x;
+        const dy = y - center.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance >= radius.inner && distance <= radius.outer) {
+          const angle = Math.atan2(dy, dx);
+          let normalizedAngle = angle + Math.PI / 2; // Adjust for starting at top
+          if (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
+          
+          // Find which slice the mouse is over
+          points.forEach((point: any) => {
+            let startAngle = point.startAngle + Math.PI / 2;
+            let endAngle = point.endAngle + Math.PI / 2;
+            if (startAngle < 0) startAngle += 2 * Math.PI;
+            if (endAngle < 0) endAngle += 2 * Math.PI;
+            
+            if (startAngle <= endAngle) {
+              if (normalizedAngle >= startAngle && normalizedAngle <= endAngle) {
+                nearestPoint = point;
+              }
+            } else {
+              // Handle wrapping around 0
+              if (normalizedAngle >= startAngle || normalizedAngle <= endAngle) {
+                nearestPoint = point;
+              }
+            }
+          });
+        }
+      } else {
+        // Line/Bar/Scatter/Bubble chart hover detection
+        points.forEach((point: any) => {
+          let distance;
+          
+          // Handle different chart types
+          if (point.width && point.height) {
+            // Bar chart - check if point is inside rectangle
+            if (x >= point.x && x <= point.x + point.width && 
+                y >= point.y && y <= point.y + point.height) {
+              distance = 0;
+            } else {
+              distance = Infinity;
+            }
+          } else if (point.radius) {
+            // Bubble chart - check if point is inside circle
+            distance = Math.sqrt((x - point.x) ** 2 + (y - point.y) ** 2);
+            if (distance > point.radius) {
+              distance = Infinity;
+            }
+          } else {
+            // Line/scatter chart - check distance to point
+            distance = Math.sqrt((x - point.x) ** 2 + (y - point.y) ** 2);
+          }
+          
+          if (distance < 20 && distance < minDistance) { // Increased detection radius
+            minDistance = distance;
+            nearestPoint = point;
+          }
+        });
+      }
+      
+      if (nearestPoint) {
+        tooltip.innerHTML = `${nearestPoint.label}: ${nearestPoint.value}`;
+        tooltip.style.left = `${e.clientX + 10}px`;
+        tooltip.style.top = `${e.clientY - 35}px`;
+        tooltip.style.opacity = '1';
+        canvas.style.cursor = 'pointer';
+      } else {
+        tooltip.style.opacity = '0';
+        canvas.style.cursor = 'default';
+      }
+    };
+
+    const handleMouseLeave = () => {
+      tooltip.style.opacity = '0';
+      canvas.style.cursor = 'default';
+    };
+
+    // Remove existing listeners to avoid duplicates
+    canvas.removeEventListener('mousemove', handleMouseMove);
+    canvas.removeEventListener('mouseleave', handleMouseLeave);
+    
+    // Add new listeners
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseleave', handleMouseLeave);
+    
+    console.log('Hover behavior added to canvas', canvas, 'with points:', (canvas as any)._chartPoints);
   }
 
   private renderAccordion(config: WidgetConfig, container: HTMLElement): void {
@@ -1110,6 +1443,58 @@ class WidgetXFormer {
     const theme = this.getTheme(config.style?.theme);
     const fluentTokens = config.style?.fluentDesign ? getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light') : null;
 
+    // Add search input if filterable option is enabled
+    if (config.options?.filterable) {
+      const searchInput = document.createElement('input');
+      searchInput.type = 'text';
+      searchInput.placeholder = 'Search for projects...';
+      searchInput.className = 'table-search-input';
+      
+      if (config.style?.fluentDesign && fluentTokens) {
+        searchInput.style.cssText = `
+          width: 100%;
+          padding: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.spacingHorizontalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          margin-bottom: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          border: 1px solid ${theme.surfaceBorder || theme.border};
+          border-radius: ${fluentTokens.borderRadiusMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+          outline: none;
+          transition: border-color ${fluentTokens.durationFast.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.curveEasyEase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        `;
+      } else {
+        searchInput.style.cssText = `
+          width: 100%;
+          padding: 8px 12px;
+          margin-bottom: 16px;
+          border: 2px solid ${theme.border};
+          border-radius: 4px;
+          outline: none;
+        `;
+      }
+      
+      // Focus styles
+      searchInput.addEventListener('focus', () => {
+        if (config.style?.fluentDesign) {
+          searchInput.style.borderColor = theme.primary;
+          searchInput.style.boxShadow = `0 0 0 2px ${theme.primary}40`;
+        } else {
+          searchInput.style.borderColor = theme.primary;
+        }
+      });
+      
+      searchInput.addEventListener('blur', () => {
+        searchInput.style.borderColor = theme.surfaceBorder || theme.border;
+        searchInput.style.boxShadow = 'none';
+      });
+      
+      container.appendChild(searchInput);
+    }
+
+    // Create table wrapper for overflow handling
+    const tableWrapper = document.createElement('div');
+    tableWrapper.style.cssText = 'overflow-x: auto;';
+
     const table = document.createElement('table');
     table.className = config.style?.fluentDesign ? 'fluent-table' : 'widget-table';
     
@@ -1117,7 +1502,7 @@ class WidgetXFormer {
       table.style.cssText = `
         width: 100%;
         border-collapse: collapse;
-        margin: ${fluentTokens.spacingVerticalM.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} 0;
+        margin: 0;
         font-family: ${fluentTokens.fontFamilyBase.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
         font-size: ${fluentTokens.fontSizeBase300.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
         border-radius: ${fluentTokens.borderRadiusMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
@@ -1128,7 +1513,7 @@ class WidgetXFormer {
       table.style.cssText = `
         width: 100%;
         border-collapse: collapse;
-        margin: 1rem 0;
+        margin: 0;
       `;
     }
 
@@ -1152,11 +1537,13 @@ class WidgetXFormer {
           `;
         } else {
           th.style.cssText = `
-            padding: 0.75rem;
+            padding: 12px;
             text-align: left;
             background: ${theme.primary};
             color: white;
-            font-weight: 500;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
           `;
         }
         headerRow.appendChild(th);
@@ -1169,9 +1556,11 @@ class WidgetXFormer {
     // Create body
     if (tableData.rows) {
       const tbody = document.createElement('tbody');
+      tbody.className = 'table-body';
       
       tableData.rows.forEach((row: string[], index: number) => {
         const tr = document.createElement('tr');
+        tr.className = 'table-row';
         
         if (config.style?.fluentDesign && fluentTokens) {
           tr.style.backgroundColor = index % 2 === 0 ? 
@@ -1182,9 +1571,23 @@ class WidgetXFormer {
           tr.style.backgroundColor = index % 2 === 0 ? theme.background : '#f8f9fa';
         }
         
-        row.forEach((cell: string) => {
+        row.forEach((cell: string, cellIndex: number) => {
           const td = document.createElement('td');
-          td.textContent = cell;
+          
+          // Add status badges for the status column (assuming it's the second column)
+          if (cellIndex === 1 && typeof cell === 'string') {
+            const status = cell.toLowerCase();
+            if (['completed', 'in progress', 'on hold', 'overdue'].some(s => status.includes(s))) {
+              const badge = document.createElement('span');
+              badge.textContent = cell;
+              badge.style.cssText = this.getStatusBadgeStyles(cell, theme, fluentTokens);
+              td.appendChild(badge);
+            } else {
+              td.textContent = cell;
+            }
+          } else {
+            td.textContent = cell;
+          }
           
           if (config.style?.fluentDesign && fluentTokens) {
             td.style.cssText = `
@@ -1195,7 +1598,7 @@ class WidgetXFormer {
             `;
           } else {
             td.style.cssText = `
-              padding: 0.75rem;
+              padding: 12px;
               border-bottom: 1px solid ${theme.border};
             `;
           }
@@ -1207,8 +1610,76 @@ class WidgetXFormer {
       
       table.appendChild(tbody);
     }
+    
+    tableWrapper.appendChild(table);
+    container.appendChild(tableWrapper);
 
-    container.appendChild(table);
+    // Add filtering functionality if enabled
+    if (config.options?.filterable) {
+      const searchInput = container.querySelector('.table-search-input') as HTMLInputElement;
+      const tbody = table.querySelector('.table-body');
+      
+      searchInput?.addEventListener('input', () => {
+        const filter = searchInput.value.toUpperCase();
+        const rows = tbody?.querySelectorAll('.table-row');
+        
+        rows?.forEach((row: Element) => {
+          const tds = row.querySelectorAll('td');
+          let found = false;
+          
+          tds.forEach((td) => {
+            if (td.textContent && td.textContent.toUpperCase().indexOf(filter) > -1) {
+              found = true;
+            }
+          });
+          
+          (row as HTMLElement).style.display = found ? '' : 'none';
+        });
+      });
+    }
+  }
+
+  private getStatusBadgeStyles(status: string, theme: any, fluentTokens: any): string {
+    const statusLower = status.toLowerCase();
+    let bgColor = theme.primary;
+    let textColor = 'white';
+    
+    if (statusLower.includes('completed')) {
+      bgColor = '#10b981'; // Green
+      textColor = 'white';
+    } else if (statusLower.includes('in progress')) {
+      bgColor = '#f59e0b'; // Yellow
+      textColor = 'white';
+    } else if (statusLower.includes('on hold')) {
+      bgColor = '#3b82f6'; // Blue
+      textColor = 'white';
+    } else if (statusLower.includes('overdue')) {
+      bgColor = '#ef4444'; // Red
+      textColor = 'white';
+    }
+    
+    if (fluentTokens) {
+      return `
+        background: ${bgColor};
+        color: ${textColor};
+        padding: ${fluentTokens.spacingVerticalXS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')} ${fluentTokens.spacingHorizontalS.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        border-radius: ${fluentTokens.borderRadiusMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-size: ${fluentTokens.fontSizeBase200.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        font-weight: ${fluentTokens.fontWeightMedium.replace(/var\([^,]+,\s*([^)]+)\)/, '$1')};
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      `;
+    } else {
+      return `
+        background: ${bgColor};
+        color: ${textColor};
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+      `;
+    }
   }
 
   private renderWorldMap(config: WidgetConfig, container: HTMLElement): void {
@@ -1245,7 +1716,8 @@ class WidgetXFormer {
   }
 
   private renderTimeline(config: WidgetConfig, container: HTMLElement): void {
-    const timelineData = config.data as { events: TimelineEvent[], config?: TimelineConfig };
+  const timelineData = config.data as { events: TimelineEvent[], config?: TimelineConfig };
+  console.log('renderTimeline called with data:', timelineData);
     const timelineConfig = timelineData.config || {} as TimelineConfig;
     const theme = this.getTheme(config.style?.theme);
     const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
@@ -2367,7 +2839,8 @@ class WidgetXFormer {
   }
 
   private renderFunnel(config: WidgetConfig, container: HTMLElement): void {
-    const funnelData = config.data;
+  const funnelData = config.data;
+  console.log('renderFunnel called with data:', funnelData);
     const theme = this.getTheme(config.style?.theme);
     const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
 
@@ -2442,12 +2915,13 @@ class WidgetXFormer {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    this.drawScatterPlot(ctx, scatterData, canvas.width, canvas.height, theme);
+    this.drawScatterPlot(ctx, scatterData, canvas.width, canvas.height, theme, config.options);
+    this.addChartHoverBehavior(canvas);
     container.appendChild(canvas);
   }
 
-  private drawScatterPlot(ctx: CanvasRenderingContext2D, data: ChartData, width: number, height: number, theme: any): void {
-    const padding = 40;
+  private drawScatterPlot(ctx: CanvasRenderingContext2D, data: ChartData, width: number, height: number, theme: any, options?: any): void {
+    const padding = 70; // Increased padding to accommodate axis labels
     const chartWidth = width - 2 * padding;
     const chartHeight = height - 2 * padding;
 
@@ -2462,23 +2936,33 @@ class WidgetXFormer {
     }
 
     // Find data ranges
-    let maxX = 0, maxY = 0;
+    let maxX = 0, maxY = 0, minX = 0, minY = 0;
+    let hasData = false;
+    
     data.datasets.forEach(dataset => {
       if (dataset && dataset.data && Array.isArray(dataset.data)) {
         dataset.data.forEach((point: any) => {
           if (typeof point === 'object' && point.x !== undefined && point.y !== undefined) {
-            maxX = Math.max(maxX, point.x);
-            maxY = Math.max(maxY, point.y);
+            if (!hasData) {
+              minX = maxX = point.x;
+              minY = maxY = point.y;
+              hasData = true;
+            } else {
+              maxX = Math.max(maxX, point.x);
+              maxY = Math.max(maxY, point.y);
+              minX = Math.min(minX, point.x);
+              minY = Math.min(minY, point.y);
+            }
           }
         });
       }
     });
 
-    // Ensure we have valid ranges
-    if (maxX === 0 && maxY === 0) {
-      maxX = 100;
-      maxY = 100;
-    }
+    // Use axis configuration if provided, otherwise use calculated ranges
+    const xMin = options?.xAxis?.min ?? minX;
+    const xMax = options?.xAxis?.max ?? (hasData ? maxX : 100);
+    const yMin = options?.yAxis?.min ?? minY;
+    const yMax = options?.yAxis?.max ?? (hasData ? maxY : 100);
 
     // Draw axes
     ctx.strokeStyle = theme.border;
@@ -2489,7 +2973,68 @@ class WidgetXFormer {
     ctx.lineTo(width - padding, height - padding);
     ctx.stroke();
 
-    // Draw scatter points
+    // Draw grid lines
+    ctx.strokeStyle = theme.border + '40'; // Lighter grid lines
+    ctx.lineWidth = 1;
+    
+    // Vertical grid lines
+    for (let i = 0; i <= 5; i++) {
+      const x = padding + (i / 5) * chartWidth;
+      ctx.beginPath();
+      ctx.moveTo(x, padding);
+      ctx.lineTo(x, height - padding);
+      ctx.stroke();
+    }
+    
+    // Horizontal grid lines  
+    for (let i = 0; i <= 5; i++) {
+      const y = padding + (i / 5) * chartHeight;
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(width - padding, y);
+      ctx.stroke();
+      
+      // Y-axis labels
+      const value = yMax - (i / 5) * (yMax - yMin);
+      ctx.fillStyle = theme.text;
+      ctx.textAlign = 'right';
+      ctx.font = '10px system-ui';
+      ctx.fillText(Math.round(value).toString(), padding - 10, y + 3);
+    }
+
+    // X-axis labels
+    ctx.fillStyle = theme.text;
+    ctx.font = '10px system-ui';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= 5; i++) {
+      const x = padding + (i / 5) * chartWidth;
+      const value = xMin + (i / 5) * (xMax - xMin);
+      ctx.fillText(Math.round(value).toString(), x, height - padding + 20);
+    }
+
+    // Draw axis titles
+    ctx.fillStyle = theme.text;
+    ctx.font = '14px system-ui';
+    ctx.textAlign = 'center';
+    
+    // X-axis title
+    if (options?.xAxis?.title) {
+      ctx.fillText(options.xAxis.title, width / 2, height - 10);
+    }
+    
+    // Y-axis title
+    if (options?.yAxis?.title) {
+      ctx.save();
+      ctx.translate(15, height / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = 'center';
+      ctx.fillText(options.yAxis.title, 0, 0);
+      ctx.restore();
+    }
+
+    // Draw scatter points and store for hover
+    const points: {x: number, y: number, value: number, label: string}[] = [];
+    
     data.datasets.forEach((dataset) => {
       if (!dataset || !dataset.data || !Array.isArray(dataset.data)) {
         return;
@@ -2501,22 +3046,29 @@ class WidgetXFormer {
 
       ctx.fillStyle = color;
       
-      dataset.data.forEach((point: any) => {
+      dataset.data.forEach((point: any, index: number) => {
         if (typeof point === 'object' && point.x !== undefined && point.y !== undefined) {
-          const x = padding + (point.x / maxX) * chartWidth;
-          const y = height - padding - (point.y / maxY) * chartHeight;
+          const x = padding + ((point.x - xMin) / (xMax - xMin)) * chartWidth;
+          const y = height - padding - ((point.y - yMin) / (yMax - yMin)) * chartHeight;
           
           ctx.beginPath();
           ctx.arc(x, y, 4, 0, 2 * Math.PI);
           ctx.fill();
+          
+          // Store point for hover detection
+          const label = dataset.label || `Point ${index + 1}`;
+          const valueLabel = `(${point.x}, ${point.y})`;
+          points.push({x, y, value: point.y, label: `${label}: ${valueLabel}`});
         }
       });
     });
 
+    // Store points for hover detection
+    (ctx.canvas as any)._chartPoints = points;
+    console.log('Scatter plot points stored:', points);
+
     // Draw legend
-    if (data.datasets.length > 1) {
-      this.drawLegend(ctx, data, width, height, 20);
-    }
+    this.drawLegend(ctx, data, width, height, 20);
   }
 
   private renderBubbleChart(config: WidgetConfig, container: HTMLElement): void {
@@ -2553,6 +3105,7 @@ class WidgetXFormer {
     if (!ctx) return;
 
     this.drawBubbleChart(ctx, bubbleData, canvas.width, canvas.height, theme);
+    this.addChartHoverBehavior(canvas);
     
     bubbleContainer.appendChild(canvas);
     container.appendChild(bubbleContainer);
@@ -2602,6 +3155,42 @@ class WidgetXFormer {
     ctx.lineTo(width - padding, height - padding);
     ctx.stroke();
 
+    // Draw grid lines
+    ctx.strokeStyle = theme.border + '40'; // Lighter grid lines
+    ctx.lineWidth = 1;
+    
+    // Vertical grid lines and X-axis value labels
+    for (let i = 0; i <= 5; i++) {
+      const x = padding + (i / 5) * chartWidth;
+      ctx.beginPath();
+      ctx.moveTo(x, padding);
+      ctx.lineTo(x, height - padding);
+      ctx.stroke();
+      
+      // X-axis value labels
+      const value = xMin + (i / 5) * (xMax - xMin);
+      ctx.fillStyle = theme.text;
+      ctx.textAlign = 'center';
+      ctx.font = '10px system-ui';
+      ctx.fillText(Math.round(value * 10) / 10 + '', x, height - padding + 15);
+    }
+    
+    // Horizontal grid lines and Y-axis value labels
+    for (let i = 0; i <= 5; i++) {
+      const y = padding + (i / 5) * chartHeight;
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(width - padding, y);
+      ctx.stroke();
+      
+      // Y-axis value labels
+      const value = yMax - (i / 5) * (yMax - yMin);
+      ctx.fillStyle = theme.text;
+      ctx.textAlign = 'right';
+      ctx.font = '10px system-ui';
+      ctx.fillText(Math.round(value * 10) / 10 + '', padding - 10, y + 3);
+    }
+
     // Draw axis labels
     ctx.fillStyle = theme.text;
     ctx.font = '12px sans-serif';
@@ -2623,6 +3212,7 @@ class WidgetXFormer {
 
     // Draw bubbles
     ctx.globalAlpha = 0.7;
+    const points: {x: number, y: number, radius: number, value: any, label: string}[] = [];
     
     bubblePoints.forEach((point: any) => {
       if (point.x !== undefined && point.y !== undefined) {
@@ -2635,6 +3225,13 @@ class WidgetXFormer {
         ctx.arc(x, y, radius, 0, 2 * Math.PI);
         ctx.fill();
         
+        // Store point for hover detection
+        points.push({
+          x, y, radius, 
+          value: `(${point.x}, ${point.y}, size: ${point.size || point.r || 10})`,
+          label: point.label || `Bubble ${points.length + 1}`
+        });
+        
         // Draw label if provided
         if (point.label) {
           ctx.fillStyle = theme.text;
@@ -2646,6 +3243,28 @@ class WidgetXFormer {
     });
 
     ctx.globalAlpha = 1;
+    
+    // Store points for hover detection
+    (ctx.canvas as any)._chartPoints = points;
+    console.log('Bubble chart points stored:', points);
+    
+    // Draw legend if we have multiple datasets or labeled bubbles
+    if (data.datasets && data.datasets.length > 0) {
+      // Create legend data from bubble labels
+      const uniqueLabels = [...new Set(bubblePoints.map(p => p.label).filter(l => l))];
+      const uniqueColors = [...new Set(bubblePoints.map(p => p.color || theme.primary))];
+      if (uniqueLabels.length > 0) {
+        const legendData: ChartData = {
+          labels: uniqueLabels,
+          datasets: [{
+            label: 'Bubbles',
+            data: [],
+            backgroundColor: uniqueColors
+          }]
+        };
+        this.drawLegend(ctx, legendData, width, height, 20);
+      }
+    }
   }
 
   private renderGauge(config: WidgetConfig, container: HTMLElement): void {
@@ -2759,7 +3378,8 @@ class WidgetXFormer {
   }
 
   private renderHeatmap(config: WidgetConfig, container: HTMLElement): void {
-    const heatmapData = config.data;
+  const heatmapData = config.data;
+  console.log('renderHeatmap called with data:', heatmapData);
     const theme = this.getTheme(config.style?.theme);
     const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
 
@@ -2906,7 +3526,8 @@ class WidgetXFormer {
   }
 
   private renderSlider(config: WidgetConfig, container: HTMLElement): void {
-    const sliderData = config.data;
+  const sliderData = config.data;
+  console.log('renderSlider called with data:', sliderData);
     const theme = this.getTheme(config.style?.theme);
     const fluentTokens = getFluentTokens(config.style?.theme === 'fluent-dark' ? 'dark' : 'light');
 

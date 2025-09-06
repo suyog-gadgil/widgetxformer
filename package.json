@@ -1,26 +1,75 @@
 {
   "name": "widgetxformer",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Enterprise-grade TypeScript widget library with Microsoft Fluent Design System integration. Transform JSON data into beautiful, accessible widgets.",
   "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles": "./dist/widgetxformer.css"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "widgets",
+    "charts",
+    "fluent-ui",
+    "typescript",
+    "dashboard",
+    "data-visualization",
+    "ui-components",
+    "microsoft-fluent",
+    "design-system",
+    "canvas-charts"
+  ],
+  "author": {
+    "name": "WidgetXFormer Team",
+    "email": "contact@widgetxformer.dev",
+    "url": "https://github.com/suyog-gadgil/widgetxformer"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suyog-gadgil/widgetxformer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/suyog-gadgil/widgetxformer/issues"
+  },
+  "homepage": "https://github.com/suyog-gadgil/widgetxformer#readme",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "npm run build:lib",
+    "build:lib": "vite build --config vite.lib.config.ts",
+    "build:demo": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "type-check": "tsc --noEmit",
+    "prepublishOnly": "npm run test:run && npm run build",
+    "publish:dry": "npm publish --dry-run"
   },
   "devDependencies": {
-    "@vitest/ui": "^3.2.4",
-    "jsdom": "^26.1.0",
+    "@types/node": "^22.18.1",
+    "@vitest/coverage-v8": "^2.1.2",
+    "terser": "^5.44.0",
     "typescript": "~5.8.3",
     "vite": "^7.1.2",
-    "vitest": "^3.2.4"
+    "vite-plugin-dts": "^4.4.0",
+    "vitest": "^2.1.2"
   },
-  "dependencies": {
-    "@fluentui/react-components": "^9.69.0",
-    "@fluentui/react-icons": "^2.0.309",
-    "@fluentui/tokens": "^1.0.0-alpha.22"
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
   }
 }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Hover Test</title>
+    <style>
+        body { margin: 20px; font-family: Arial, sans-serif; }
+        .chart-container { margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Simple Chart Hover Test</h1>
+    
+    <div class="chart-container">
+        <h2>Line Chart</h2>
+        <div id="simple-line"></div>
+    </div>
+
+    <script type="module">
+        import WidgetXFormer from './src/widget-xformer.js';
+
+        console.log('Starting simple test...');
+        
+        const widgetXFormer = WidgetXFormer.getInstance();
+        
+        // Simple line chart
+        widgetXFormer.render({
+            type: 'line',
+            data: {
+                labels: ['A', 'B', 'C'],
+                datasets: [{
+                    label: 'Simple',
+                    data: [10, 20, 15],
+                    borderColor: 'blue'
+                }]
+            },
+            options: {
+                xAxis: { title: 'X' },
+                yAxis: { title: 'Y' }
+            }
+        }, 'simple-line');
+
+        console.log('Chart rendered, checking canvas...');
+        
+        setTimeout(() => {
+            const canvas = document.querySelector('#simple-line canvas');
+            console.log('Canvas found:', canvas);
+            if (canvas) {
+                console.log('Canvas points:', canvas._chartPoints);
+                console.log('Canvas tooltip:', canvas._tooltip);
+            }
+        }, 500);
+    </script>
+</body>
+</html>
