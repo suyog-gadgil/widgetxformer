@@ -172,6 +172,22 @@
             <h2 class="widget-title">Global Distribution</h2>
             <div id="demo-worldmap"></div>
         </div>
+
+        <!-- Timeline Widgets -->
+        <div class="widget-container full-width">
+            <h2 class="widget-title">Project Timeline - Vertical</h2>
+            <div id="demo-timeline-vertical"></div>
+        </div>
+
+        <div class="widget-container full-width">
+            <h2 class="widget-title">Company History - Horizontal</h2>
+            <div id="demo-timeline-horizontal"></div>
+        </div>
+
+        <div class="widget-container full-width">
+            <h2 class="widget-title">Development Roadmap - Grouped</h2>
+            <div id="demo-timeline-grouped"></div>
+        </div>
     </div>
 
     <!-- Controls -->
@@ -340,6 +356,207 @@ widgetXFormer.render(chartConfig, 'my-chart-container');
                 style: { theme: currentTheme }
             },
 
+            timelineVertical: {
+                type: 'timeline',
+                data: {
+                    events: [
+                        {
+                            id: '1',
+                            date: '2024-01-15',
+                            title: 'Project Kickoff',
+                            description: 'Initial project planning and team formation. Defined scope, timeline, and resource allocation.',
+                            category: 'Planning',
+                            icon: '🚀',
+                            status: 'completed'
+                        },
+                        {
+                            id: '2',
+                            date: '2024-02-20',
+                            title: 'Design Phase Complete',
+                            description: 'Finalized UI/UX designs, wireframes, and user experience flows.',
+                            category: 'Design',
+                            icon: '🎨',
+                            status: 'completed'
+                        },
+                        {
+                            id: '3',
+                            date: '2024-04-10',
+                            title: 'Development Milestone 1',
+                            description: 'Core functionality implemented including user authentication and basic features.',
+                            category: 'Development',
+                            icon: '💻',
+                            status: 'completed'
+                        },
+                        {
+                            id: '4',
+                            date: '2024-06-15',
+                            title: 'Beta Testing Launch',
+                            description: 'Released beta version to internal stakeholders and select customers for feedback.',
+                            category: 'Testing',
+                            icon: '🧪',
+                            status: 'current'
+                        },
+                        {
+                            id: '5',
+                            date: '2024-08-30',
+                            title: 'Production Release',
+                            description: 'Full production deployment with all features and comprehensive testing complete.',
+                            category: 'Deployment',
+                            icon: '🎯',
+                            status: 'upcoming'
+                        }
+                    ],
+                    config: {
+                        orientation: 'vertical',
+                        layout: 'alternating',
+                        showProgress: true,
+                        groupBy: 'none',
+                        animate: true,
+                        interactive: true,
+                        dateFormat: 'MMM DD, YYYY'
+                    }
+                },
+                style: { theme: currentTheme }
+            },
+
+            timelineHorizontal: {
+                type: 'timeline',
+                data: {
+                    events: [
+                        {
+                            id: '1',
+                            date: '2020-01-01',
+                            title: 'Company Founded',
+                            description: 'Started as a small startup with big dreams and innovative ideas.',
+                            category: 'Milestone',
+                            icon: '🏢',
+                            status: 'completed'
+                        },
+                        {
+                            id: '2',
+                            date: '2021-06-15',
+                            title: 'Series A Funding',
+                            description: 'Raised $5M in Series A funding to accelerate growth and development.',
+                            category: 'Funding',
+                            icon: '💰',
+                            status: 'completed'
+                        },
+                        {
+                            id: '3',
+                            date: '2022-03-20',
+                            title: '10,000 Users',
+                            description: 'Reached the milestone of 10,000 active users on our platform.',
+                            category: 'Growth',
+                            icon: '👥',
+                            status: 'completed'
+                        },
+                        {
+                            id: '4',
+                            date: '2023-09-10',
+                            title: 'International Expansion',
+                            description: 'Expanded operations to European and Asian markets.',
+                            category: 'Expansion',
+                            icon: '🌍',
+                            status: 'completed'
+                        },
+                        {
+                            id: '5',
+                            date: '2024-12-01',
+                            title: 'IPO Launch',
+                            description: 'Planning initial public offering to fuel next phase of growth.',
+                            category: 'Milestone',
+                            icon: '📈',
+                            status: 'upcoming'
+                        }
+                    ],
+                    config: {
+                        orientation: 'horizontal',
+                        layout: 'center',
+                        showProgress: false,
+                        compactMode: true,
+                        animate: true,
+                        interactive: true,
+                        dateFormat: 'YYYY'
+                    }
+                },
+                style: { theme: currentTheme }
+            },
+
+            timelineGrouped: {
+                type: 'timeline',
+                data: {
+                    events: [
+                        // 2024 Events
+                        {
+                            id: '1',
+                            date: '2024-03-01',
+                            title: 'Widget Library v2.0',
+                            description: 'Major update with new timeline components and enhanced charting capabilities.',
+                            category: 'Core Features',
+                            icon: '📦',
+                            status: 'completed'
+                        },
+                        {
+                            id: '2',
+                            date: '2024-06-15',
+                            title: 'Mobile Responsive Design',
+                            description: 'Complete mobile optimization for all widget types.',
+                            category: 'UI/UX',
+                            icon: '📱',
+                            status: 'current'
+                        },
+                        {
+                            id: '3',
+                            date: '2024-09-01',
+                            title: 'Advanced Analytics',
+                            description: 'Integration with analytics platforms and custom reporting.',
+                            category: 'Analytics',
+                            icon: '📊',
+                            status: 'upcoming'
+                        },
+                        // 2025 Events
+                        {
+                            id: '4',
+                            date: '2025-01-15',
+                            title: 'AI-Powered Insights',
+                            description: 'Machine learning integration for predictive analytics and smart recommendations.',
+                            category: 'AI/ML',
+                            icon: '🤖',
+                            status: 'upcoming'
+                        },
+                        {
+                            id: '5',
+                            date: '2025-04-20',
+                            title: 'Enterprise Features',
+                            description: 'Advanced security, SSO integration, and enterprise-grade scalability.',
+                            category: 'Enterprise',
+                            icon: '🏢',
+                            status: 'upcoming'
+                        },
+                        {
+                            id: '6',
+                            date: '2025-08-10',
+                            title: 'API Marketplace',
+                            description: 'Launch of public API marketplace for third-party integrations.',
+                            category: 'Platform',
+                            icon: '🔗',
+                            status: 'upcoming'
+                        }
+                    ],
+                    config: {
+                        orientation: 'vertical',
+                        layout: 'left',
+                        showProgress: true,
+                        groupBy: 'year',
+                        animate: true,
+                        interactive: true,
+                        dateFormat: 'MMM DD, YYYY',
+                        showConnectors: true
+                    }
+                },
+                style: { theme: currentTheme }
+            },
+
             metrics: {
                 users: {
                     type: 'metric',
@@ -369,6 +586,11 @@ widgetXFormer.render(chartConfig, 'my-chart-container');
             widgetXFormer.render(configs.table, 'demo-table');
             widgetXFormer.render(configs.card, 'demo-card');
             widgetXFormer.render(configs.worldmap, 'demo-worldmap');
+            
+            // Render timeline widgets
+            widgetXFormer.render(configs.timelineVertical, 'demo-timeline-vertical');
+            widgetXFormer.render(configs.timelineHorizontal, 'demo-timeline-horizontal');
+            widgetXFormer.render(configs.timelineGrouped, 'demo-timeline-grouped');
             
             // Render metrics
             widgetXFormer.render(configs.metrics.users, 'metric-users');

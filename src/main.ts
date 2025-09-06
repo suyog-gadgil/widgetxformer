@@ -45,6 +45,12 @@ const widgetConfigs = {
           expanded: false
         },
         {
+          id: 'timeline',
+          title: '⏰ Timeline Widget',
+          content: 'Advanced timeline visualization with vertical/horizontal layouts, grouping, progress tracking, and animations.',
+          expanded: false
+        },
+        {
           id: 'themes',
           title: '🎨 Multiple Themes',
           content: 'Built-in themes including default, brand, and dark mode support.',
@@ -59,6 +65,69 @@ const widgetConfigs = {
       ]
     },
     style: { theme: 'default' }
+  },
+
+  sampleTimeline: {
+    type: 'timeline',
+    data: {
+      events: [
+        {
+          id: '1',
+          date: '2024-01-15',
+          title: 'Project Started',
+          description: 'Initial project setup and planning',
+          status: 'completed',
+          category: 'Development'
+        },
+        {
+          id: '2',
+          date: '2024-02-20',
+          title: 'MVP Release',
+          description: 'Released minimum viable product',
+          status: 'completed',
+          category: 'Release'
+        },
+        {
+          id: '3',
+          date: '2024-03-15',
+          title: 'Fluent UI Integration',
+          description: 'Added Microsoft Fluent Design System',
+          status: 'current',
+          category: 'Enhancement'
+        }
+      ],
+      config: {
+        orientation: 'vertical',
+        showProgress: true,
+        animate: true
+      }
+    },
+    style: { theme: 'light', fluentDesign: true }
+  },
+
+  // New Fluent UI widgets
+  fluentCard: {
+    type: 'fluent-card',
+    data: {
+      title: 'Enhanced Fluent Card',
+      content: 'This card uses Microsoft Fluent Design System with proper typography, spacing, and elevation.',
+      interactive: true,
+      actions: [
+        { text: 'Primary Action', appearance: 'primary', onClick: () => alert('Primary clicked!') },
+        { text: 'Secondary', appearance: 'secondary' }
+      ]
+    },
+    style: { theme: 'light', fluentDesign: true }
+  },
+
+  fluentProgress: {
+    type: 'fluent-progressbar',
+    data: {
+      label: 'Download Progress',
+      value: 65,
+      description: '65% complete - 2.3 MB of 3.5 MB'
+    },
+    style: { theme: 'light', fluentDesign: true }
   }
 };
 
@@ -99,6 +168,21 @@ class WidgetXFormerApp {
               <h3>Features Overview</h3>
               <div id="features-widget"></div>
             </div>
+
+            <div class="widget-item full-width">
+              <h3>Development Timeline</h3>
+              <div id="timeline-widget"></div>
+            </div>
+
+            <div class="widget-item">
+              <h3>🎨 Fluent Design Card</h3>
+              <div id="fluent-card-widget"></div>
+            </div>
+
+            <div class="widget-item">
+              <h3>📊 Fluent Progress Bar</h3>
+              <div id="fluent-progress-widget"></div>
+            </div>
           </div>
         </main>
 
@@ -131,15 +215,22 @@ class WidgetXFormerApp {
   }
 
   private renderWidgets(): void {
-    // Update theme for all widgets
+    // Update theme for all widgets (except Fluent ones which have their own theme)
     Object.values(widgetConfigs).forEach(config => {
-      config.style.theme = this.currentTheme;
+      if (!config.style || !(config.style as any).fluentDesign) {
+        config.style = { ...config.style, theme: this.currentTheme };
+      }
     });
 
     // Render widgets
     widgetXFormer.render(widgetConfigs.welcome, 'welcome-widget');
     widgetXFormer.render(widgetConfigs.sampleChart, 'chart-widget');
     widgetXFormer.render(widgetConfigs.features, 'features-widget');
+    widgetXFormer.render(widgetConfigs.sampleTimeline, 'timeline-widget');
+    
+    // Render new Fluent UI widgets
+    widgetXFormer.render(widgetConfigs.fluentCard, 'fluent-card-widget');
+    widgetXFormer.render(widgetConfigs.fluentProgress, 'fluent-progress-widget');
   }
 
   private toggleTheme(): void {
